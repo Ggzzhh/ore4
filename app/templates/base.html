@@ -1,0 +1,31 @@
+{% extends "bootstrap/base.html" %}
+
+{% block html_attribs %} lang='zh-CN' {% endblock html_attribs %}
+{% block title %}{{ "四矿干部管理系统"|safe }}{%endblock %}
+{% block head %}
+	<meta charset="UTF-8" />
+	<meta name="author" content="Ggzzhh" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	{{ super() }}
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}" type="text/css">
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/sweetalert2.min.css') }}" type="text/css">
+	<link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css">
+	<link rel="shortcut icon" href="/static/image/favicon.ico" type="image/x-icon"/>
+{% endblock head %}
+
+{% block navbar %}
+	<noscript unselectable="on" id="noscript">
+		<div class="aw-404 aw-404-wrap container">
+			<img src="http://wenda.ghostchina.com/static/common/no-js.jpg">
+			<p>你的浏览器禁用了JavaScript, 请开启后刷新浏览器获得更好的体验!</p>
+		</div>
+	</noscript>
+{% endblock navbar %}
+
+{% block content %}
+	<main role="main" class="main">
+		{% block page_content %}{% endblock page_content%}
+	</main>
+	{% block footer %}
+	{% endblock footer %}
+{% endblock content %}

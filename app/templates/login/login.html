@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block head %}
+	{{ super() }}
+	<link rel="stylesheet"
+		  href="{{ url_for('static', filename='css/login.css') }}"
+		  type="text/css">
+{% endblock %}
+
+{% block content %}
+	{% block page_content %}
+		<div class="login-box">
+			<div class="box-body">
+				<div class="content">
+					<form action="" class="form">
+						<ul>
+							<li class="text-center">
+								<h2>河南平顶山四矿干部管理系统</h2>
+								<img src="\static\image\2.jpg" width="140"
+									 height="140" class="img-circle">
+							</li>
+							<li>
+								<input type="text" class="form-control" required
+									   placeholder="账号名" name="username"/>
+							</li>
+							<li><input type="password" class="form-control"
+									   placeholder="密码" required
+									   name="password"/></li>
+							<li class="inline">
+								<div class="right">
+									<a href="">忘记密码</a>
+								</div>
+							</li>
+							<li class="text-center">
+								<button class="btn btn-info btn-lg"
+										id="submit">登录</button>
+							</li>
+						</ul>
+					</form>
+				</div>
+			</div>
+		</div>
+	{% endblock %}
+{% endblock %}
