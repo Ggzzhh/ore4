@@ -1,9 +1,11 @@
 {% extends "base.html" %}
+{% from 'bootstrap/utils.html' import render_static %}
 {% block head %}
-	{{ super() }}
-	<link rel="stylesheet"
-		  href="{{ url_for('static', filename='css/login.css') }}"
-		  type="text/css">
+	{{ render_static('css', 'css/login.css') }}
+{% endblock %}
+
+{% block nav %}
+
 {% endblock %}
 
 {% block content %}
@@ -11,12 +13,11 @@
 		<div class="login-box">
 			<div class="box-body">
 				<div class="content">
-					<form action="" class="form">
+					<form action="" class="form" method="post">
+						<input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
 						<ul>
-							<li class="text-center">
-								<h2>河南平顶山四矿干部管理系统</h2>
-								<img src="\static\image\2.jpg" width="140"
-									 height="140" class="img-circle">
+							<li class="text-center title">
+								{{ system_name }}
 							</li>
 							<li>
 								<input type="text" class="form-control" required
@@ -26,6 +27,11 @@
 									   placeholder="密码" required
 									   name="password"/></li>
 							<li class="inline">
+								{% if error_message %}
+									<div class="left reset_password">
+										{{ error_message }}
+									</div>
+								{% endif %}
 								<div class="right">
 									<a href="">忘记密码</a>
 								</div>

@@ -6,7 +6,16 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 
 class Config:
 
-    SALT = os.environ.get('SECRET_KEY') or 'W2s4S4sa2FS96Ok'
+    SECRET_KEY = os.environ.get('SECRET_KEY') or 'W2s4S4sa2FS96Ok'
+
+    BOOTSTRAP_SERVE_LOCAL = True
+
+    # 管理员邮箱
+    ADMIN_MAIL = os.environ.get('ADMIN_EMAIL') or '你的邮箱@test.com'
+    # 管理员账号 默认为admin 可修改 第一次运行时会自动注册
+    ADMIN_USERNAME = os.environ.get('ADMIN_USERNAME') or 'admin'
+    # 管理员密码 默认为admin 可修改 第一次运行时会自动注册
+    ADMIN_PASSWORD = os.environ.get('ADMIN_PASSWORD') or 'admin'
 
     # 数据库自动提交数据
     SQLALCHEMY_COMMIT_ON_TEARDOWN = True
@@ -33,6 +42,9 @@ class Config:
 
     # 分页设置 每页显示数量
     PER_PAGE = 15
+
+    # 系统名称
+    SYSTEMNAME = '四矿干部管理系统'
 
     # 配置类可以定义 init_app() 类方法，其参数是程序实例。
     # 在这个方法中，可以执行对当前 环境的配置初始化。

@@ -14,7 +14,9 @@ body{
     border-radius: 10px;
     height: 500px;
     background: #ffffff;
-
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .box-body .content{
@@ -44,16 +46,21 @@ body{
 }
 
 .box-body .content .left{
-    width: 70%;
+    width: 75%;
     float: left;
     display: inline-block;
     text-align: left;
 }
 .box-body .content .right{
-    width: 30%;
+    width: 25%;
     float: right;
     display: inline-block;
     text-align: right;
+}
+
+.box-body .content .title {
+    min-height: 100px;
+    font-size: 2em;
 }
 
 .box-body #submit {
@@ -63,10 +70,9 @@ body{
 }
 
 .reset_password {
-    font-size: 20px;
-    line-height: 35px;
-    color: #ff000a;
-    width: 70%;
+    font-size: 1em;
+    line-height: 15px;
+    color: #b50007;
     margin-left: auto;
     margin-right: auto;
 }
@@ -106,7 +112,7 @@ body{
         display: none;
     }
     .reset_password {
-        font-size: 15px;
+        font-size: 0.7em;
     }
     .reset_password button{
         margin-top: 15px;

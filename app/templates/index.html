@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% from 'bootstrap/utils.html' import render_static %}
+{% block head %}
+	{{ super() }}
+	<link rel="stylesheet"
+		  href="{{ url_for('static', filename='css/index.css') }}"
+		  type="text/css">
+{% endblock %}
+{% block page_content %}
+	<div class="container">
+		<div class="jumbotron mt-5">
+			<h1>欢迎！</h1>
+			<h4 id="show_date">今天是{{ moment(date).format('YYYY年M月DD日 dddd')
+					}}，祝您心情愉快!</h4>
+		</div>
+	</div>
+{% endblock %}
+{% block script %}
+	{{ super() }}
+	<script>
+	</script>
+{% endblock %}
