@@ -36,7 +36,7 @@ def create_app(config_name):
     bootstrap.init_app(app)
     db.init_app(app)
     login_manager.init_app(app)
-    csrf.init_app(app)
+    # csrf.init_app(app)
     excel.init_excel(app)
     moment.init_app(app)
 
@@ -54,7 +54,6 @@ def create_app(config_name):
 
     from .api_v1 import api_v1 as api_v1_blueprint
     app.register_blueprint(api_v1_blueprint, url_prefix="/v1")
-
 
     return app
 
