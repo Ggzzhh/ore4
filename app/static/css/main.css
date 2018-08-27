@@ -6,8 +6,8 @@ html, body {
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
-h2 a {
-    text-decoration: none;
+body a:hover {
+    text-decoration: none;!important;
     cursor: pointer;
 }
 
@@ -23,4 +23,8 @@ ul, ol {
     min-height: 650px;
 }
 
+.navbar {
+    box-shadow: 0 0 15px 0 rgba(0,0,0,.85);
+    transition: all 250ms;
+}
 

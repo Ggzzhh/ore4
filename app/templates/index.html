@@ -6,6 +6,9 @@
 		  href="{{ url_for('static', filename='css/index.css') }}"
 		  type="text/css">
 {% endblock %}
+{% block leftnav %}
+	{{ super() }}
+{% endblock %}
 {% block page_content %}
 	<div class="container">
 		<div class="jumbotron mt-5">
