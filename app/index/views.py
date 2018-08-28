@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import time
+import json
 from datetime import datetime, timedelta
 
 from flask import render_template, request, jsonify, \
@@ -59,7 +60,8 @@ def main():
 @login_required
 def upload():
     if request.method == 'POST':
-        return jsonify({'result': request.get_array(field_name='file')})
+        return json.dumps({'result': request.get_array(field_name='file')},
+                          ensure_ascii=False)
     user = current_user.username
     return '''
     <!doctype html>
@@ -80,5 +82,5 @@ def export_records():
 @index.route("/download", methods=['GET'])
 @login_required
 def download_file_named_in_unicode():
-    return excel.make_response_from_array([[1, 2], [3, 4]], "xlsx",
+    return excel.make_response_from_array([['呵呵呵', '哈哈哈'], ['哟啊', 4]], "xlsx",
                                           file_name=u"中文文件名")
