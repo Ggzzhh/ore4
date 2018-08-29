@@ -36,7 +36,6 @@ class User(db.Model, UserMixin):
     password_hash = db.Column(db.String(128))
     retry_count = db.Column(db.Integer, default=10)
     disable_time = db.Column(db.DateTime)
-    dept_id = db.Column(db.Integer, db.ForeignKey('depts.id'))
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
 
     def __init__(self, **kwargs):
@@ -62,11 +61,26 @@ class User(db.Model, UserMixin):
         return '<用户名: %r>-%r' % (self.username, self.role)
 
 
+class System(db.Model):
+    __tablename__ = 'systems'
+    id = db.Column(db.Integer, primary_key=True)
+    system_name = db.Column(db.String(64), unique=True)
+    depts = db.relationship('Dept', backref='system')
+
+
 class Dept(db.Model):
     __tablename__ = 'depts'
     id = db.Column(db.Integer, primary_key=True)
     dept_name = db.Column(db.String(64), unique=True)
-    users = db.relationship('User', backref='dept')
+    system_id = db.Column(db.Integer, db.ForeignKey('systems.id'))
+    dept_pro_id = db.Column(db.Integer, db.ForeignKey('dept_pros.id'))
+
+
+class DeptPro(db.Model):
+    __tablename__ = 'dept_pros'
+    id = db.Column(db.Integer, primary_key=True)
+    dept_pro_name = db.Column(db.String(64), unique=True)
+    depts = db.relationship('Dept', backref='dept_pro')
 
 
 def run_only():

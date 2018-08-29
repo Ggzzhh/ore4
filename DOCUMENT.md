@@ -25,3 +25,7 @@ virtualenv --no-site-packages venv
     
 ### jinja2中使用break以及continue
     app.jinja_env.add_extension('jinja2.ext.loopcontrols')
+    
+### pip导出库/安装库
+    pip freeze > requirements.txt
+    pip install -r requirements.txt

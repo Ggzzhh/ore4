@@ -5,7 +5,7 @@ from flask import Flask
 from flask_bootstrap import Bootstrap
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
-from flask_wtf.csrf import CsrfProtect
+from flask_wtf.csrf import CSRFProtect
 from flask_moment import Moment
 import flask_excel as excel
 
@@ -15,7 +15,7 @@ from config import config
 bootstrap = Bootstrap()
 login_manager = LoginManager()
 db = SQLAlchemy()
-csrf = CsrfProtect()
+csrf = CSRFProtect()
 moment = Moment()
 
 

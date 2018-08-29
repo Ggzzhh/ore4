@@ -18,7 +18,7 @@ class Config:
     ADMIN_PASSWORD = os.environ.get('ADMIN_PASSWORD') or 'skzzk'
 
     # 数据库自动提交数据
-    SQLALCHEMY_COMMIT_ON_TEARDOWN = True
+    SQLALCHEMY_COMMIT_ON_TEARDOWN = False
 
     # 如果设置成 True (默认情况)，Flask-SQLAlchemy 将会追踪对象的修改并且发送信号。
     # 这需要额外的内存， 如果不必要的可以禁用它。
@@ -57,8 +57,8 @@ class Config:
 class DevelopmentConfig(Config):
     """开发配置 以及开发时使用的数据库地址"""
     DEBUG = True
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DEV_DATABASE_URL') or \
-        'sqlite:///' + os.path.join(basedir, 'data-dev.sqlite')
+    SQLALCHEMY_DATABASE_URI = \
+        'mysql+pymysql://root:65700@localhost:3306/ore4?charset=utf8'
 
 
 class TestingConfig(Config):

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import time
 import json
 from datetime import datetime, timedelta
@@ -107,23 +106,22 @@ def search():
 @login_required
 def upload():
     if request.method == 'POST':
-        return json.dumps({'result': request.get_array(field_name='file')},
-                          ensure_ascii=False)
+        return jsonify({'result': request.get_array(field_name='file')})
     user = current_user.username
-    return '''
-    <!doctype html>
-    <title>Upload an excel file %s </title>
-    <h1>Excel file upload (csv, tsv, csvz, tsvz only)</h1>
-    <form action="" method=post enctype=multipart/form-data><p>
-    <input type=file name=file><input type=submit value=Upload>
-    </form>
-    ''' % user
+    return render_template('test.html')
+    # return '''
+    # <!doctype html>
+    # <title>Upload an excel file %s </title>
+    # <h1>Excel file upload (csv, tsv, csvz, tsvz only)</h1>
+    # <form action="" method=post enctype=multipart/form-data><p>
+    # <input type=file name=file><input type=submit value=Upload>
+    # </form>
+    # ''' % user
 
 
-@index.route("/export", methods=['GET'])
-def export_records():
-    return excel.make_response_from_array([[1, 2], [3, 4]], "xlsx",
-                                          file_name="export_data")
+@index.route("/test", methods=['GET'])
+def test():
+    return jsonify('我擦asdasd123')
 
 
 @index.route("/download", methods=['GET'])
