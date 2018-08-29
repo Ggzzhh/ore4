@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from flask import flash, redirect, url_for
-from flask_login import logout_user, current_user
+from flask_login import logout_user, current_user, login_required
 
 from . import api_v1
 from ..models import User
@@ -13,6 +13,7 @@ def test():
 
 
 @api_v1.route('/logout/<string:username>')
+@login_required
 def logout(username):
     if username == current_user.username:
         logout_user()

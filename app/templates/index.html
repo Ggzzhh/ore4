@@ -10,11 +10,12 @@
 	{{ super() }}
 {% endblock %}
 {% block page_content %}
-	<div class="container">
-		<div class="jumbotron mt-5">
-			<h1>欢迎！</h1>
-			<h4 id="show_date">今天是{{ moment(date).format('YYYY年M月DD日 dddd')
-					}}，祝您心情愉快!</h4>
+	<div class="iframe">
+		<div class="embed-responsive embed-responsive-16by9">
+			<iframe src="{{ url_for('index.search') }}"
+					class="embed-responsive-item nui-scroll" allowfullscreen
+					scrolling="auto"
+			></iframe>
 		</div>
 	</div>
 {% endblock %}

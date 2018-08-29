@@ -13,9 +13,9 @@ class Config:
     # 管理员邮箱
     ADMIN_MAIL = os.environ.get('ADMIN_EMAIL') or '你的邮箱@test.com'
     # 管理员账号 默认为admin 可修改 第一次运行时会自动注册
-    ADMIN_USERNAME = os.environ.get('ADMIN_USERNAME') or 'admin'
+    ADMIN_USERNAME = os.environ.get('ADMIN_USERNAME') or 'skzzk'
     # 管理员密码 默认为admin 可修改 第一次运行时会自动注册
-    ADMIN_PASSWORD = os.environ.get('ADMIN_PASSWORD') or 'admin'
+    ADMIN_PASSWORD = os.environ.get('ADMIN_PASSWORD') or 'skzzk'
 
     # 数据库自动提交数据
     SQLALCHEMY_COMMIT_ON_TEARDOWN = True

@@ -17,6 +17,7 @@
 	{% block head %}
 
 	{% endblock %}
+
 </head>
 
 <body>
@@ -27,7 +28,7 @@
 	</div>
 </noscript>
 {% block nav %}
-	<nav class="navbar navbar-expand-md bg-info navbar-dark">
+	<nav class="navbar navbar-expand-lg bg-info navbar-dark">
 		<a href="#" class="navbar-brand">
 			<img src="{{ url_for('static', filename='image/1.jpg') }}"
 				 width="30" height="30" class="d-inline-block align-center">
@@ -42,25 +43,58 @@
 
 
 		<div class="collapse navbar-collapse" id="collapsibleNavbar">
-			<form class="form-inline ml-lg-5 mr-auto">
-				<input class="form-control-sm mr-sm-2 my-2 my-lg-0" type="search"
-					   placeholder="姓名/科室/职务" aria-label="Search">
-				<button class="btn btn-sm btn-outline-light my-2 my-sm-0 ml-2"
-						type="submit">快捷搜索</button>
-			</form>
-			<ul class="navbar-nav">
+			<ul class="navbar-nav mr-auto align-items-center">
+				{% for foo in nav %}
+					{% if foo == '系统管理' and current_user.username != 'admin' %}
+						{% continue %}
+					{% endif %}
+					<li class="nav-item dropdown mr-2">
+						<a href="#" class="nav-link dropdown-toggle"
+						   role="button"
+						   id="{{ nav[foo]['id'] }}"
+						   data-toggle="dropdown"
+						   aria-haspopup="true"
+						   aria-expanded="false"
+						>
+							{{ foo }}
+						</a>
+						<div class="dropdown-menu"
+							 aria-labelledby="{{ nav[foo]['id'] }}">
+							{% for item in nav[foo]['data'] %}
+								{% if item == 'divider' %}
+									<div class="dropdown-divider"></div>
+								{% else %}
+									<a class="dropdown-item"
+									   href="{{ nav[foo]['data'][item] }}">
+											{{ item }}</a>
+								{% endif %}
+							{% endfor %}
+						</div>
+					</li>
+				{% endfor %}
 				<li class="nav-item">
-					<span class="navbar-text btn">
+					<form class="form-inline ml-auto">
+						<input class="form-control-sm mr-sm-2 my-2 my-lg-0" type="search"
+							   placeholder="姓名/拼音" aria-label="Search">
+						<button class="btn btn-sm btn-outline-light my-2 my-sm-0 ml-2"
+								type="submit">快捷搜索</button>
+					</form>
+				</li>
+			</ul>
+
+			<ul class="navbar-nav align-items-center">
+				<li class="nav-item">
+					<span class="navbar-text mr-3">
 						欢迎 , {{ current_user.username }}
 					</span>
 				</li>
 				<li class="nav-item">
-					<span class="navbar-text btn">
+					<span class="navbar-text mr-3">
 						<a href="#" class=""> 帮助</a>
 					</span>
 				</li>
 				<li class="nav-item">
-					<span class="navbar-text btn">
+					<span class="navbar-text mr-3">
 					<a href="{{ url_for('v1.logout' ,
 						username=current_user.username) }}"
 					   class=""> 退出</a>
@@ -68,7 +102,6 @@
 				</li>
 			</ul>
 		</div>
-
 	</nav>
 {% endblock %}
 <main>

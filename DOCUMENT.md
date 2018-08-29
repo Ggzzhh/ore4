@@ -22,3 +22,6 @@ virtualenv --no-site-packages venv
     
 ### 关于flask-moment语言问题
     在include_moment()下面添加{{ moment.lang("zh-cn") }}
+    
+### jinja2中使用break以及continue
+    app.jinja_env.add_extension('jinja2.ext.loopcontrols')

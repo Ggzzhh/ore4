@@ -42,6 +42,8 @@ def create_app(config_name):
 
     # 设置session设置的过期时间 也就是关闭浏览器5分钟内不用重新登录
     app.permanent_session_lifetime = timedelta(minutes=60)
+    # 设置jinja2模版可以使用continue
+    app.jinja_env.add_extension('jinja2.ext.loopcontrols')
 
     # 在正常使用时打开ssl安全协议
     if not app.debug and not app.testing and not app.config['SSL_DISABLE']:

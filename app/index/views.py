@@ -37,23 +37,70 @@ def login():
                     if user.retry_count == 0:
                         user.disable_time = datetime.now()
                         error_messgae = '账号被锁定'
-                    error_messgae = '密码错误，今日还可尝试{}次！'\
+                    error_messgae = '密码错误，今日还可尝试{}次！' \
                         .format(user.retry_count)
         else:
             error_messgae = '用户不存在！'
         return render_template('login/login.html',
                                system_name=current_app.config['SYSTEMNAME'],
                                error_message=error_messgae)
-    # if current_user:
-    #     return redirect(url_for('index.upload'))
     return render_template('login/login.html',
                            system_name=current_app.config['SYSTEMNAME'])
 
 
-@index.route('/')
+@index.route('/main')
 @login_required
 def main():
-    return render_template('index.html', date=datetime.utcnow())
+    nav_data = {
+        '人员信息': {
+            'id': 'dropdown_info',
+            'data': {
+                '新增人员': '#',
+                'excel录入': '#',
+                '照片导入': '#'
+            }
+        },
+        '统计查询': {
+            'id': 'dropdown_search',
+            'data': {
+                '姓名查询': '#',
+                '系统查询': '#',
+                '单位查询': '#',
+                '年龄查询': '#',
+                '职务查询': '#',
+                'divider': '#',
+                '职务统计': '#',
+                '单位统计': '#',
+                '职称统计': '#',
+                '状态统计': '#'
+            }
+        },
+        '报表整理': {
+            'id': 'dropdown_table',
+            'data': {
+                '干部花名册': '#',
+                '人数统计表': '#'
+            }
+        },
+        '系统管理': {
+            'id': 'dropdown_system',
+            'data': {
+                '用户管理': '#',
+                '职务管理': '#',
+                '职称管理': '#',
+                '参数管理': '#',
+                'divider': '#',
+                '修改密码': '#'
+            }
+        }
+    }
+    return render_template('index.html', nav=nav_data)
+
+
+@index.route('/search')
+@login_required
+def search():
+    return render_template('search.html')
 
 
 @index.route('/upload', methods=['GET', 'POST'])
