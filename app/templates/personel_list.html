@@ -1,0 +1,18 @@
+<div class="search-table">
+	<table class="table table-hover table-bordered">
+		<tr>
+			<th scope="col"></th>
+			{% for index in l %}
+				<th scope="col" id="th{{ index }}">{{ dic[index][1] }}</th>
+			{% endfor %}
+		</tr>
+		<tr>
+			<td>
+				<input type="checkbox" value="{{ index }}" name="search_choice">
+			</td>
+			{% for index in l %}
+				<td id="td{{ index }}">{{ user[dic[index][0]]|default('None') }}</td>
+			{% endfor %}
+		</tr>
+	</table>
+</div>

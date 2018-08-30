@@ -102,7 +102,34 @@ def main():
 @index.route('/search')
 @login_required
 def search():
-    return render_template('search.html')
+    l = [i for i in range(1, 19)]
+    user = {
+        'name': '张三',
+        'mz': '汉',
+        'sex': '男',
+        'birthday': '19930113',
+    }
+    dic = {
+        1: ['name', '姓名'],
+        2: ['mz', '民族'],
+        3: ['sex', '性别'],
+        4: ['birthday', '生日'],
+        5: ['birthday', '生日'],
+        6: ['birthday', '生日'],
+        7: ['birthday', '生日'],
+        8: ['birthday', '生日'],
+        9: ['birthday', '生日'],
+        10: ['birthday', '生日'],
+        11: ['birthday', '生日'],
+        12: ['birthday', '生日'],
+        13: ['birthday', '生日'],
+        14: ['birthday', '生日'],
+        15: ['birthday', '生日'],
+        16: ['birthday', '生日'],
+        17: ['birthday', '生日'],
+        18: ['birthday', '生日'],
+    }
+    return render_template('search.html', user=user, dic=dic, l=l)
 
 
 @index.route('/upload', methods=['GET', 'POST'])

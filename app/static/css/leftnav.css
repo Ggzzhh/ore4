@@ -4,10 +4,10 @@
     width: 11%;
     overflow: auto;
     background-color: #f0f0f0;
+    text-shadow: 0.1em 0.1em rgba(0,0,0,0.1);
 }
 
 .leftnav a{
-    font-size: 1rem;
     color: #5e5e5e;
     font-weight: 800;
 }
@@ -18,4 +18,15 @@
 
 .leftnav ul {
     color: #0f0f0f;
+}
+
+.left-list{
+    font-size: 0.5rem;!important;
+    /*background-color: rgba(39, 85, 130, 0.6);*/
+}
+
+.left-list a{
+    margin-bottom: .3em;
+    font-size: 0.5rem;
+
 }

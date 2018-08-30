@@ -7,31 +7,16 @@
 			   aria-controls="system{{ system.id }}">
 				{{ system.system_name }}
 			</a>
-			<div class="collapse" id="system{{ system.id }}">
-				<div class="d-flex flex-column align-items-content ml-5">
+			<div class="collapse left-list" id="system{{ system.id }}">
+				<div class="d-flex flex-column align-items-start ml-1">
 					{% for dept in system['depts'] %}
-						<a href="#">{{ dept.dept_name	 }}</a>
+						<a href="#">
+							{{ dept.dept_name }}({{ dept.dept_pro.dept_pro_name
+								}})
+						</a>
 					{% endfor %}
 				</div>
 			</div>
 		</li>
 	{% endfor %}
-
-	<li class="nav-item">
-		<a href="#input-search" class="nav-link" data-toggle="collapse"
-		   role="button" aria-expanded="false" aria-controls="input-search">
-			档案查询
-		</a>
-		<div class="collapse" id="input-search">
-			<div class="d-flex flex-column align-items-content ml-5">
-				<a href="#" class="">所有档案</a>
-				<a href="#" class="">按姓名查询</a>
-				<a href="#" class="">按年龄查询</a>
-				<a href="#" class="">按职务查询</a>
-				<a href="#" class="">按单位查询</a>
-				<a href="#" class="">按学历查询</a>
-				<a href="#" class="">按职称查询</a>
-			</div>
-		</div>
-	</li>
 </ul>
