@@ -1,8 +1,10 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 	<meta charset="utf-8">
 	<title>Title</title>
+	{{ bootstrap.load_css() }}
 	<style>
         body {
 
@@ -47,10 +49,6 @@
 	</style>
 </head>
 <body>
-<div class="test">测试</div>
-<div class="test">测试</div>
-<div class="test">测试</div>
-<div class="test">测试</div>
-<div class="test">测试</div>
+{% include 'person_info.html' %}
 </body>
 </html>

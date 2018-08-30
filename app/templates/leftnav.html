@@ -1,23 +1,29 @@
 <ul class="nav flex-column ">
-	<li class="nav-item">
-		<a href="#input-data" class="nav-link" data-toggle="collapse"
-		   role="button" aria-expanded="false" aria-controls="input-data">
-			档案录入
-		</a>
-		<div class="collapse" id="input-data">
-			<div class="d-flex flex-column">
-				<a href="#" class="">干部新增</a>
-				<a href="#" class="">批量导入</a>
+	{% for system in systems %}
+		<li class="nav-item">
+			<a href="#system{{ system.id }}" class="nav-link"
+			   data-toggle="collapse"
+			   role="button" aria-expanded="false"
+			   aria-controls="system{{ system.id }}">
+				{{ system.system_name }}
+			</a>
+			<div class="collapse" id="system{{ system.id }}">
+				<div class="d-flex flex-column align-items-content ml-5">
+					{% for dept in system['depts'] %}
+						<a href="#">{{ dept.dept_name	 }}</a>
+					{% endfor %}
+				</div>
 			</div>
-		</div>
-	</li>
+		</li>
+	{% endfor %}
+
 	<li class="nav-item">
 		<a href="#input-search" class="nav-link" data-toggle="collapse"
 		   role="button" aria-expanded="false" aria-controls="input-search">
 			档案查询
 		</a>
 		<div class="collapse" id="input-search">
-			<div class="d-flex flex-column align-items-end ml-5">
+			<div class="d-flex flex-column align-items-content ml-5">
 				<a href="#" class="">所有档案</a>
 				<a href="#" class="">按姓名查询</a>
 				<a href="#" class="">按年龄查询</a>
@@ -25,45 +31,6 @@
 				<a href="#" class="">按单位查询</a>
 				<a href="#" class="">按学历查询</a>
 				<a href="#" class="">按职称查询</a>
-			</div>
-		</div>
-	</li>
-	<li class="nav-item">
-		<a href="#input-manage" class="nav-link" data-toggle="collapse"
-		   role="button" aria-expanded="false" aria-controls="input-manage">
-			档案管理
-		</a>
-		<div class="collapse" id="input-manage">
-			<div class="d-flex flex-column">
-				<a href="#" class="">职位调动</a>
-				<a href="#" class="">离职登记</a>
-			</div>
-		</div>
-	</li>
-	<li class="nav-item">
-		<a href="#table-manage" class="nav-link" data-toggle="collapse"
-		   role="button" aria-expanded="false" aria-controls="table-manage">
-			报表管理
-		</a>
-		<div class="collapse" id="table-manage">
-			<div class="d-flex flex-column">
-				<a href="#" class="">干部花名册</a>
-				<a href="#" class="">干部任免审批表</a>
-				<a href="#" class="">任免审批呈报表</a>
-			</div>
-		</div>
-	</li>
-	<li class="nav-item">
-		<a href="#system-manage" class="nav-link" data-toggle="collapse"
-		   role="button" aria-expanded="false" aria-controls="system-manage">
-			系统管理
-		</a>
-		<div class="collapse" id="system-manage">
-			<div class="d-flex flex-column">
-				<a href="#" class="">用户管理</a>
-				<a href="#" class="">职务管理</a>
-				<a href="#" class="">参数设置</a>
-				<a href="#" class="">修改密码</a>
 			</div>
 		</div>
 	</li>

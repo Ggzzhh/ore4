@@ -3,127 +3,128 @@
 <!DOCTYPE html>
 <html lang="zh-CN" >
 <head>
-    <title>{{ config.SYSTEMNAME|default('人力资源管理系统') }}</title>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="author" content="Ggzzhh" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    {{ render_static('css', 'css/main.css') }}
-    {{ render_static('css', 'css/leftnav.css') }}
-    {{ render_static('css', 'css/sweetalert2.min.css') }}
-    <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="shortcut icon" href="/static/image/favicon.ico" type="image/x-icon"/>
-    {{ bootstrap.load_css() }}
-    {% block head %}
-    {% endblock %}
+	<title>{{ config.SYSTEMNAME|default('人力资源管理系统') }}</title>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<meta name="author" content="Ggzzhh" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	{{ render_static('css', 'css/main.css') }}
+	{{ render_static('css', 'css/leftnav.css') }}
+	{{ render_static('css', 'css/sweetalert2.min.css') }}
+	<link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css">
+	<link rel="shortcut icon" href="/static/image/favicon.ico" type="image/x-icon"/>
+	{{ bootstrap.load_css() }}
+	{% block head %}
+	{% endblock %}
 
 </head>
 
 <body>
 <noscript unselectable="on" id="noscript">
-    <div class="aw-404 aw-404-wrap container">
-        <img src="http://wenda.ghostchina.com/static/common/no-js.jpg">
-        <p>你的浏览器禁用了JavaScript, 请开启后刷新浏览器获得更好的体验!</p>
-    </div>
+	<div class="aw-404 aw-404-wrap container">
+		<img src="http://wenda.ghostchina.com/static/common/no-js.jpg">
+		<p>你的浏览器禁用了JavaScript, 请开启后刷新浏览器获得更好的体验!</p>
+	</div>
 </noscript>
 {% block nav %}
-    <div class="d-flex bg-blue p-3">
-        <div class="logo">
-{#            <img src="{{ url_for('static', filename='image/1.jpg') }}"#}
-{#                 width="50" height="50" class="d-inline-block align-center">#}
-            {{ config.SYSTEMNAME|default('人力资源管理系统') }}
+	<div class="d-flex bg-blue p-3">
+        <div class="logo d-flex align-items-center mr-4">
+            <img src="{{ url_for('static', filename='image/logo.png') }}"
+				 width="50" height="50" class="rounded">
         </div>
-    </div>
-    <nav class="navbar navbar-expand-lg bg-blue2 navbar-dark">
+		<div class="logo">{{ config.SYSTEMNAME|default('人力资源管理系统') }}</div>
+	</div>
+	<nav class="navbar navbar-expand-lg bg-blue2 navbar-dark">
 
 
-        <button class="navbar-toggler" type="button"
-                data-toggle="collapse"
-                data-target="#collapsibleNavbar">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+		<button class="navbar-toggler" type="button"
+				data-toggle="collapse"
+				data-target="#collapsibleNavbar">
+			<span class="navbar-toggler-icon"></span>
+		</button>
 
 
-        <div class="collapse navbar-collapse" id="collapsibleNavbar">
-            <ul class="navbar-nav mr-auto align-items-center">
-                <li class="nav-item mr-5">
-					<span class="navbar-text ">
+		<div class="collapse navbar-collapse" id="collapsibleNavbar">
+			<ul class="navbar-nav mr-auto align-items-center">
+				<li class="nav-item mr-lg-5">
+					<span class="navbar-text">
 						欢迎 , {{ current_user.username }}
 					</span>
-                </li>
-                {% for foo in nav %}
-                    {% if foo == '系统管理' and current_user.username != 'admin' %}
-                        {% continue %}
-                    {% endif %}
-                    <li class="nav-item dropdown mr-2">
-                        <a href="#" class="nav-link dropdown-toggle"
-                           role="button"
-                           id="{{ nav[foo]['id'] }}"
-                           data-toggle="dropdown"
-                           aria-haspopup="true"
-                           aria-expanded="false"
-                        >
-                            {{ foo }}
-                        </a>
-                        <div class="dropdown-menu"
-                             aria-labelledby="{{ nav[foo]['id'] }}">
-                            {% for item in nav[foo]['data'] %}
-                                {% if item == 'divider' %}
-                                    <div class="dropdown-divider"></div>
-                                {% else %}
-                                    <a class="dropdown-item"
-                                       href="{{ nav[foo]['data'][item] }}">
-                                        {{ item }}</a>
-                                {% endif %}
-                            {% endfor %}
-                        </div>
-                    </li>
-                {% endfor %}
-                <li class="nav-item">
-                    <form class="form-inline ml-auto">
-                        <input class="form-control-sm mr-sm-2 my-2 my-lg-0" type="search"
-                               placeholder="姓名/拼音" aria-label="Search">
-                        <button class="btn btn-sm btn-outline-light my-2 my-sm-0 ml-2"
-                                type="submit">快捷搜索</button>
-                    </form>
-                </li>
-            </ul>
+				</li>
+				{% for foo in nav %}
+					{% if foo == '系统管理' and current_user.username !=
+                    config.ADMIN_USERNAME %}
+						{% continue %}
+					{% endif %}
+					<li class="nav-item dropdown mr-lg-2">
+						<a href="#" class="nav-link dropdown-toggle"
+						   role="button"
+						   id="{{ nav[foo]['id'] }}"
+						   data-toggle="dropdown"
+						   aria-haspopup="true"
+						   aria-expanded="false"
+						>
+							{{ foo }}
+						</a>
+						<div class="dropdown-menu"
+							 aria-labelledby="{{ nav[foo]['id'] }}">
+							{% for item in nav[foo]['data'] %}
+								{% if item == 'divider' %}
+									<div class="dropdown-divider"></div>
+								{% else %}
+									<a class="dropdown-item"
+									   href="{{ nav[foo]['data'][item] }}">
+										{{ item }}</a>
+								{% endif %}
+							{% endfor %}
+						</div>
+					</li>
+				{% endfor %}
+				<li class="nav-item">
+					<form class="form-inline ml-auto">
+						<input class="form-control-sm mr-sm-2 my-2 my-lg-0" type="search"
+							   placeholder="姓名/拼音" aria-label="Search">
+						<button class="btn btn-sm btn-outline-light my-2 my-sm-0 ml-2"
+								type="submit">快捷搜索</button>
+					</form>
+				</li>
+			</ul>
 
-            <ul class="navbar-nav align-items-center">
+			<ul class="navbar-nav align-items-center">
 
-                <li class="nav-item">
+				<li class="nav-item">
 					<span class="navbar-text mr-3">
 						<a href="#" class=""> 帮助</a>
 					</span>
-                </li>
-                <li class="nav-item">
+				</li>
+				<li class="nav-item">
 					<span class="navbar-text mr-3">
 					<a href="{{ url_for('v1.logout' ,
 						username=current_user.username) }}"
-                       class=""> 退出</a>
+					   class=""> 退出</a>
 					</span>
-                </li>
-            </ul>
-        </div>
-    </nav>
+				</li>
+			</ul>
+		</div>
+	</nav>
 {% endblock %}
 {% block content %}
-    <main class="d-flex main">
-        <div class="p-2 leftnav">
-            {% block leftnav %}
-                {% include "leftnav.html" %}
-            {% endblock %}
-        </div>
-        <div class="p-2 flex-grow-1">
-            {% block page_content %}{% endblock %}
-        </div>
+	<main class="d-flex main">
+		<div class="p-2 leftnav">
+			{% block leftnav %}
+				{% include "leftnav.html" %}
+			{% endblock %}
+		</div>
+		<div class="p-2 flex-grow-1">
+			{% block page_content %}{% endblock %}
+		</div>
 
-    </main>
+	</main>
 
 {% endblock %}
-<footer class="text-center">
-    {% block footer %}
-    {% endblock %}
+<footer class="">
+	{% block footer %}
+	{% endblock %}
 </footer>
 {{ bootstrap.load_js() }}
 {{ moment.include_moment() }}

@@ -1,3 +1,21 @@
+.leftnav {
+    font-size: 1rem;
+    font-weight: 800;
+    width: 11%;
+    overflow: auto;
+    background-color: #f0f0f0;
+}
+
+.leftnav a{
+    font-size: 1rem;
+    color: #5e5e5e;
+    font-weight: 800;
+}
+
+.leftnav a:hover{
+    color: #0c3e67;
+}
+
 .leftnav ul {
     color: #0f0f0f;
 }

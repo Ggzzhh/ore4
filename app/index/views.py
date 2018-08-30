@@ -8,7 +8,7 @@ from flask_login import login_user, login_required, current_user, logout_user
 import flask_excel as excel
 
 from . import index
-from ..models import User
+from ..models import User, Dept, System
 
 
 @index.route('/login2ore4manageSystem', methods=['GET', 'POST'])
@@ -93,7 +93,10 @@ def main():
             }
         }
     }
-    return render_template('index.html', nav=nav_data)
+
+    systems = System.query.order_by("id").all()
+
+    return render_template('index.html', nav=nav_data, systems=systems)
 
 
 @index.route('/search')

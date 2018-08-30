@@ -25,12 +25,14 @@ def init():
     from app.models import run_only
     run_only()
 
+
 @manager.command
 def ex_test():
     from app.handle_excel import UNIT
     unit = UNIT()
-    unit.init_system()
-    unit.init_dept_pro()
+    # unit.init_system()
+    # unit.init_dept_pro()
+    unit.init_dept()
     db.session.commit()
 
 if __name__ == "__main__":
