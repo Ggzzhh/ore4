@@ -72,6 +72,7 @@ class Dept(db.Model):
     __tablename__ = 'depts'
     id = db.Column(db.Integer, primary_key=True)
     dept_name = db.Column(db.String(64), unique=True)
+    personnels = db.relationship('Personnel', backref='duty')
     system_id = db.Column(db.Integer, db.ForeignKey('systems.id'))
     dept_pro_id = db.Column(db.Integer, db.ForeignKey('dept_pros.id'))
 
@@ -81,6 +82,146 @@ class DeptPro(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     dept_pro_name = db.Column(db.String(64), unique=True)
     depts = db.relationship('Dept', backref='dept_pro')
+
+
+class Personnel(db.Model):
+    __tablename__ = 'personnels'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(16), nullable=False)
+    sex = db.Column(db.String(2))
+    nation = db.Column(db.String(32))
+    birthday = db.Column(db.DateTime)
+    cadre_id = db.Column(db.Integer)
+    id_card = db.Column(db.Integer)
+    work_time = db.Column(db.DateTime)
+    party_member = db.Column(db.DateTime)
+    native_place = db.Column(db.String(32))
+    birth_place = db.Column(db.String(32))
+    specialty = db.Column(db.String(64))
+    deputy_sc_time = db.Column(db.DateTime)
+    sc_time = db.Column(db.DateTime)
+    position_time = db.Column(db.DateTime)
+    identity = db.Column(db.DateTime)
+    work_no = db.Column(db.Integer)
+    work_year = db.Column(db.String(16))
+    bonus = db.Column(db.String(100))
+    remarks = db.Column(db.Text)
+    remarks_2 = db.Column(db.Text)
+    families = db.relationship('Family', backref='personnel')
+    r_and_p = db.relationship('RAndP', backref='personnel')
+    f_t_edu = db.relationship('FullTimeEdu', backref='personnel')
+    i_s_edu = db.relationship('InServiceEdu', backref='personnel')
+    resumes = db.relationship('Resume', backref='personnel')
+    duty_id = db.Column(db.Integer, db.ForeignKey('duties.id'))
+    title_id = db.Column(db.Integer, db.ForeignKey('titlies.id'))
+    dept_id = db.Column(db.Integer, db.ForeignKey('depts.id'))
+    state_id = db.Column(db.Integer, db.ForeignKey('states.id'))
+
+
+class Resume(db.Model):
+    __tablename__ = 'resumes'
+    id = db.Column(db.Integer, primary_key=True)
+    personnel_id = db.Column(db.Integer, db.ForeignKey('personnels.id'))
+    work_time = db.Column(db.DateTime)
+    duty = db.Column(db.String(64))
+    duty_lv = db.Column(db.String(64))
+    identifier = db.Column(db.String(64))
+
+
+class RAndP(db.Model):
+    """奖惩 英文：rewards and penalties 缩写为RAndP"""
+    __tablename__ = 'r_and_p'
+    id = db.Column(db.Integer, primary_key=True)
+    personnel_id = db.Column(db.Integer, db.ForeignKey('personnels.id'))
+    content = db.Column(db.String(200))
+
+
+class FullTimeEdu(db.Model):
+    __tablename__ = 'full_time_edus'
+    id = db.Column(db.Integer, primary_key=True)
+    edu_level_id = db.Column(db.Integer, db.ForeignKey('edu_levels.id'))
+    personnel_id = db.Column(db.Integer, db.ForeignKey('personnels.id'))
+    enrolment_time = db.Column(db.DateTime)
+    graduation_time = db.Column(db.DateTime)
+    edu = db.Column(db.String(64))
+    department = db.Column(db.String(64))
+
+
+class InServiceEdu(db.Model):
+    __tablename__ = 'in_service_edus'
+    id = db.Column(db.Integer, primary_key=True)
+    edu_level_id = db.Column(db.Integer, db.ForeignKey('edu_levels.id'))
+    personnel_id = db.Column(db.Integer, db.ForeignKey('personnels.id'))
+    enrolment_time = db.Column(db.DateTime)
+    graduation_time = db.Column(db.DateTime)
+    edu = db.Column(db.String(64))
+    department = db.Column(db.String(64))
+
+
+class EduLevel(db.Model):
+    __tablename__ = 'edu_levels'
+    id = db.Column(db.Integer, primary_key=True)
+    i_s_edu = db.relationship('InServiceEdu', backref='edu_level', uselist=False)
+    f_t_edu = db.relationship('FullTimeEdu', backref='edu_level', uselist=False)
+    value = db.Column(db.Integer)
+    level = db.Column(db.String(32))
+
+
+class Family(db.Model):
+    __tablename__ = 'families'
+    id = db.Column(db.Integer, primary_key=True)
+    personnel_id = db.Column(db.Integer, db.ForeignKey('personnels.id'))
+    relationship = db.Column(db.String(16))
+    name = db.Column(db.String(16))
+    age = db.Column(db.Integer)
+    # 政治面貌  political climate
+    p_c = db.Column(db.String(16))
+    workplace = db.Column(db.String(64))
+
+
+class Duty(db.Model):
+    __tablename__ = 'duties'
+    id = db.Column(db.Integer, primary_key=True)
+    personnels = db.relationship('Personnel', backref='duty')
+    name = db.Column(db.String(32))
+    duty_level_id = db.Column(db.Integer, db.ForeignKey('duty_level.id'))
+
+
+class DutyLevel(db.Model):
+    __tablename__ = 'duty_level'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(32))
+    duties = db.relationship('Duty', backref='duty_level')
+
+
+class Title(db.Model):
+    __tablename__ = 'titlies'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(32))
+    personnels = db.relationship('Personnel', backref='title')
+    title_lv_id = db.Column(db.Integer, db.ForeignKey('title_lv.id'))
+    title_dept_id = db.Column(db.Integer, db.ForeignKey('title_dept.id'))
+
+
+class TitleDept(db.Model):
+    __tablename__ = 'title_dept'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(32))
+    titlies = db.relationship('Title', backref='title_dept')
+
+
+class TitleLv(db.Model):
+    __tablename__ = 'title_lv'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(32))
+    titlies = db.relationship('Title', backref='title_lv')
+
+
+class State(db.Model):
+    __tablename__ = 'states'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(32))
+    personnels = db.relationship('Personnel', backref='state')
 
 
 def run_only():
