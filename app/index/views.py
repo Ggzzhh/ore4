@@ -84,12 +84,12 @@ def main():
         '系统管理': {
             'id': 'dropdown_system',
             'data': {
-                '用户管理': '#',
-                '职务管理': '#',
-                '职称管理': '#',
+                '用户管理': 'm_user',
+                '职务管理': 'm_duty',
+                '职称管理': 'm_title',
                 '参数管理': '#',
                 'divider': '#',
-                '修改密码': '#'
+                '修改密码': 'update_password'
             }
         }
     }
@@ -130,6 +130,20 @@ def search():
         18: ['birthday', '生日'],
     }
     return render_template('search.html', user=user, dic=dic, l=l)
+
+
+@index.route('/system-manage/user')
+@login_required
+def system_manage_user():
+    users = User.query.all()
+    return render_template('system_manage/user.html', title='用户管理',
+                           users=users)
+
+
+@index.route('/system-manage/pwd')
+@login_required
+def system_manage_pwd():
+    return render_template('system_manage/pwd.html', title='修改密码')
 
 
 @index.route('/upload', methods=['GET', 'POST'])

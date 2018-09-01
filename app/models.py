@@ -23,7 +23,7 @@ class Role(db.Model):
     __tablename__ = 'roles'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), unique=True)
-    users = db.relationship('User', backref='role')
+    users = db.relationship('User', backref='role', lazy='dynamic')
 
     def __repr__(self):
         return '<角色: %r>' % self.name
@@ -67,14 +67,20 @@ class System(db.Model):
     system_name = db.Column(db.String(64), unique=True)
     depts = db.relationship('Dept', backref='system')
 
+    def __repr__(self):
+        return '<系统: %r>' % self.system_name
+
 
 class Dept(db.Model):
     __tablename__ = 'depts'
     id = db.Column(db.Integer, primary_key=True)
     dept_name = db.Column(db.String(64), unique=True)
-    personnels = db.relationship('Personnel', backref='duty')
+    personnels = db.relationship('Personnel', backref='dept')
     system_id = db.Column(db.Integer, db.ForeignKey('systems.id'))
     dept_pro_id = db.Column(db.Integer, db.ForeignKey('dept_pros.id'))
+
+    def __repr__(self):
+        return '<单位: %r>' % self.dept_name
 
 
 class DeptPro(db.Model):
@@ -82,6 +88,9 @@ class DeptPro(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     dept_pro_name = db.Column(db.String(64), unique=True)
     depts = db.relationship('Dept', backref='dept_pro')
+
+    def __repr__(self):
+        return '<单位属性: %r>' % self.dept_pro_name
 
 
 class Personnel(db.Model):
@@ -91,8 +100,8 @@ class Personnel(db.Model):
     sex = db.Column(db.String(2))
     nation = db.Column(db.String(32))
     birthday = db.Column(db.DateTime)
-    cadre_id = db.Column(db.Integer)
-    id_card = db.Column(db.Integer)
+    cadre_id = db.Column(db.String(64))
+    id_card = db.Column(db.String(128))
     work_time = db.Column(db.DateTime)
     party_member = db.Column(db.DateTime)
     native_place = db.Column(db.String(32))
@@ -107,6 +116,7 @@ class Personnel(db.Model):
     bonus = db.Column(db.String(100))
     remarks = db.Column(db.Text)
     remarks_2 = db.Column(db.Text)
+    punished = db.Column(db.Boolean)
     families = db.relationship('Family', backref='personnel')
     r_and_p = db.relationship('RAndP', backref='personnel')
     f_t_edu = db.relationship('FullTimeEdu', backref='personnel')
@@ -116,6 +126,13 @@ class Personnel(db.Model):
     title_id = db.Column(db.Integer, db.ForeignKey('titlies.id'))
     dept_id = db.Column(db.Integer, db.ForeignKey('depts.id'))
     state_id = db.Column(db.Integer, db.ForeignKey('states.id'))
+
+    @property
+    def system(self):
+        return self.duty.system.system_name
+
+    def __repr__(self):
+        return "<员工姓名: {}>".format(self.name)
 
 
 class Resume(db.Model):
@@ -127,6 +144,9 @@ class Resume(db.Model):
     duty_lv = db.Column(db.String(64))
     identifier = db.Column(db.String(64))
 
+    def __repr__(self):
+        return "<{}的简历>".format(self.personnel.name)
+
 
 class RAndP(db.Model):
     """奖惩 英文：rewards and penalties 缩写为RAndP"""
@@ -134,6 +154,9 @@ class RAndP(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     personnel_id = db.Column(db.Integer, db.ForeignKey('personnels.id'))
     content = db.Column(db.String(200))
+
+    def __repr__(self):
+        return "<奖惩内容: {}>".format(self.content)
 
 
 class FullTimeEdu(db.Model):
@@ -146,6 +169,9 @@ class FullTimeEdu(db.Model):
     edu = db.Column(db.String(64))
     department = db.Column(db.String(64))
 
+    def __repr__(self):
+        return "<全日制学历: {}>".format(self.edu)
+
 
 class InServiceEdu(db.Model):
     __tablename__ = 'in_service_edus'
@@ -157,6 +183,9 @@ class InServiceEdu(db.Model):
     edu = db.Column(db.String(64))
     department = db.Column(db.String(64))
 
+    def __repr__(self):
+        return "<在职学历: {}>".format(self.edu)
+
 
 class EduLevel(db.Model):
     __tablename__ = 'edu_levels'
@@ -165,6 +194,9 @@ class EduLevel(db.Model):
     f_t_edu = db.relationship('FullTimeEdu', backref='edu_level', uselist=False)
     value = db.Column(db.Integer)
     level = db.Column(db.String(32))
+
+    def __repr__(self):
+        return "<学历等级: {}>".format(self.level)
 
 
 class Family(db.Model):
@@ -178,6 +210,9 @@ class Family(db.Model):
     p_c = db.Column(db.String(16))
     workplace = db.Column(db.String(64))
 
+    def __repr__(self):
+        return "<家人姓名: {}>".format(self.name)
+
 
 class Duty(db.Model):
     __tablename__ = 'duties'
@@ -186,12 +221,18 @@ class Duty(db.Model):
     name = db.Column(db.String(32))
     duty_level_id = db.Column(db.Integer, db.ForeignKey('duty_level.id'))
 
+    def __repr__(self):
+        return "<职务: {}>".format(self.name)
+
 
 class DutyLevel(db.Model):
     __tablename__ = 'duty_level'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(32))
     duties = db.relationship('Duty', backref='duty_level')
+
+    def __repr__(self):
+        return "<职务等级: {}>".format(self.name)
 
 
 class Title(db.Model):
@@ -202,12 +243,18 @@ class Title(db.Model):
     title_lv_id = db.Column(db.Integer, db.ForeignKey('title_lv.id'))
     title_dept_id = db.Column(db.Integer, db.ForeignKey('title_dept.id'))
 
+    def __repr__(self):
+        return "<职称: {}>".format(self.name)
+
 
 class TitleDept(db.Model):
     __tablename__ = 'title_dept'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(32))
     titlies = db.relationship('Title', backref='title_dept')
+
+    def __repr__(self):
+        return "<职称系列: {}>".format(self.name)
 
 
 class TitleLv(db.Model):
@@ -216,6 +263,9 @@ class TitleLv(db.Model):
     name = db.Column(db.String(32))
     titlies = db.relationship('Title', backref='title_lv')
 
+    def __repr__(self):
+        return "<职称等级: {}>".format(self.name)
+
 
 class State(db.Model):
     __tablename__ = 'states'
@@ -223,26 +273,25 @@ class State(db.Model):
     name = db.Column(db.String(32))
     personnels = db.relationship('Personnel', backref='state')
 
+    def __repr__(self):
+        return "<状态: {}>".format(self.name)
+
 
 def run_only():
 
     def register_role():
         db.drop_all()
         db.create_all()
-        admin = Role(name='admin')
-        leader = Role(name='leader')
-        cadre = Role(name='cadre')
-        staff = Role(name='staff')
+        admin = Role(name='管理员')
+        leader = Role(name='审查者')
         db.session.add(admin)
         db.session.add(leader)
-        db.session.add(cadre)
-        db.session.add(staff)
         db.session.commit()
 
     def register_admin():
         only_admin = User(username=current_app.config['ADMIN_USERNAME'])
         only_admin.password = current_app.config['ADMIN_PASSWORD']
-        only_admin.role = Role.query.filter_by(name='admin').first()
+        only_admin.role = Role.query.filter_by(name='管理员').first()
         print(only_admin)
         db.session.add(only_admin)
         db.session.commit()

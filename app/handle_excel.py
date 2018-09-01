@@ -2,7 +2,8 @@
 from pyexcel_xlsx import get_data
 
 from app import db
-from app.models import System, Dept, DeptPro, User
+from app.models import System, Dept, DeptPro, DutyLevel, Duty, Title, \
+    TitleDept, TitleLv
 
 
 class UNIT:
@@ -16,8 +17,6 @@ class UNIT:
             if res is None:
                 s = System(system_name=system[0])
                 db.session.add(s)
-            else:
-                print(system[0] + '已存在')
         print('系统分类更新完毕')
 
     def init_dept_pro(self):
@@ -27,8 +26,6 @@ class UNIT:
             if res is None:
                 s = DeptPro(dept_pro_name=pro[0])
                 db.session.add(s)
-            else:
-                print(pro[0] + '已存在')
         print('单位属性分类更新完毕')
 
     def init_dept(self):
@@ -39,21 +36,104 @@ class UNIT:
                 system = System.query.filter_by(system_name=dept[1]).first()
                 dept_pro = DeptPro.query \
                     .filter_by(dept_pro_name=dept[2]).first()
-                dept = Dept(dept_name=dept[0])
+                _dept = Dept(dept_name=dept[0])
                 if system:
-                    dept.system = system
+                    _dept.system = system
                 if dept_pro:
-                    dept.dept_pro = dept_pro
-                db.session.add(dept)
+                    _dept.dept_pro = dept_pro
+                db.session.add(_dept)
+                message = '插入完成'
             else:
-                message = '已存在'
-                if res.dept_pro is None:
-                    res.dept_pro = DeptPro.query \
-                        .filter_by(dept_pro_name=dept[2]).first()
-                    message += ' 单位属性已插入！'
-                if res.system is None:
-                    res.system = System.query\
-                        .filter_by(system_name=dept[1]).first()
-                    message += ' 系统已插入！'
-                print(dept[0] + message)
-        print('单位分类更新完毕')
+                message = '开始更新所属职务属性以及其系统'
+                res.dept_pro = DeptPro.query \
+                    .filter_by(dept_pro_name=dept[2]).first()
+                res.system = System.query \
+                    .filter_by(system_name=dept[1]).first()
+                db.session.add(res)
+            print(dept[0] + message)
+    print('单位分类更新完毕')
+
+
+class InitDuty:
+    def __init__(self):
+        excel_unit = 'excel/职务.xlsx'
+        data = get_data(excel_unit)
+        self.duties= data['Sheet1']
+        self.lvs = data['Sheet2']
+
+    def init_duty_lv(self):
+        for lv in self.lvs:
+            res = DutyLevel.query.filter_by(name=lv[0]).first()
+            if res is None:
+                temp = DutyLevel(name=lv[0])
+                db.session.add(temp)
+        print('职称级别数据已更新')
+
+    def init_duty(self):
+
+        for _duty in self.duties:
+            res = Duty.query.filter_by(name=_duty[0]).first()
+            lv = ''
+            if len(_duty) >= 2:
+                lv = DutyLevel.query.filter_by(name=_duty[1]).first()
+            if res is None:
+                temp = Duty(name=_duty[0])
+                if lv:
+                    temp.duty_level = lv
+                db.session.add(temp)
+            else:
+                if lv:
+                    res.duty_level = lv
+                db.session.add(res)
+        print('职称级别数据已更新\n')
+
+
+class InitTitle:
+    def __init__(self):
+        excel_unit = 'excel/职称.xlsx'
+        data = get_data(excel_unit)
+        self.t = data['Sheet1']
+        self.lvs = data['Sheet2']
+        self.depts = data['Sheet3']
+
+    def init_t_dept(self):
+        for _dept in self.depts:
+            res = TitleDept.query.filter_by(name=_dept[0]).first()
+            if res is None:
+                temp = TitleDept(name=_dept[0])
+                db.session.add(temp)
+        print('职称系别数据已更新')
+
+    def init_t_lvs(self):
+        for lv in self.lvs:
+            res = TitleLv.query.filter_by(name=lv[0]).first()
+            if res is None:
+                temp = TitleLv(name=lv[0])
+                db.session.add(temp)
+            else:
+                print(lv[0] + '已存在\n')
+        print('职称级别数据已更新')
+
+    def init_t(self):
+        for t in self.t:
+            res = Title.query.filter_by(name=t[0]).first()
+            lv = ''
+            dept = ''
+            if len(t) >= 2:
+                lv = TitleLv.query.filter_by(name=t[1]).first()
+            if len(t) >= 3:
+                dept = TitleDept.query.filter_by(name=t[2]).first()
+            if res is None:
+                temp = Title(name=t[0])
+                if lv:
+                    temp.title_lv = lv
+                if dept:
+                    temp.title_dept = dept
+                db.session.add(temp)
+            else:
+                if lv:
+                    res.title_lv = lv
+                if dept:
+                    res.title_dept = dept
+                db.session.add(res)
+        print('职称信息更新完毕')

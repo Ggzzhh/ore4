@@ -1,0 +1,38 @@
+{% extends 'system_manage/base.html' %}
+
+{% block page %}
+    <div class="pwd">
+        <div class="jumbotron">
+            <form id="update-pwd">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">旧密码</span>
+                    </div>
+                    <input type="password" class="form-control" required
+                           placeholder="请输入" id="old-pwd">
+                </div>
+
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" >新密码</span>
+                    </div>
+                    <input type="password" class="form-control" required
+                           placeholder="请输入" id="pwd">
+                </div>
+
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" >重复新密码</span>
+                    </div>
+                    <input type="password" class="form-control" required
+                           placeholder="请输入" id="pwd2">
+                </div>
+                <div class="input-group mb-3 d-flex justify-content-center">
+                    <button type="submit" class="btn btn-primary"
+                            id="update-pwd">提交</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}

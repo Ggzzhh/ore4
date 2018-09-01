@@ -4,7 +4,7 @@
     width: 11%;
     overflow: auto;
     background-color: #f0f0f0;
-    text-shadow: 0.1em 0.1em rgba(0,0,0,0.1);
+    text-shadow: 0.1em 0.1em rgba(0,0,0,0.05);
 }
 
 .leftnav a{
@@ -28,5 +28,5 @@
 .left-list a{
     margin-bottom: .3em;
     font-size: 0.5rem;
-
+    color: #147fd6;
 }
