@@ -135,9 +135,15 @@ def search():
 @index.route('/system-manage/user')
 @login_required
 def system_manage_user():
-    users = User.query.all()
+    page = request.args.get('page', 1, type=int)
+    pagination = User.query.filter(User.id > 1).order_by(User.id).paginate(
+        page, per_page=current_app.config['PER_PAGE'],
+        error_out=False
+    )
+    users = pagination.items
+
     return render_template('system_manage/user.html', title='用户管理',
-                           users=users)
+                           users=users, pagination=pagination)
 
 
 @index.route('/system-manage/pwd')

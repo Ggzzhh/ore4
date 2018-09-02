@@ -1,43 +1,50 @@
 {% extends 'system_manage/base.html' %}
-
+{% import '_models.html' as model %}
 {% block page %}
-    <div class="user">
-        <div class="d-flex justify-content-center">
-            <span class="mr-auto p-3">用户列表</span>
-            <span class="p-2">
-                <button type="button" class="btn btn-outline-dark" id="u-add">
+  <div class="user">
+    <div class="d-flex justify-content-center">
+      <span class="mr-auto p-3">用户列表</span>
+      <span class="p-2">
+                <button type="button" class="btn btn-outline-dark"
+                        data-toggle="modal"
+                        data-target="#uAdd">
                     + 新增用户
                 </button>
             </span>
-        </div>
-        <div class="list">
-            <table class="table table-bordered text-center">
-                <thead>
-                <tr>
-                    <th>用户名</th>
-                    <th>角色</th>
-                    <th>操作</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for user in users %}
-                    <tr>
-                        <td>{{ user.username }}</td>
-                        <td>{{ user.role.name }}</td>
-                        <td>
-                            <button type="button" class="btn btn-link"
-                                    onclick="uEdit('{{ user.id }}')">
-                                编辑
-                            </button>
-                            <button href="#" class="btn btn-link"
-                               onclick="uDel('{{ user.id }}')">
-                                删除
-                            </button>
-                        </td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-        </div>
     </div>
+    <div class="list">
+      <table class="table table-bordered text-center">
+        <thead>
+        <tr>
+          <th>用户名</th>
+          <th>角色</th>
+          <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for user in users %}
+          <tr>
+            <td>{{ user.username }}</td>
+            <td>{{ user.role.name }}</td>
+            <td>
+              <button type="button" class="btn btn-link"
+                      onclick="uEdit('{{ user.id }}')">
+                修改密码
+              </button>
+              <button href="#" class="btn btn-link"
+                      onclick="uDel('{{ user.id }}')">
+                删除
+              </button>
+            </td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+      <div class="d-flex justify-content-center">
+        {{ model.pagination_widget(pagination, 'index.system_manage_user') }}
+      </div>
+      {{ model.user_model('uAdd', 'u-add') }}
+      {{ model.update_user_pwd_model('uEdit', 'u-edit') }}
+    </div>
+  </div>
 {% endblock %}

@@ -3,126 +3,123 @@
 <!DOCTYPE html>
 <html lang="zh-CN" >
 <head>
-    <title>{{ config.SYSTEMNAME|default('人力资源管理系统') }}</title>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="author" content="Ggzzhh" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    {{ render_static('css', 'css/main.css') }}
-    {{ render_static('css', 'css/leftnav.css') }}
-    {{ render_static('css', 'css/sweetalert2.min.css') }}
-    <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="shortcut icon" href="/static/image/favicon.ico" type="image/x-icon"/>
-    {{ bootstrap.load_css() }}
-    {% block head %}
-    {% endblock %}
+  <title>{{ config.SYSTEMNAME|default('人力资源管理系统') }}</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="author" content="Ggzzhh" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  {{ render_static('css', 'css/main.css') }}
+  {{ render_static('css', 'css/leftnav.css') }}
+  {{ render_static('css', 'css/sweetalert2.min.css') }}
+  <link rel="stylesheet" href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="shortcut icon" href="/static/image/favicon.ico" type="image/x-icon"/>
+  {{ bootstrap.load_css() }}
+  {% block head %}
+  {% endblock %}
 
 </head>
 
 <body>
 <noscript unselectable="on" id="noscript">
-    <div class="aw-404 aw-404-wrap container">
-        <img src="http://wenda.ghostchina.com/static/common/no-js.jpg">
-        <p>你的浏览器禁用了JavaScript, 请开启后刷新浏览器获得更好的体验!</p>
-    </div>
+  <div class="aw-404 aw-404-wrap container">
+    <img src="http://wenda.ghostchina.com/static/common/no-js.jpg">
+    <p>你的浏览器禁用了JavaScript, 请开启后刷新浏览器获得更好的体验!</p>
+  </div>
 </noscript>
 {% block nav %}
-    <div class="d-flex bg-blue p-3">
-        <div class="logo d-flex align-items-center mr-4">
-            <img src="{{ url_for('static', filename='image/logo.png') }}"
-                 width="50" height="50" class="rounded">
-        </div>
-        <div class="logo">{{ config.SYSTEMNAME|default('人力资源管理系统') }}</div>
+  <div class="d-flex bg-blue p-3">
+    <div class="logo d-flex align-items-center mr-4">
+      <img src="{{ url_for('static', filename='image/logo.png') }}"
+           width="50" height="50" class="rounded">
     </div>
-    <nav class="navbar navbar-expand-lg bg-blue2 navbar-dark">
+    <div class="logo">{{ config.SYSTEMNAME|default('人力资源管理系统') }}</div>
+  </div>
+  <nav class="navbar navbar-expand-lg bg-blue2 navbar-dark">
 
 
-        <button class="navbar-toggler" type="button"
-                data-toggle="collapse"
-                data-target="#collapsibleNavbar">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+    <button class="navbar-toggler" type="button"
+            data-toggle="collapse"
+            data-target="#collapsibleNavbar">
+      <span class="navbar-toggler-icon"></span>
+    </button>
 
 
-        <div class="collapse navbar-collapse" id="collapsibleNavbar">
-            <ul class="navbar-nav mr-auto align-items-center">
-                <li class="nav-item mr-lg-5">
+    <div class="collapse navbar-collapse" id="collapsibleNavbar">
+      <ul class="navbar-nav mr-auto align-items-center">
+        <li class="nav-item mr-lg-5">
 					<span class="navbar-text">
 						欢迎 , {{ current_user.username }}
 					</span>
-                </li>
-                <li class="nav-item mr-lg-2">
-					<a href="/main" class="nav-link">
-						首 页
-					</a>
-                </li>
-                {% for foo in nav %}
-                    {% if foo == '系统管理' and current_user.username !=
-                    config.ADMIN_USERNAME %}
-                        {% continue %}
-                    {% endif %}
-                    <li class="nav-item dropdown mr-lg-2">
-                        <a href="#" class="nav-link dropdown-toggle"
-                           role="button"
-                           id="{{ nav[foo]['id'] }}"
-                           data-toggle="dropdown"
-                           aria-haspopup="true"
-                           aria-expanded="false"
-                        >
-                            {{ foo }}
-                        </a>
-                        <div class="dropdown-menu"
-                             aria-labelledby="{{ nav[foo]['id'] }}">
-                            {% for item in nav[foo]['data'] %}
-                                {% if item == 'divider' %}
-                                    <div class="dropdown-divider"></div>
-                                {% else %}
-                                    <button class="dropdown-item"
-                                            type="button"
-                                            id="{{ nav[foo]['data'][item] }}">
-                                        {{ item }}</button>
-                                {% endif %}
-                            {% endfor %}
-                        </div>
-                    </li>
-                {% endfor %}
-            </ul>
+        </li>
+        <li class="nav-item mr-lg-2">
+          <a href="/main" class="nav-link">
+            首 页
+          </a>
+        </li>
+        {% for foo in nav %}
 
-            <ul class="navbar-nav align-items-center">
+          <li class="nav-item dropdown mr-lg-2">
+            <a href="#" class="nav-link dropdown-toggle"
+               role="button"
+               id="{{ nav[foo]['id'] }}"
+               data-toggle="dropdown"
+               aria-haspopup="true"
+               aria-expanded="false"
+            >
+              {{ foo }}
+            </a>
+            <div class="dropdown-menu"
+                 aria-labelledby="{{ nav[foo]['id'] }}">
+              {% for item in nav[foo]['data'] %}
+                {% if item == 'divider' %}
+                  <div class="dropdown-divider"></div>
+                {% else %}
+                  <button class="dropdown-item role"
+                          type="button"
+                          id="{{ nav[foo]['data'][item] }}">
+                    {{ item }}</button>
+                {% endif %}
+              {% endfor %}
+            </div>
+          </li>
+        {% endfor %}
+      </ul>
 
-                <li class="nav-item">
+      <ul class="navbar-nav align-items-center">
+
+        <li class="nav-item">
 					<span class="navbar-text mr-3">
 						<a href="#" class=""> 帮助</a>
 					</span>
-                </li>
-                <li class="nav-item">
+        </li>
+        <li class="nav-item">
 					<span class="navbar-text mr-3">
 					<a href="{{ url_for('v1.logout' ,
 						username=current_user.username) }}"
-                       class=""> 退出</a>
+             class=""> 退出</a>
 					</span>
-                </li>
-            </ul>
-        </div>
-    </nav>
+        </li>
+      </ul>
+    </div>
+  </nav>
 {% endblock %}
 {% block content %}
-    <main class="d-flex main">
-        <div class="p-2 leftnav">
-            {% block leftnav %}
-                {% include "leftnav.html" %}
-            {% endblock %}
-        </div>
-        <div class="p-2 flex-grow-1">
-            {% block page_content %}{% endblock %}
-        </div>
+  <main class="d-flex main">
+    <div class="p-2 leftnav">
+      {% block leftnav %}
+        {% include "leftnav.html" %}
+      {% endblock %}
+    </div>
+    <div class="p-2 flex-grow-1">
+      {% block page_content %}{% endblock %}
+    </div>
 
-    </main>
+  </main>
 
 {% endblock %}
 <footer class="">
-    {% block footer %}
-    {% endblock %}
+  {% block footer %}
+  {% endblock %}
 </footer>
 {{ bootstrap.load_js() }}
 {{ moment.include_moment() }}
@@ -134,14 +131,24 @@
         function set_iframe_src(url) {
             $('iframe').attr('src', url)
         }
+        {% if current_user.username != config.ADMIN_USERNAME %}
+            $('.role').bind('click', function () {
+                if (this.parentNode.parentNode.children[0].id === 'dropdown_search')
+                    return;
+                alert('权限不足！请联系管理员!');
+                location.reload();
+            });
+        {% else %}
+            $('#m_user').bind('click', function () {
+                set_iframe_src('/system-manage/user')
+            });
 
-        $('#m_user').bind('click', function () {
-            set_iframe_src('/system-manage/user')
-        });
+            $('#update_password').bind('click', function () {
+                set_iframe_src('/system-manage/pwd')
+            });
+        {% endif %}
 
-        $('#update_password').bind('click', function () {
-            set_iframe_src('/system-manage/pwd')
-        })
+
     });
 </script>
 </body>

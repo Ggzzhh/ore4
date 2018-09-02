@@ -41,7 +41,7 @@ class Config:
     UPLOAD_FOLDER = 'app//static//image'
 
     # 分页设置 每页显示数量
-    PER_PAGE = 15
+    PER_PAGE = 8
 
     # 系统名称
     SYSTEMNAME = '四矿干部管理系统'

@@ -1,4 +1,4 @@
-function a_json_post(url, type, data, success, error) {
+function a_json(url, type, data, success, error) {
     if (error == null){
         error = function (data) {
             // console.log(data)
@@ -12,11 +12,15 @@ function a_json_post(url, type, data, success, error) {
         dataType: 'json',
         contentType: 'application/json',
         success: function (data) {
-            if (data.error)
+            if (data.error){
                 alert(data.error_message);
+                location.reload();
+            }
             else
                 success(data);
         },
-        error: error(data)
+        error: function(data){
+            error(data)
+        }
     })
 }
