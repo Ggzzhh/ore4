@@ -8,7 +8,7 @@ from flask_login import login_user, login_required, current_user, logout_user
 import flask_excel as excel
 
 from . import index
-from ..models import User, Dept, System
+from ..models import User, Dept, System, Title, Duty
 
 
 @index.route('/login2ore4manageSystem', methods=['GET', 'POST'])
@@ -144,6 +144,21 @@ def system_manage_user():
 
     return render_template('system_manage/user.html', title='用户管理',
                            users=users, pagination=pagination)
+
+
+@index.route('/system-manage/title')
+@login_required
+def system_manage_title():
+    titles = []
+    page = request.args.get('page', 1, type=int)
+    pagination = Title.query.order_by(Title.id).paginate(
+        page, per_page=current_app.config['PER_PAGE'],
+        error_out=False
+    )
+    for title in pagination.items:
+        titles.append(title.to_json())
+    return render_template('system_manage/title.html', title='职称管理',
+                           titles=titles, pagination=pagination)
 
 
 @index.route('/system-manage/pwd')

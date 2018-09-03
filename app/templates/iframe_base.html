@@ -102,6 +102,26 @@
         return false;
     }
 
+    function checkFile(){
+			// 获取文件对象(该对象的类型是[object FileList]，其下有个length属性)
+			var fileList = $('#fileUpLoad')[0].files;
+
+			// 如果文件对象的length属性为0，就是没文件
+			if (fileList.length === 0) {
+				console.log('没选择文件');
+				return false;
+			};
+			if (fileList.length > 0) {
+			    var re = /\.(xls|xlsx)/,
+				filename = fileList[0].name;
+			    if(!re.test(filename)){
+			        alert('请下载给予的模版文件，在其中进行操作后上传。');
+					return false;
+				}
+			}
+			return fileList[0];
+		};
+
 
     $(document).ready(function () {
         $('#update-pwd').bind('submit', function () {
@@ -153,8 +173,15 @@
                 data,
                 _success);
             return false;
-        })
+        });
 
+		$('#fileUpLoad').bind('change', function () {
+            var file = checkFile();
+            if (!file) {
+				return false;
+			};
+
+        })
     });
 </script>
 </body>

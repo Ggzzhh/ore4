@@ -54,7 +54,7 @@ class UNIT:
     print('单位分类更新完毕')
 
 
-class InitDuty:
+class _Duty:
     def __init__(self):
         excel_unit = 'excel/职务.xlsx'
         data = get_data(excel_unit)
@@ -88,31 +88,13 @@ class InitDuty:
         print('职称级别数据已更新\n')
 
 
-class InitTitle:
+class _Title:
     def __init__(self):
         excel_unit = 'excel/职称.xlsx'
         data = get_data(excel_unit)
         self.t = data['Sheet1']
         self.lvs = data['Sheet2']
         self.depts = data['Sheet3']
-
-    def init_t_dept(self):
-        for _dept in self.depts:
-            res = TitleDept.query.filter_by(name=_dept[0]).first()
-            if res is None:
-                temp = TitleDept(name=_dept[0])
-                db.session.add(temp)
-        print('职称系别数据已更新')
-
-    def init_t_lvs(self):
-        for lv in self.lvs:
-            res = TitleLv.query.filter_by(name=lv[0]).first()
-            if res is None:
-                temp = TitleLv(name=lv[0])
-                db.session.add(temp)
-            else:
-                print(lv[0] + '已存在\n')
-        print('职称级别数据已更新')
 
     def init_t(self):
         for t in self.t:
@@ -137,3 +119,56 @@ class InitTitle:
                     res.title_dept = dept
                 db.session.add(res)
         print('职称信息更新完毕')
+
+    def update_title(self):
+        for t in self.t:
+            res = Title.query.filter_by(name=t[0]).first()
+            lv = ''
+            dept = ''
+            if len(t) >= 2:
+                lv = TitleLv.query.filter_by(name=t[1]).first()
+            if len(t) >= 3:
+                dept = TitleDept.query.filter_by(name=t[2]).first()
+            if res:
+
+                if lv and lv.name != res.title_lv.name:
+                    res.title_lv = lv
+                elif lv is None and len(t) >= 2:
+                    lv = self.new_title_lv(t[1])
+                    if lv:
+                        res.lv = lv
+                else:
+                    pass
+
+                if dept and dept.name != res.title_dept.name:
+                    res.title_dept = dept
+                elif dept is None and len(t) >= 3:
+                    dept = self.new_title_dept(t[2])
+                    if dept:
+                        res.dept = dept
+                else:
+                    pass
+
+    @staticmethod
+    def new_title_lv(name):
+        if name is None:
+            return None
+        try:
+            temp = Title(name=name)
+            db.session.add(temp)
+            db.session.commit()
+            return temp
+        except:
+            return None
+
+    @staticmethod
+    def new_title_dept(name):
+        if name is None:
+            return None
+        try:
+            temp = Dept(name=name)
+            db.session.add(temp)
+            db.session.commit()
+            return temp
+        except:
+            return None

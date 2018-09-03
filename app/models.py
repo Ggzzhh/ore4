@@ -1,11 +1,7 @@
 # -*- coding: utf-8 -*-
-import html
-import hashlib
-from datetime import datetime
 
-from flask import current_app
+from flask import current_app, abort
 from flask_login import UserMixin
-from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from . import db, login_manager
@@ -242,6 +238,35 @@ class Title(db.Model):
     personnels = db.relationship('Personnel', backref='title')
     title_lv_id = db.Column(db.Integer, db.ForeignKey('title_lv.id'))
     title_dept_id = db.Column(db.Integer, db.ForeignKey('title_dept.id'))
+
+    def to_json(self):
+        data = {
+            'id': self.id,
+            'name': self.name,
+            'title_lv_id': self.title_lv_id,
+            'title_dept_id': self.title_dept_id,
+            'title_lv': self.title_lv.name if self.title_lv is not None else '',
+            'title_dept': self.title_dept.name
+            if self.title_dept is not None else '',
+        }
+        return data
+
+    @staticmethod
+    def from_json(data):
+        if data is None or data.get('name') is None:
+            abort(403)
+        _id = data.get('id')
+        name = data.get('name')
+        title_lv_id = data.get('title_lv_id')
+        title_dept_id = data.get('title_dept_id')
+        if _id is not None:
+            temp = Title.query.get_or_404(_id)
+        else:
+            temp = Title()
+        temp.name = name
+        temp.title_lv_id = title_lv_id
+        temp.title_dept_id = title_dept_id
+        return temp
 
     def __repr__(self):
         return "<职称: {}>".format(self.name)

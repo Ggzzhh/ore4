@@ -33,17 +33,15 @@ def init():
 
 @manager.command
 def ex_test():
-    from app.handle_excel import UNIT, InitDuty, InitTitle
+    from app.handle_excel import UNIT, _Duty, _Title
     unit = UNIT()
-    duty = InitDuty()
-    title = InitTitle()
-    unit.init_system()
-    unit.init_dept_pro()
-    unit.init_dept()
-    duty.init_duty_lv()
-    duty.init_duty()
-    title.init_t_lvs()
-    title.init_t_dept()
+    duty = _Duty()
+    title = _Title()
+    # unit.init_system()
+    # unit.init_dept_pro()
+    # unit.init_dept()
+    # duty.init_duty_lv()
+    # duty.init_duty()
     title.init_t()
     db.session.commit()
 
