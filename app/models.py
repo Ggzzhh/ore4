@@ -64,7 +64,7 @@ class System(db.Model):
     depts = db.relationship('Dept', backref='system')
 
     def __repr__(self):
-        return '<系统: %r>' % self.system_name
+        return '<单位系统: %r>' % self.system_name
 
 
 class Dept(db.Model):
@@ -217,6 +217,31 @@ class Duty(db.Model):
     name = db.Column(db.String(32))
     duty_level_id = db.Column(db.Integer, db.ForeignKey('duty_level.id'))
 
+    def to_json(self):
+        data = {
+            'id': self.id,
+            'name': self.name,
+            'duty_level_id': self.duty_level_id,
+            'duty_level': self.duty_level.name if self.duty_level is not None
+            else ''
+        }
+        return data
+
+    @staticmethod
+    def from_json(data):
+        if data is None or data.get('name') is None:
+            abort(403)
+        _id = data.get('id')
+        name = data.get('name')
+        duty_level_id = data.get('duty_level_id')
+        if _id is not None:
+            temp = Duty.query.get_or_404(_id)
+        else:
+            temp = Duty()
+        temp.name = name
+        temp.duty_level_id = duty_level_id
+        return temp
+
     def __repr__(self):
         return "<职务: {}>".format(self.name)
 
@@ -225,7 +250,13 @@ class DutyLevel(db.Model):
     __tablename__ = 'duty_level'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(32))
+    value = db.Column(db.Integer, default=0)
     duties = db.relationship('Duty', backref='duty_level')
+
+    @staticmethod
+    def to_array():
+        duty_lvs = DutyLevel.query.all()
+        return [[l.id, l.name] for l in duty_lvs]
 
     def __repr__(self):
         return "<职务等级: {}>".format(self.name)
@@ -307,7 +338,7 @@ def run_only():
     def register_role():
         db.drop_all()
         db.create_all()
-        admin = Role(name='管理员')
+        admin = Role(name='管理员', id=1)
         leader = Role(name='审查者')
         db.session.add(admin)
         db.session.add(leader)

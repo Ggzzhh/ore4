@@ -37,12 +37,12 @@ def ex_test():
     unit = UNIT()
     duty = _Duty()
     title = _Title()
-    # unit.init_system()
-    # unit.init_dept_pro()
-    # unit.init_dept()
-    # duty.init_duty_lv()
-    # duty.init_duty()
-    title.init_t()
+    unit.init_system()
+    unit.init_dept_pro()
+    unit.init_dept()
+    duty.init_duty_lv()
+    duty.init_duty()
+    title.update_title()
     db.session.commit()
 
 

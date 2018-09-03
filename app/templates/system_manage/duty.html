@@ -1,0 +1,55 @@
+{% extends 'system_manage/base.html' %}
+{% import '_models.html' as model %}
+{% block page %}
+	<div class="user">
+		<div class="d-flex justify-content-center align-items-center">
+			<div class="mr-auto p-3">职务列表</div>
+			<div class="p-2">
+				<button class="btn btn-outline-dark"
+						data-toggle="modal"
+						data-target="#new-duty">+
+					新增职务</button>
+			</div>
+		</div>
+		<div class="list">
+			<table class="table table-bordered text-center">
+				<thead>
+				<tr>
+					<th>职务名</th>
+					<th>等级</th>
+					<th>操作</th>
+				</tr>
+				</thead>
+				<tbody>
+				{% for duty in duties %}
+					<tr>
+						<td style="width: 33%">
+							{{ duty.name }}
+						</td>
+						<td>
+							{{ duty.duty_level }}
+						</td>
+						<td>
+							<button type="button" class="btn btn-link btn-sm"
+									onclick="dutyEdit('{{ duty.name }}', '{{
+											duty.id }}',
+											'{{ duty.duty_level_id }}')">
+								编辑
+							</button>
+							<button href="#" class="btn btn-link btn-sm"
+									onclick="dutyDel('{{ duty.id }}')">
+								删除
+							</button>
+						</td>
+					</tr>
+				{% endfor %}
+				</tbody>
+			</table>
+			<div class="d-flex justify-content-center">
+				{{ model.pagination_widget(pagination, 'index.system_manage_duty') }}
+			</div>
+		{{ model.update_duty_model('new-duty', 'add-duty', lvs, 1) }}
+		{{ model.update_duty_model('dutyEdit', 'duty-edit', lvs, 2) }}
+		</div>
+	</div>
+{% endblock %}

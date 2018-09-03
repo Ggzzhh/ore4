@@ -8,7 +8,7 @@ from flask_login import login_user, login_required, current_user, logout_user
 import flask_excel as excel
 
 from . import index
-from ..models import User, Dept, System, Title, Duty
+from ..models import User, Dept, System, Title, Duty, DutyLevel
 
 
 @index.route('/login2ore4manageSystem', methods=['GET', 'POST'])
@@ -86,7 +86,7 @@ def main():
             'data': {
                 '用户管理': 'm_user',
                 '职务管理': 'm_duty',
-                '职称管理': 'm_title',
+                '单位管理': 'm_dept',
                 '参数管理': '#',
                 'divider': '#',
                 '修改密码': 'update_password'
@@ -146,19 +146,20 @@ def system_manage_user():
                            users=users, pagination=pagination)
 
 
-@index.route('/system-manage/title')
+@index.route('/system-manage/duty')
 @login_required
-def system_manage_title():
-    titles = []
+def system_manage_duty():
+    duties = []
     page = request.args.get('page', 1, type=int)
-    pagination = Title.query.order_by(Title.id).paginate(
+    pagination = Duty.query.order_by(Duty.duty_level_id.desc()).paginate(
         page, per_page=current_app.config['PER_PAGE'],
         error_out=False
     )
-    for title in pagination.items:
-        titles.append(title.to_json())
-    return render_template('system_manage/title.html', title='职称管理',
-                           titles=titles, pagination=pagination)
+    for duty in pagination.items:
+        duties.append(duty.to_json())
+    lvs = DutyLevel.to_array()
+    return render_template('system_manage/duty.html', title='职务管理', lvs=lvs,
+                           duties=duties, pagination=pagination)
 
 
 @index.route('/system-manage/pwd')

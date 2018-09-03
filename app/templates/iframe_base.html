@@ -101,6 +101,54 @@
             _success);
         return false;
     }
+    
+    function dutyEdit(name, id, lv_id) {
+        $('#i-dutyEdit').attr('value', name);
+        $('#select_lv_2').val(lv_id);
+		$('#dutyEdit').modal('show');
+
+		$('#duty-edit').bind('submit', function () {
+		    console.log($('#select_lv_2').val())
+			var data = JSON.stringify({
+                id: id,
+                lv_id: $('#select_lv_2').val(),
+                new: false
+            });
+            var _success = function (data) {
+                alert(data.message);
+                $('#uAdd').modal('hide');
+                setTimeout(function () {
+                    location.href = '/system-manage/duty';
+                }, 1000);
+            };
+
+            a_json(
+                "{{ url_for('v1.manage_duty') }}",
+                "POST",
+                data,
+                _success);
+            return false;
+        })
+    }
+
+    function dutyDel(id) {
+        var data = JSON.stringify({
+            id: id
+        });
+
+        var _success = function (data) {
+            alert(data.message);
+            location.href = '/system-manage/duty';
+        };
+
+
+        a_json(
+            "{{ url_for('v1.manage_duty') }}",
+            "DELETE",
+            data,
+            _success);
+        return false;
+    }
 
     function checkFile(){
 			// 获取文件对象(该对象的类型是[object FileList]，其下有个length属性)
@@ -169,6 +217,28 @@
 
             a_json(
                 "{{ url_for('v1.manage_user') }}",
+                "POST",
+                data,
+                _success);
+            return false;
+        });
+
+        $('#add-duty').bind('submit', function () {
+            var data = JSON.stringify({
+				name: $('#i-new-duty').val(),
+				lv_id: $('#select_lv_1').val(),
+                'new': true
+            });
+            var _success = function (data) {
+                alert(data.message);
+                $('#new-duty').modal('hide');
+                setTimeout(function () {
+                    location.href = '/system-manage/duty';
+                }, 1000);
+            };
+
+            a_json(
+                "{{ url_for('v1.manage_duty') }}",
                 "POST",
                 data,
                 _success);

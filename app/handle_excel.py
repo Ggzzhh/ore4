@@ -66,7 +66,11 @@ class _Duty:
             res = DutyLevel.query.filter_by(name=lv[0]).first()
             if res is None:
                 temp = DutyLevel(name=lv[0])
+                temp.value = lv[1]
                 db.session.add(temp)
+            else:
+                res.value = lv[1]
+                db.session.add(res)
         print('职称级别数据已更新')
 
     def init_duty(self):
