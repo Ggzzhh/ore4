@@ -8,7 +8,8 @@ from flask_login import login_user, login_required, current_user, logout_user
 import flask_excel as excel
 
 from . import index
-from ..models import User, Dept, System, Title, Duty, DutyLevel
+from ..models import User, Dept, System, Title, Duty, DutyLevel, DeptPro
+from ..const import NAV, TITLE_NO
 
 
 @index.route('/login2ore4manageSystem', methods=['GET', 'POST'])
@@ -50,49 +51,7 @@ def login():
 @index.route('/main')
 @login_required
 def main():
-    nav_data = {
-        '人员信息': {
-            'id': 'dropdown_info',
-            'data': {
-                '新增人员': '#',
-                'excel录入': '#',
-                '照片导入': '#'
-            }
-        },
-        '统计查询': {
-            'id': 'dropdown_search',
-            'data': {
-                '姓名查询': '#',
-                '系统查询': '#',
-                '单位查询': '#',
-                '年龄查询': '#',
-                '职务查询': '#',
-                'divider': '#',
-                '职务统计': '#',
-                '单位统计': '#',
-                '职称统计': '#',
-                '状态统计': '#'
-            }
-        },
-        '报表整理': {
-            'id': 'dropdown_table',
-            'data': {
-                '干部花名册': '#',
-                '人数统计表': '#'
-            }
-        },
-        '系统管理': {
-            'id': 'dropdown_system',
-            'data': {
-                '用户管理': 'm_user',
-                '职务管理': 'm_duty',
-                '单位管理': 'm_dept',
-                '参数管理': '#',
-                'divider': '#',
-                '修改密码': 'update_password'
-            }
-        }
-    }
+    nav_data = NAV
 
     systems = System.query.order_by("id").all()
 
@@ -160,6 +119,24 @@ def system_manage_duty():
     lvs = DutyLevel.to_array()
     return render_template('system_manage/duty.html', title='职务管理', lvs=lvs,
                            duties=duties, pagination=pagination)
+
+
+@index.route('/system-manage/dept')
+@login_required
+def system_manage_dept():
+    depts = []
+    page = request.args.get('page', 1, type=int)
+    pagination = Dept.query.order_by(Dept.dept_pro_id).paginate(
+        page, per_page=current_app.config['PER_PAGE'],
+        error_out=False
+    )
+    for dept in pagination.items:
+        depts.append(dept.to_json())
+    systems = System.to_array()
+    dept_pros = System.to_array()
+    return render_template('system_manage/dept.html', title='单位管理',
+                           systems=systems, dept_pros=dept_pros,
+                           depts=depts, pagination=pagination)
 
 
 @index.route('/system-manage/pwd')

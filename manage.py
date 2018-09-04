@@ -18,7 +18,7 @@ migrate = Migrate(app, db)
 @manager.shell
 def make_shell_context():
     return dict(app=app, db=db, user=User, role=Role, dept=Dept,
-                per=Personnel, duty=Duty)
+                per=Personnel, duty=Duty, title=Title)
 
 
 manager.add_command("shell", Shell(make_context=make_shell_context))
@@ -42,7 +42,9 @@ def ex_test():
     unit.init_dept()
     duty.init_duty_lv()
     duty.init_duty()
-    title.update_title()
+    title.init_t_dept()
+    title.init_t_lvs()
+    title.init_t()
     db.session.commit()
 
 

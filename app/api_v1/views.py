@@ -6,7 +6,7 @@ from flask import flash, redirect, url_for, jsonify, \
 from flask_login import logout_user, current_user, login_required
 
 from . import api_v1
-from ..models import db, User, Role, Duty, DutyLevel
+from ..models import db, User, Role, Duty, DutyLevel, Dept
 
 
 @api_v1.route('/update-pwd', methods=["POST"])
@@ -69,11 +69,11 @@ def manage_duty():
             message = '添加职务成功!'
         else:
             duty = Duty.query.get_or_404(res.get('id'))
-            print(lv)
             message = '修改职务成功!'
         if duty and lv:
             duty.duty_level = lv
-
+            duty.order = res.get('order')
+        db.session.add(duty)
     elif request.method == "DELETE":
         duty = Duty.query.get_or_404(res['id'])
         db.session.delete(duty)
@@ -81,6 +81,29 @@ def manage_duty():
     return jsonify({'error': False, 'message': message})
 
 
+@api_v1.route('/manage-dept', methods=['POST', 'DELETE'])
+@login_required
+def manage_dept():
+    if current_user.username != current_app.config['ADMIN_USERNAME']:
+        return jsonify({'error': True, 'error_message': '权限不足'})
+    res = request.get_json()
+    message = ''
+    if res is None:
+        return jsonify({'error': True, 'error_message': '没有值传递'})
+    if request.method == "POST":
+        temp, add = Dept.from_json(res)
+        if add and temp:
+            message = '新增成功!'
+        elif add is False and temp:
+            message = '修改成功'
+        else:
+            return jsonify({'error': True, 'error_message': '发生错误！请联系维护人员！'})
+        db.session.add(temp)
+    elif request.method == "DELETE":
+        dept = Dept.query.get_or_404(res['id'])
+        db.session.delete(dept)
+        message = '删除成功'
+    return jsonify({'error': False, 'message': message})
 
 
 @api_v1.route('/logout/<string:username>')

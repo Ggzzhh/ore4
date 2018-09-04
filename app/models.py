@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from datetime import datetime, date
 
 from flask import current_app, abort
 from flask_login import UserMixin
@@ -13,6 +14,13 @@ def load_user(user_id):
         user = User.query.get(int(user_id))
         return user
     return None
+
+
+class Per2Title(db.Model):
+    __tablename__ = 'follows'
+    date = db.Column('date', db.DateTime, default=date.today())
+    per_id = db.Column(db.Integer, db.ForeignKey('personnels.id'), primary_key=True)
+    title_id = db.Column( db.Integer, db.ForeignKey('titlies.id'), primary_key=True)
 
 
 class Role(db.Model):
@@ -61,7 +69,12 @@ class System(db.Model):
     __tablename__ = 'systems'
     id = db.Column(db.Integer, primary_key=True)
     system_name = db.Column(db.String(64), unique=True)
-    depts = db.relationship('Dept', backref='system')
+    depts = db.relationship('Dept', backref='system', lazy='dynamic')
+
+    @staticmethod
+    def to_array():
+        data = System.query.order_by('id').all()
+        return [[s.id, s.system_name] for s in data]
 
     def __repr__(self):
         return '<单位系统: %r>' % self.system_name
@@ -71,9 +84,41 @@ class Dept(db.Model):
     __tablename__ = 'depts'
     id = db.Column(db.Integer, primary_key=True)
     dept_name = db.Column(db.String(64), unique=True)
-    personnels = db.relationship('Personnel', backref='dept')
+    personnels = db.relationship('Personnel', backref='dept', lazy='dynamic')
     system_id = db.Column(db.Integer, db.ForeignKey('systems.id'))
     dept_pro_id = db.Column(db.Integer, db.ForeignKey('dept_pros.id'))
+
+    @staticmethod
+    def from_json(data):
+        new = data.get('new')
+        if new is True:
+            dept = Dept(dept_name=data.get('name'))
+            if dept.dept_name is None:
+                return None, True
+            add = True
+        elif new is False:
+            dept = Dept.query.get_or_404(id)
+            add = False
+        else:
+            dept = ''
+            add = ''
+            abort(403)
+        dept.system_id = data.get('system_id')
+        dept.dept_pro_id = data.get('dept_pro_id')
+        return dept, add
+
+    def to_json(self):
+        data = {
+            'id': self.id,
+            'name': self.dept_name,
+            'system_id': self.system_id,
+            'system': self.system.system_name if self.system is not None
+            else '',
+            'dept_pro_id': self.dept_pro_id,
+            'dept_pro': self.dept_pro.dept_pro_name if self.dept_pro is not None
+            else ''
+        }
+        return data
 
     def __repr__(self):
         return '<单位: %r>' % self.dept_name
@@ -83,7 +128,12 @@ class DeptPro(db.Model):
     __tablename__ = 'dept_pros'
     id = db.Column(db.Integer, primary_key=True)
     dept_pro_name = db.Column(db.String(64), unique=True)
-    depts = db.relationship('Dept', backref='dept_pro')
+    depts = db.relationship('Dept', backref='dept_pro', lazy='dynamic')
+
+    @staticmethod
+    def to_array():
+        pros = DeptPro.query.order_by('id').all()
+        return [[p.id, p.dept_pro_name] for p in pros]
 
     def __repr__(self):
         return '<单位属性: %r>' % self.dept_pro_name
@@ -93,6 +143,7 @@ class Personnel(db.Model):
     __tablename__ = 'personnels'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(16), nullable=False)
+    phonetic = db.Column(db.String(16))
     sex = db.Column(db.String(2))
     nation = db.Column(db.String(32))
     birthday = db.Column(db.DateTime)
@@ -113,15 +164,21 @@ class Personnel(db.Model):
     remarks = db.Column(db.Text)
     remarks_2 = db.Column(db.Text)
     punished = db.Column(db.Boolean)
-    families = db.relationship('Family', backref='personnel')
-    r_and_p = db.relationship('RAndP', backref='personnel')
-    f_t_edu = db.relationship('FullTimeEdu', backref='personnel')
-    i_s_edu = db.relationship('InServiceEdu', backref='personnel')
-    resumes = db.relationship('Resume', backref='personnel')
+    families = db.relationship('Family', backref='personnel', lazy='dynamic')
+    r_and_p = db.relationship('RAndP', backref='personnel', lazy='dynamic')
+    f_t_edu = db.relationship('FullTimeEdu', backref='personnel', lazy='dynamic')
+    i_s_edu = db.relationship('InServiceEdu', backref='personnel', lazy='dynamic')
+    resumes = db.relationship('Resume', backref='personnel', lazy='dynamic')
+    titlies = db.relationship('Per2Title', foreign_keys=[Per2Title.per_id],
+                              backref=db.backref('personnel', lazy='joined'),
+                              lazy='dynamic', cascade='all, delete-orphan')
     duty_id = db.Column(db.Integer, db.ForeignKey('duties.id'))
-    title_id = db.Column(db.Integer, db.ForeignKey('titlies.id'))
     dept_id = db.Column(db.Integer, db.ForeignKey('depts.id'))
     state_id = db.Column(db.Integer, db.ForeignKey('states.id'))
+
+    def top_title(self):
+        l = self.titlies.order_by(Per2Title.date.desc()).all()
+        return l[0].title if l else None
 
     @property
     def system(self):
@@ -186,8 +243,10 @@ class InServiceEdu(db.Model):
 class EduLevel(db.Model):
     __tablename__ = 'edu_levels'
     id = db.Column(db.Integer, primary_key=True)
-    i_s_edu = db.relationship('InServiceEdu', backref='edu_level', uselist=False)
-    f_t_edu = db.relationship('FullTimeEdu', backref='edu_level', uselist=False)
+    i_s_edus = db.relationship('InServiceEdu', backref='edu_level',
+                               lazy='dynamic')
+    f_t_edus = db.relationship('FullTimeEdu', backref='edu_level',
+                               lazy='dynamic')
     value = db.Column(db.Integer)
     level = db.Column(db.String(32))
 
@@ -213,14 +272,16 @@ class Family(db.Model):
 class Duty(db.Model):
     __tablename__ = 'duties'
     id = db.Column(db.Integer, primary_key=True)
-    personnels = db.relationship('Personnel', backref='duty')
+    personnels = db.relationship('Personnel', backref='duty', lazy='dynamic')
     name = db.Column(db.String(32))
+    order = db.Column(db.Integer, default=1)
     duty_level_id = db.Column(db.Integer, db.ForeignKey('duty_level.id'))
 
     def to_json(self):
         data = {
             'id': self.id,
             'name': self.name,
+            'order': self.order,
             'duty_level_id': self.duty_level_id,
             'duty_level': self.duty_level.name if self.duty_level is not None
             else ''
@@ -251,7 +312,7 @@ class DutyLevel(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(32))
     value = db.Column(db.Integer, default=0)
-    duties = db.relationship('Duty', backref='duty_level')
+    duties = db.relationship('Duty', backref='duty_level', lazy='dynamic')
 
     @staticmethod
     def to_array():
@@ -266,7 +327,9 @@ class Title(db.Model):
     __tablename__ = 'titlies'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(32))
-    personnels = db.relationship('Personnel', backref='title')
+    personnels = db.relationship('Per2Title', foreign_keys=[Per2Title.title_id],
+                              backref=db.backref('title', lazy='joined'),
+                              lazy='dynamic', cascade='all, delete-orphan')
     title_lv_id = db.Column(db.Integer, db.ForeignKey('title_lv.id'))
     title_dept_id = db.Column(db.Integer, db.ForeignKey('title_dept.id'))
 
@@ -307,7 +370,7 @@ class TitleDept(db.Model):
     __tablename__ = 'title_dept'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(32))
-    titlies = db.relationship('Title', backref='title_dept')
+    titlies = db.relationship('Title', backref='title_dept', lazy='dynamic')
 
     def __repr__(self):
         return "<职称系列: {}>".format(self.name)
@@ -317,7 +380,7 @@ class TitleLv(db.Model):
     __tablename__ = 'title_lv'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(32))
-    titlies = db.relationship('Title', backref='title_lv')
+    titlies = db.relationship('Title', backref='title_lv', lazy='dynamic')
 
     def __repr__(self):
         return "<职称等级: {}>".format(self.name)
@@ -327,7 +390,7 @@ class State(db.Model):
     __tablename__ = 'states'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(32))
-    personnels = db.relationship('Personnel', backref='state')
+    personnels = db.relationship('Personnel', backref='state', lazy='dynamic')
 
     def __repr__(self):
         return "<状态: {}>".format(self.name)
@@ -336,8 +399,6 @@ class State(db.Model):
 def run_only():
 
     def register_role():
-        db.drop_all()
-        db.create_all()
         admin = Role(name='管理员', id=1)
         leader = Role(name='审查者')
         db.session.add(admin)
@@ -347,7 +408,7 @@ def run_only():
     def register_admin():
         only_admin = User(username=current_app.config['ADMIN_USERNAME'])
         only_admin.password = current_app.config['ADMIN_PASSWORD']
-        only_admin.role = Role.query.filter_by(name='管理员').first()
+        only_admin.role = Role.query.get(1)
         print(only_admin)
         db.session.add(only_admin)
         db.session.commit()

@@ -3,45 +3,43 @@
 {% block page %}
 	<div class="user">
 		<div class="d-flex justify-content-center align-items-center">
-			<div class="mr-auto p-3">职务列表</div>
+			<div class="mr-auto p-3">单位列表</div>
 			<div class="p-2">
 				<button class="btn btn-outline-dark"
 						data-toggle="modal"
-						data-target="#new-duty">+
-					新增职务</button>
+						data-target="#new-dept">+
+					新增单位</button>
 			</div>
 		</div>
 		<div class="list">
 			<table class="table table-bordered text-center">
 				<thead>
 				<tr>
-					<th>职务名</th>
-					<th>等级</th>
-					<th>排序级别</th>
+					<th>单位名</th>
+					<th>归属系统</th>
+					<th>单位属性</th>
 					<th>操作</th>
 				</tr>
 				</thead>
 				<tbody>
-				{% for duty in duties %}
+				{% for dept in depts %}
 					<tr>
 						<td style="width: 33%">
-							{{ duty.name }}
+							{{ dept.name }}
 						</td>
 						<td>
-							{{ duty.duty_level }}
+							{{ dept.system }}
 						</td>
 						<td>
-							{{ duty.order }}
+							{{ dept.dept_pro }}
 						</td>
 						<td>
 							<button type="button" class="btn btn-link btn-sm"
-									onclick="dutyEdit('{{ duty.name }}', '{{
-											duty.id }}','{{ duty.order }}',
-											'{{ duty.duty_level_id }}')">
+									onclick="">
 								编辑
 							</button>
 							<button href="#" class="btn btn-link btn-sm"
-									onclick="dutyDel('{{ duty.id }}')">
+									onclick="deptDel('{{ dept.id }}')">
 								删除
 							</button>
 						</td>
@@ -50,10 +48,11 @@
 				</tbody>
 			</table>
 			<div class="d-flex justify-content-center">
-				{{ model.pagination_widget(pagination, 'index.system_manage_duty') }}
+				{{ model.pagination_widget(
+				pagination, 'index.system_manage_dept') }}
 			</div>
-		{{ model.update_duty_model('new-duty', 'add-duty', lvs, 1) }}
-		{{ model.update_duty_model('dutyEdit', 'duty-edit', lvs, 2) }}
+		{{ model.dept_model('new-dept', 'add-dept', systems, dept_pros , '1') }}
+		{{ model.dept_model('edit-dept', 'dept-form', systems, dept_pros , '2') }}
 		</div>
 	</div>
 {% endblock %}
