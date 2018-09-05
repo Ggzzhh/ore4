@@ -1,0 +1,97 @@
+<nav>
+	<div class="nav nav-tabs" id="nav-tab" role="tablist">
+		<a class="nav-item nav-link active"
+		   id="nav-base-info"
+		   data-toggle="tab"
+		   href="#base-info"
+		   role="tab"
+		   aria-controls="base-info"
+		   aria-selected="true">
+			基本资料
+		</a>
+
+		<a class="nav-item nav-link"
+		   id="nav-resumes"
+		   data-toggle="tab"
+		   href="#per-resumes"
+		   role="tab"
+		   aria-controls="per-resumes"
+		   aria-selected="false">
+			简历
+		</a>
+		<a class="nav-item nav-link"
+		   id="nav-title"
+		   data-toggle="tab"
+		   href="#per-title"
+		   role="tab"
+		   aria-controls="per-title"
+		   aria-selected="false">
+			职称
+		</a>
+		<a class="nav-item nav-link"
+		   id="nav-edu"
+		   data-toggle="tab"
+		   href="#per-edu"
+		   role="tab"
+		   aria-controls="per-edu"
+		   aria-selected="false">
+			学历
+		</a>
+		<a class="nav-item nav-link"
+		   id="nav-r-and-p"
+		   data-toggle="tab"
+		   href="#per-r-and-p"
+		   role="tab"
+		   aria-controls="per-r-and-p"
+		   aria-selected="false">
+			奖惩
+		</a>
+		<a class="nav-item nav-link"
+		   id="nav-family"
+		   data-toggle="tab"
+		   href="#per-family"
+		   role="tab"
+		   aria-controls="per-family"
+		   aria-selected="false">
+			家庭情况
+		</a>
+	</div>
+</nav>
+<div class="tab-content" id="nav-tabContent">
+	<div class="tab-pane fade show active"
+		 id="base-info"
+		 role="tabpanel"
+		 aria-labelledby="nav-base-info">
+		{% include 'per/info.html' %}
+	</div>
+	<div class="tab-pane fade"
+		 id="per-resumes"
+		 role="tabpanel"
+		 aria-labelledby="nav-resumes">
+		{% include 'per/resumes.html' %}
+	</div>
+	<div class="tab-pane fade"
+		 id="per-title"
+		 role="tabpanel"
+		 aria-labelledby="nav-title">
+		{% include 'per/title.html' %}
+	</div>
+	<div class="tab-pane fade"
+		 id="per-edu"
+		 role="tabpanel"
+		 aria-labelledby="nav-edu">
+		{% include 'per/eduation.html' %}
+	</div>
+	<div class="tab-pane fade"
+		 id="per-r-and-p"
+		 role="tabpanel"
+		 aria-labelledby="nav-r-and-p">
+		{% include 'per/r_and_p.html' %}
+	</div>
+	<div class="tab-pane fade"
+		 id="per-family"
+		 role="tabpanel"
+		 aria-labelledby="nav-family">
+		{% include 'per/family.html' %}
+	</div>
+</div>

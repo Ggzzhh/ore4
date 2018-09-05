@@ -1,0 +1,18 @@
+{% from 'bootstrap/utils.html' import render_static %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8">
+	{{ bootstrap.load_css() }}
+	{% block head %}
+	
+	{% endblock %}
+</head>
+<body>
+{% block content %}
+
+{% endblock %}
+{{ bootstrap.load_js() }}
+{{ render_static('js', 'js/_ajax.js') }}
+</body>
+</html>

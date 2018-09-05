@@ -89,6 +89,8 @@ class Dept(db.Model):
     full_name = db.Column(db.String(256))
     # 支部名称
     branch_name = db.Column(db.String(128))
+    # 级别编号
+    order = db.Column(db.Integer, default=10)
     personnels = db.relationship('Personnel', backref='dept', lazy='dynamic')
     system_id = db.Column(db.Integer, db.ForeignKey('systems.id'))
     dept_pro_id = db.Column(db.Integer, db.ForeignKey('dept_pros.id'))
@@ -102,20 +104,25 @@ class Dept(db.Model):
                 return None, True
             add = True
         elif new is False:
-            dept = Dept.query.get_or_404(id)
+            dept = Dept.query.get_or_404(data.get('id'))
             add = False
         else:
             dept = ''
             add = ''
             abort(403)
-        dept.system_id = data.get('system_id')
-        dept.dept_pro_id = data.get('dept_pro_id')
+        system = System.query.get(data.get('system_id'))
+        dept_pro = DeptPro.query.get(data.get('dept_pro_id'))
+        print(dept_pro)
+        dept.system = system
+        dept.dept_pro = dept_pro
+        dept.order = data.get('order')
         return dept, add
 
     def to_json(self):
         data = {
             'id': self.id,
             'name': self.dept_name,
+            'order': self.order,
             'system_id': self.system_id,
             'system': self.system.system_name if self.system is not None
             else '',
@@ -138,6 +145,7 @@ class DeptPro(db.Model):
     @staticmethod
     def to_array():
         pros = DeptPro.query.order_by('id').all()
+
         return [[p.id, p.dept_pro_name] for p in pros]
 
     def __repr__(self):
@@ -188,13 +196,15 @@ class Personnel(db.Model):
     # 特殊工作年限
     s_work_year = db.Column(db.String(16))
     # 荣誉金
-    bonus = db.Column(db.String(100))
+    bonus = db.Column(db.String(128))
     # 档案备注
     remarks = db.Column(db.Text)
     # 调入备注
     remarks_2 = db.Column(db.Text)
     # 受处分
     punished = db.Column(db.Boolean)
+    # 照片地址
+    photo_src = db.Column(db.String(128))
     # 家庭情况
     families = db.relationship('Family', backref='personnel', lazy='dynamic')
     # 奖惩情况

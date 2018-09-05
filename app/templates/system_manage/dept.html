@@ -15,9 +15,10 @@
 			<table class="table table-bordered text-center">
 				<thead>
 				<tr>
-					<th>单位名</th>
+					<th>单位简称</th>
 					<th>归属系统</th>
 					<th>单位属性</th>
+					<th>排序级别</th>
 					<th>操作</th>
 				</tr>
 				</thead>
@@ -34,8 +35,14 @@
 							{{ dept.dept_pro }}
 						</td>
 						<td>
+							{{ dept.order }}
+						</td>
+						<td>
 							<button type="button" class="btn btn-link btn-sm"
-									onclick="">
+									onclick="deptEdit('{{ dept.name }}', '{{
+											dept.id }}', '{{ dept.order }}',
+											'{{ dept.system_id }}', {{ dept.dept_pro_id
+											}})">
 								编辑
 							</button>
 							<button href="#" class="btn btn-link btn-sm"

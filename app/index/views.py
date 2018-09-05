@@ -110,7 +110,8 @@ def system_manage_user():
 def system_manage_duty():
     duties = []
     page = request.args.get('page', 1, type=int)
-    pagination = Duty.query.order_by(Duty.duty_level_id.desc()).paginate(
+    pagination = Duty.query.order_by(Duty.order,
+                                     Duty.duty_level_id.desc()).paginate(
         page, per_page=current_app.config['PER_PAGE'],
         error_out=False
     )
@@ -133,7 +134,7 @@ def system_manage_dept():
     for dept in pagination.items:
         depts.append(dept.to_json())
     systems = System.to_array()
-    dept_pros = System.to_array()
+    dept_pros = DeptPro.to_array()
     return render_template('system_manage/dept.html', title='单位管理',
                            systems=systems, dept_pros=dept_pros,
                            depts=depts, pagination=pagination)

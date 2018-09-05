@@ -1,0 +1,17 @@
+{% extends 'iframe_base.html' %}
+{% from 'bootstrap/utils.html' import render_static %}
+{% block head %}
+	<style>
+
+	</style>
+{% endblock %}
+{% block content %}
+	<div class="iframe-content">
+		<div class="search d-flex">
+			<div class="title">{{ title }}</div>
+		</div>
+		<div class="info_manage">
+			{% include 'per/infotable.html' %}
+		</div>
+	</div>
+{% endblock %}

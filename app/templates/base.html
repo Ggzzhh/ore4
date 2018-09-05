@@ -138,6 +138,9 @@
                 alert('权限不足！您不是管理员！');
             });
         {% else %}
+			$('#new-per').bind('click', function () {
+                set_iframe_src('/per/add')
+            });
             $('#m_user').bind('click', function () {
                 set_iframe_src('/system-manage/user')
             });

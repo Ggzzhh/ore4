@@ -49,6 +49,8 @@ class UNIT:
                     .filter_by(dept_pro_name=dept[2]).first()
                 res.system = System.query \
                     .filter_by(system_name=dept[1]).first()
+                if res.order is None:
+                    res.order = 10
                 db.session.add(res)
             # print(dept[0] + message)
     print('单位分类更新完毕')

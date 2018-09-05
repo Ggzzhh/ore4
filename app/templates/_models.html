@@ -14,7 +14,7 @@
 					<div class="modal-body">
 						<div class="input-group mb-3">
 							<div class="input-group-prepend">
-								<span class="input-group-text">单位名称</span>
+								<span class="input-group-text">单位简称</span>
 							</div>
 							<input type="text" class="form-control" required
 								   placeholder="请输入" id="i-{{ id }}"
@@ -49,6 +49,23 @@
 								{% for dept_pro in dept_pros %}
 									<option value="{{ dept_pro[0] }}">
 										{{ dept_pro[1] }}
+									</option>
+								{% endfor %}
+							</select>
+						</div>
+
+						<div class="input-group mb-3">
+							<div class="input-group-prepend">
+								<label class="input-group-text" for="order_{{
+										model_id }}">
+									排序级别
+								</label>
+							</div>
+							<select class="custom-select" id="order_{{
+									model_id }}">
+								{% for i in range(1, 11) %}
+									<option value="{{ i }}">
+										{{ i }}
 									</option>
 								{% endfor %}
 							</select>
