@@ -41,7 +41,7 @@ def create_app(config_name):
     moment.init_app(app)
 
     # 设置session设置的过期时间 也就是关闭浏览器5分钟内不用重新登录
-    app.permanent_session_lifetime = timedelta(minutes=60)
+    app.permanent_session_lifetime = timedelta(minutes=5)
     # 设置jinja2模版可以使用continue
     app.jinja_env.add_extension('jinja2.ext.loopcontrols')
 

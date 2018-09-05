@@ -7,7 +7,7 @@ from flask_migrate import Migrate, MigrateCommand
 
 from app import create_app, db
 from app.models import User, Role, Dept, Personnel, DeptPro, Duty, DutyLevel,\
-    Title,TitleLv,TitleDept,FullTimeEdu,EduLevel,State,System,InServiceEdu,\
+    Title, TitleLv, TitleDept, EduLevel, State, System, Education,\
     Resume
 
 app = create_app('development')

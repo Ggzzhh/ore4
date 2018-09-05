@@ -2,7 +2,7 @@
 from pyexcel_xlsx import get_data
 
 from app import db
-from app.models import System, Dept, DeptPro, DutyLevel, Duty, Title, \
+from app.models import System, Dept, DeptPro, DutyLevel, Duty, TitleName, \
     TitleDept, TitleLv
 
 
@@ -120,7 +120,7 @@ class _Title:
 
     def init_t(self):
         for t in self.t:
-            res = Title.query.filter_by(name=t[0]).first()
+            res = TitleName.query.filter_by(name=t[0]).first()
             lv = ''
             dept = ''
             if len(t) >= 2:
@@ -128,17 +128,17 @@ class _Title:
             if len(t) >= 3:
                 dept = TitleDept.query.filter_by(name=t[2]).first()
             if res is None:
-                temp = Title(name=t[0])
+                temp = TitleName(name=t[0])
                 if lv:
-                    temp.title_lv = lv
+                    temp.lv = lv
                 if dept:
-                    temp.title_dept = dept
+                    temp.dept = dept
                 db.session.add(temp)
             else:
                 if lv:
-                    res.title_lv = lv
+                    res.lv = lv
                 if dept:
-                    res.title_dept = dept
+                    res.dept = dept
                 db.session.add(res)
         print('职称信息更新完毕')
 
