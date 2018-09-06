@@ -1,1 +1,34 @@
-<h1>家庭情况</h1>
+
+<div class="new-family">
+	<button class="btn btn-outline-dark" type="button" data-toggle="modal"
+			data-target="#new-family-modal">
+		+ 新增
+	</button>
+</div>
+<div class="family-tab mt-2">
+	<table class="table table-bordered text-center">
+		<thead>
+		<tr>
+			<th>序 号</th>
+			<th>成员称谓</th>
+			<th>成员姓名</th>
+			<th>成员年龄</th>
+			<th>政治面貌</th>
+			<th>工作单位及职务</th>
+			<th>操作</th>
+		</tr>
+		</thead>
+		<tbody id="family-tbody">
+		<tr>
+			<td>1</td>
+			<td>2</td>
+			<td>3</td>
+			<td>4</td>
+			<td>5</td>
+			<td>6</td>
+			<td>7</td>
+		</tr>
+		</tbody>
+	</table>
+</div>
+{{ model.family_model('new-family-modal', 'form-family-modal') }}
