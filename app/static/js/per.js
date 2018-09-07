@@ -38,4 +38,41 @@ $(document).ready(function () {
             language: "zh-CN"
         });
     });
+
+    // 新建一行学历表格
+    $('#add-edu-tr').bind('click', function () {
+        edu_count.increment();
+        var edu_id = "edu-" + edu_count.value();
+        var edu_tr = $('<tr id="'+ edu_id + '"></tr>');
+        var edu_lv = $(select), learn_form=$(select);
+        _edu_lv.forEach(function (i) {
+            var option = $('<option value="' + i[0] + '">'
+                + i[1] + '</option>');
+            edu_lv.children('select').append(option);
+        });
+
+        _learn_from.forEach(function (i) {
+            var option = $('<option value="' + i[0] + '">'
+                + i[1] + '</option>');
+            learn_form.children('select').append(option);
+        });
+
+        edu_tr.append($('<td class="index">'+ edu_count.value() + '</td>'));
+        edu_tr.append(edu_lv);
+        edu_tr.append($(myDate));
+        edu_tr.append($(myDate));
+        edu_tr.append($(notNullText));
+        edu_tr.append($(notNullText));
+        edu_tr.append($(myText));
+        edu_tr.append($(learn_form));
+        edu_tr.append($("<td><button type='button' class='btn btn-link " +
+            "btn-sm' onclick=" + "handle.del('edu-" + edu_count
+                .value()
+            + "')" + ">删除</button></td>"));
+        $('#edu-tbody').append(edu_tr);
+
+        $('.mydate').datepicker({
+            language: "zh-CN"
+        });
+    });
 });

@@ -301,7 +301,7 @@ class EduLevel(db.Model):
     __tablename__ = 'edu_levels'
     id = db.Column(db.Integer, primary_key=True)
     edu = db.relationship('Education', backref='edu_level',
-                               lazy='joined')
+                          lazy='joined')
     # 排序用 筛选最高学历时使用
     value = db.Column(db.Integer)
     level = db.Column(db.String(32))
@@ -434,6 +434,28 @@ class TitleName(db.Model):
     titles = db.relationship('Title', backref='name', lazy='dynamic')
     title_lv_id = db.Column(db.Integer, db.ForeignKey('title_lv.id'))
     title_dept_id = db.Column(db.Integer, db.ForeignKey('title_dept.id'))
+
+    @staticmethod
+    def to_arr():
+        res = []
+        names = TitleName.query.all()
+        for temp in names:
+            l = []
+            l.append(temp.id)
+            l.append(temp.name)
+            if temp.dept:
+                l.append(temp.dept.name)
+            else:
+                l.append('无')
+            if temp.lv:
+                l.append(temp.lv.name)
+            else:
+                l.append('无')
+            res.append(l)
+        return res
+
+    def __repr__(self):
+        return "<职称名: {}>".format(self.name)
 
 
 class TitleDept(db.Model):
