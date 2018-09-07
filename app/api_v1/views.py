@@ -6,7 +6,19 @@ from flask import flash, redirect, url_for, jsonify, \
 from flask_login import logout_user, current_user, login_required
 
 from . import api_v1
-from ..models import db, User, Role, Duty, DutyLevel, Dept
+from ..models import db, User, Role, Duty, DutyLevel, Dept, Personnel
+
+
+@api_v1.route('/manage-per', methods=["POST"])
+@login_required
+def manage_per():
+    if current_user.username != current_app.config['ADMIN_USERNAME']:
+        return jsonify({'error': True, 'error_message': '权限不足'})
+    res = request.get_json()
+    if res is None:
+        return jsonify({'error': True, 'error_message': '没有值传递'})
+    print(res)
+    return jsonify({'error': False, 'message': '测试ok'})
 
 
 @api_v1.route('/update-pwd', methods=["POST"])

@@ -14,7 +14,7 @@
 		}
 		.tab-content {
 			width: 100%;
-			height: 100%;
+			min-height: 90%;
 		}
 		.fade {
 			width: 100%;
@@ -38,13 +38,14 @@
 		<div class="per-content">
 			<form id="add-per">
 				{% include 'per/infotable.html' %}
-			</form>
-			<div class="input-group justify-content-end">
-				<button type="submit" class="btn btn-outline-dark
+
+				<div class="input-group justify-content-end">
+					<button type="submit" class="btn btn-outline-dark
 				mr-3">提交</button>
-				<button type="reset" class="btn btn-outline-dark
+					<button type="reset" class="btn btn-outline-dark
 				mr-3">重置</button>
-			</div>
+				</div>
+			</form>
 		</div>
 	</div>
 {% endblock %}
@@ -64,9 +65,17 @@
                 },
                 value: function() {
                     return privateCounter;
+                },
+                init: function (val) {
+                    privateCounter = val;
                 }
             }
         };
+
+        var notNullText = "<td class='input-group-inline input-group-sm'>" +
+            "<input type='text' class='form-control' " + "required " +
+            "placeholder='请输入...'>" +
+            "</td>";
 
         var myText = "<td class='input-group-inline input-group-sm'>" +
             "<input type='text' class='form-control' " +
@@ -78,33 +87,129 @@
             "placeholder='请输入...'>" +
             "</td>";
 
+        var myDate = "<td class='input-group-inline input-group-sm'>" +
+            "<input type='text' class='form-control mydate' " +
+            "placeholder='请选择...'>" +
+            "</td>";
+
         var handle = {
-            del: function (id) {
-                console.log(id)
+            del: function (id, d_id) {
+                if (confirm('确定删除该项么？'))
+                    $('#'+id).remove();
             }
         };
 
+        var get_families = function () {
+            var family_arr = [];
+            var temp = {};
+            var families = $('#family-tbody').children();
+            for (var i=0; i < families.length; i++) {
+                temp = {};
+                var td_arr = families.eq(i).find('td');
+                temp.relationship = td_arr.eq(1).find('input').val();
+                temp.name = td_arr.eq(2).find('input').val();
+                temp.age = Number(td_arr.eq(3).find('input').val());
+                temp.p_c = td_arr.eq(4).find('input').val();
+                temp.workplace = td_arr.eq(5).find('input').val();
+                family_arr.push(temp);
+            }
+            return family_arr;
+        };
 
+        var get_r_and_p = function () {
+            var r_and_p_arr = [];
+            var temp = {};
+            var r_and_p = $('#r-and-p-tbody').children();
+            for (var i=0; i < r_and_p.length; i++) {
+                temp = {};
+                var td_arr = r_and_p.eq(i).find('td');
+                temp.time = td_arr.eq(1).find('input').val();
+                temp.dept = td_arr.eq(2).find('input').val();
+                temp.reason = td_arr.eq(3).find('input').val();
+                temp.workplace = td_arr.eq(4).find('input').val();
+                temp.remarks = td_arr.eq(5).find('input').val();
+                r_and_p_arr.push(temp);
+            }
+            return r_and_p_arr;
+        };
+
+	</script>
+	<script>
         var f_count = myCount();
+        f_count.init({{ f_count|default(0) }});
+
+        var r_and_p_count = myCount();
+        r_and_p_count.init({{ r_and_p_count|default(0) }});
+
+        var edu_count = myCount();
+        edu_count.init({{ edu_count|default(0) }});
+
+        var edu_lv = [];
+        {% for temp in edu_lv %}
+            var temp = [];
+            temp.push({{ temp[0] }});
+            temp.push("{{ temp[1] }}");
+            edu_lv.push(temp);
+        {% endfor %}
+
+        var learn_from = [];
+        {% for temp in learn_form %}
+            var temp = [];
+            temp.push({{ temp[0] }});
+            temp.push("{{ temp[1] }}");
+            learn_from.push(temp);
+        {% endfor %}
+
 
         $(document).ready(function () {
+            // 新建一行学历表格
+            $('#add-edu-tr').bind('click', function () {
+                edu_count.increment();
+                var edu_id = "r-and-p-" + edu_count.value();
+                var edu_tr = $('<tr id="'+ edu_id + '"></tr>');
+                var time = $(myDate);
+                time.attr('id', 'r-and-p-time');
+                edu_tr.append($('<td class="index">'+ edu_count.value() + '</td>'));
+                edu_tr.append($(time));
+                edu_tr.append($(notNullText));
+                edu_tr.append($(notNullText));
+                edu_tr.append($(notNullText));
+                edu_tr.append($(myText));
+                edu_tr.append($("<td><button type='button' class='btn btn-link " +
+                    "btn-sm' onclick=" + "handle.del('edu-" + edu_count
+						.value()
+                    + "')" + ">删除</button></td>"));
+                $('#edu-tbody').append(edu_tr);
 
-            // 添加一行新的插入表格
-            $('#add-family-tr').bind('click', function () {
-                f_count.increment();
-                var f_id = "family-" + f_count.value();
-                var f_tr = $('<tr id="'+ f_id + '"></tr>');
-                f_tr.append($('<td class="index">'+ f_count.value() + '</td>'));
-                f_tr.append($(myText));
-                f_tr.append($(myText));
-                f_tr.append($(myNum));
-                f_tr.append($(myText));
-                f_tr.append($(myText));
-                f_tr.append($("<td><button type='button' class='btn btn-link " +
-                    "btn-sm' onclick=" + "handle.del('family-" + f_count
-						.value() + "')" + ">删除</button></td>"));
-                $('#family-tbody').append(f_tr)
+                $('.mydate').datepicker({
+                    language: "zh-CN"
+                });
             });
+
+
+            // 监听form表单
+            $('#add-per').bind('submit', function () {
+
+                var data = JSON.stringify({
+                    families: get_families(),
+                    r_and_p: get_r_and_p()
+                });
+
+                var _success = function (data) {
+                    alert(data.message);
+                    location.href = '/search';
+                };
+
+                a_json(
+                    '/v1/manage-per',
+                    'POST',
+                    data,
+                    _success
+                );
+
+                return false;
+            })
         });
 	</script>
+	{{ render_static('js', 'js/per.js') }}
 {% endblock %}

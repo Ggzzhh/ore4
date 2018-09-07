@@ -5,6 +5,7 @@
 	<meta charset="utf-8">
 	{{ bootstrap.load_css() }}
 	{{ render_static('css', 'css/iframe.css') }}
+	{{ render_static('css', 'css/bootstrap-datepicker3.css') }}
 	<style>
 		body {
 			width: 100%;
@@ -55,10 +56,18 @@
 {% block content %}
 {% endblock %}
 {{ bootstrap.load_js() }}
+{{ moment.include_moment() }}
+{{ moment.lang("zh-cn") }}
 {{ render_static('js', 'js/_ajax.js') }}
 {{ render_static('js', 'js/manage.js') }}
+{{ render_static('js', 'js/bootstrap-datepicker.js') }}
+{{ render_static('js', 'locales/bootstrap-datepicker.zh-CN.min.js') }}
+
 <script>
     $(document).ready(function () {
+        // 监听时间模块
+
+
         $('#update-pwd').bind('submit', function () {
             var old_pwd = $('#old-pwd').val();
             var pwd = $('#pwd').val();
@@ -161,7 +170,6 @@
             if (!file) {
                 return false;
             };
-
         })
     });
 </script>

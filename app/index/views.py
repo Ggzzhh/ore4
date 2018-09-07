@@ -127,7 +127,7 @@ def system_manage_duty():
 def system_manage_dept():
     depts = []
     page = request.args.get('page', 1, type=int)
-    pagination = Dept.query.order_by(Dept.dept_pro_id).paginate(
+    pagination = Dept.query.order_by(Dept.order, Dept.dept_pro_id).paginate(
         page, per_page=current_app.config['PER_PAGE'],
         error_out=False
     )

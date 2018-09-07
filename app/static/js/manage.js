@@ -34,12 +34,13 @@ function uDel(id) {
         location.href = '/system-manage/user';
     };
 
-
-    a_json(
-        "{{ url_for('v1.manage_user') }}",
-        "DELETE",
-        data,
-        _success);
+    if (confirm('确定删除该项么？')){
+        a_json(
+            "/v1/manage-user",
+            "DELETE",
+            data,
+            _success);
+    }
     return false;
 }
 
@@ -85,11 +86,12 @@ function dutyDel(id) {
         location.href = '/system-manage/duty';
     };
 
-    a_json(
-        "{{ url_for('v1.manage_duty') }}",
-        "DELETE",
-        data,
-        _success);
+    if (confirm('确定删除该项么？'))
+        a_json(
+            "/v1/manage-duty",
+            "DELETE",
+            data,
+            _success);
     return false;
 }
 
@@ -140,11 +142,12 @@ function deptDel(id) {
         location.href = '/system-manage/dept';
     };
 
-    a_json(
-        "{{ url_for('v1.manage_dept') }}",
-        "DELETE",
-        data,
-        _success);
+    if (confirm('确定删除该项么？'))
+        a_json(
+            "/v1/manage-dept",
+            "DELETE",
+            data,
+            _success);
     return false;
 }
 

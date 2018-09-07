@@ -282,7 +282,7 @@ class Education(db.Model):
     enrolment_time = db.Column(db.DateTime)
     # 毕业时间
     graduation_time = db.Column(db.DateTime)
-    # 学校名
+    # 毕业院校
     edu_name = db.Column(db.String(128))
     # 专业名
     department = db.Column(db.String(64))
@@ -306,6 +306,11 @@ class EduLevel(db.Model):
     value = db.Column(db.Integer)
     level = db.Column(db.String(32))
 
+    @staticmethod
+    def to_arr():
+        edu_lvs = EduLevel.query.all()
+        return [[lv.id, lv.level] for lv in edu_lvs]
+
     def __repr__(self):
         return "<学历: {}>".format(self.level)
 
@@ -315,6 +320,11 @@ class LearnForm(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(32))
     edu = db.relationship('Education', backref='learn_form', lazy='joined')
+
+    @staticmethod
+    def to_arr():
+        lfs = LearnForm.query.all()
+        return [[lf.id, lf.name] for lf in lfs]
 
     def __repr__(self):
         return "<学习形式: {}>".format(self.name)
