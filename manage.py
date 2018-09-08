@@ -29,7 +29,7 @@ manager.add_command('db', MigrateCommand)
 def init():
     from app.models import run_only
     from app.sql_init import init_edu_lv, init_learn_form
-    # run_only()
+    run_only()
     init_edu_lv()
     init_learn_form()
 
@@ -53,8 +53,7 @@ def ex_test():
 
 @manager.command
 def db_test():
-    from test import add_personnel
-    add_personnel()
+    pass
 
 
 if __name__ == "__main__":

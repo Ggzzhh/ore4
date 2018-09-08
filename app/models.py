@@ -16,13 +16,6 @@ def load_user(user_id):
     return None
 
 
-class Per2Title(db.Model):
-    __tablename__ = 'follows'
-    date = db.Column('date', db.DateTime, default=date.today())
-    per_id = db.Column(db.Integer, db.ForeignKey('personnels.id'), primary_key=True)
-    title_id = db.Column( db.Integer, db.ForeignKey('titlies.id'), primary_key=True)
-
-
 class Role(db.Model):
     __tablename__ = 'roles'
     id = db.Column(db.Integer, primary_key=True)
@@ -131,6 +124,14 @@ class Dept(db.Model):
             else ''
         }
         return data
+
+    @staticmethod
+    def to_arr():
+        names = []
+        for dept in Dept.query.all():
+            names.append([dept.id, dept.dept_name, dept.system.system_name,
+                          dept.dept_pro.dept_pro_name])
+        return names
 
     def __repr__(self):
         return '<单位: %r>' % self.dept_name
@@ -242,8 +243,8 @@ class Resume(db.Model):
     change_time = db.Column(db.DateTime)
     # 任职时间
     work_time = db.Column(db.DateTime)
-    # 职务
-    duty = db.Column(db.String(64))
+    # 单位
+    dept = db.Column(db.String(64))
     # 任职文号
     identifier = db.Column(db.String(64))
 

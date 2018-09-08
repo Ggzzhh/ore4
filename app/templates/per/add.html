@@ -2,296 +2,166 @@
 {% import 'per/_models.html' as model %}
 {% from 'bootstrap/utils.html' import render_static %}
 {% block head %}
-	<style>
-		.per-content {
-			height: 100%;
-			width: 100%;
-		}
-		.per-table {
-			padding: 1.2rem 1rem;
-			width: 100%;
-			height: 100%;
-		}
-		.tab-content {
-			width: 100%;
-			min-height: 90%;
-		}
-		.fade {
-			width: 100%;
-			height: 90%;
-		}
-		form#add-per {
-			width: 100%;
-			height: 100%;
-		}
-		td.index, th.index{
-			width: 3em;
-			padding-top: 1em;
-		}
-		table tbody{
-			font-size: 0.875rem;
-		}
-		td.index {
-			padding-top: 1.1rem;
-		}
-		td select {
-			min-width: 5rem;
-		}
-	</style>
+  <style>
+    .per-content {
+      height: 100%;
+      width: 100%;
+    }
+    .per-table {
+      padding: 1.2rem 1rem;
+      width: 100%;
+      height: 100%;
+    }
+    .tab-content {
+      width: 100%;
+      min-height: 90%;
+    }
+    .fade {
+      width: 100%;
+      height: 90%;
+    }
+    form#add-per {
+      width: 100%;
+      height: 100%;
+    }
+    td.index, th.index{
+      width: 3em;
+      padding-top: 1em;
+    }
+    table tbody{
+      font-size: 0.875rem;
+    }
+    td.index {
+      padding-top: 1.1rem;
+    }
+    td select {
+      min-width: 5rem;
+    }
+  </style>
 {% endblock %}
 {% block content %}
-	<div class="iframe-content">
-		<div class="search d-flex mb-2">
-			<div class="title">{{ title }}</div>
-		</div>
-		<div class="per-content">
-			<form id="add-per">
-				{% include 'per/infotable.html' %}
+  <div class="iframe-content">
+    <div class="search d-flex mb-2">
+      <div class="title">{{ title }}</div>
+    </div>
+    <div class="per-content">
+      <form id="add-per">
+        {% include 'per/infotable.html' %}
 
-				<div class="input-group justify-content-end">
-					<button type="submit" class="btn btn-outline-dark
+        <div class="input-group justify-content-end">
+          <button type="submit" class="btn btn-outline-dark
 				mr-3">提交</button>
-					<button type="reset" class="btn btn-outline-dark
+          <button type="reset" class="btn btn-outline-dark
 				mr-3">重置</button>
-				</div>
-			</form>
-		</div>
-	</div>
+        </div>
+      </form>
+    </div>
+  </div>
 {% endblock %}
 {% block script %}
-	<script>
-        var myCount = function () {
-            var privateCounter = 0;
-            function changeBy(val) {
-                privateCounter += val;
-            }
-            return {
-                increment: function() {
-                    changeBy(1);
-                },
-                decrement: function() {
-                    changeBy(-1);
-                },
-                value: function() {
-                    return privateCounter;
-                },
-                init: function (val) {
-                    privateCounter = val;
-                }
-            }
-        };
-
-        var notNullText = "<td class='input-group-inline input-group-sm'>" +
-            "<input type='text' class='form-control' " + "required " +
-            "placeholder='请输入...'>" +
-            "</td>";
-
-        var myText = "<td class='input-group-inline input-group-sm'>" +
-            "<input type='text' class='form-control' " +
-            "placeholder='请输入...'>" +
-            "</td>";
-
-        var myNum = "<td class='input-group-inline input-group-sm'>" +
-            "<input type='number' class='form-control' " +
-            "placeholder='请输入...'>" +
-            "</td>";
-
-        var myDate = "<td class='input-group-inline input-group-sm'>" +
-            "<input type='text' class='form-control mydate' " +
-            "placeholder='请选择...'>" +
-            "</td>";
-
-        var myDisText = "<td class='input-group-inline input-group-sm'>" +
-            "<input type='text' class='form-control' disabled " +
-            "placeholder='请输入...'>" +
-            "</td>";
-
-        var td = "<td class='input-group-inline input-group-sm'></td>";
-        var select = "<td class='input-group-inline input-group-sm'>" +
-            "<select class='mt-1'>" +
-            "</select>" +
-            "</td>";
+  {{ render_static('js', 'js/per.js') }}
+  <script>
 
 
-        var handle = {
-            del: function (id, d_id) {
-                if (confirm('确定删除该项么？'))
-                    $('#'+id).remove();
-            }
-        };
+  </script>
+  <script>
+      var temp;
 
-        var get_families = function () {
-            var family_arr = [];
-            var temp = {};
-            var families = $('#family-tbody').children();
-            for (var i=0; i < families.length; i++) {
-                temp = {};
-                var td_arr = families.eq(i).find('td');
-                temp.relationship = td_arr.eq(1).find('input').val();
-                temp.name = td_arr.eq(2).find('input').val();
-                temp.age = Number(td_arr.eq(3).find('input').val());
-                temp.p_c = td_arr.eq(4).find('input').val();
-                temp.workplace = td_arr.eq(5).find('input').val();
-                family_arr.push(temp);
-            }
-            return family_arr;
-        };
+      var f_count = myCount();
+      f_count.init({{ f_count|default(0) }});
 
-        var get_r_and_p = function () {
-            var r_and_p_arr = [];
-            var temp = {};
-            var r_and_p = $('#r-and-p-tbody').children();
-            for (var i=0; i < r_and_p.length; i++) {
-                temp = {};
-                var td_arr = r_and_p.eq(i).find('td');
-                temp.time = td_arr.eq(1).find('input').val();
-                temp.dept = td_arr.eq(2).find('input').val();
-                temp.reason = td_arr.eq(3).find('input').val();
-                temp.workplace = td_arr.eq(4).find('input').val();
-                temp.remarks = td_arr.eq(5).find('input').val();
-                r_and_p_arr.push(temp);
-            }
-            return r_and_p_arr;
-        };
+      var r_and_p_count = myCount();
+      r_and_p_count.init({{ r_and_p_count|default(0) }});
 
-        var get_edu = function () {
-            var edu_arr = [];
-            var temp = {};
-            var edu = $('#edu-tbody').children();
-            for (var i=0; i < edu.length; i++) {
-                temp = {};
-                var td_arr = edu.eq(i).find('td');
-                temp.edu_level_id = td_arr.eq(1).find('select').val();
-                temp.enrolment_time = td_arr.eq(2).find('input').val();
-                temp.graduation_time = td_arr.eq(3).find('input').val();
-                temp.edu_name = td_arr.eq(4).find('input').val();
-                temp.department = td_arr.eq(5).find('input').val();
-                temp.degree = td_arr.eq(6).find('input').val();
-                temp.learn_id = td_arr.eq(7).find('select').val();
-                edu_arr.push(temp);
-            }
-            return edu_arr;
-        };
+      var edu_count = myCount();
+      edu_count.init({{ edu_count|default(0) }});
 
-	</script>
-	<script>
-        var temp;
+      var title_count = myCount();
+      title_count.init({{ title_count|default(0) }});
 
-        var f_count = myCount();
-        f_count.init({{ f_count|default(0) }});
+      var resume_count = myCount();
+      resume_count.init({{ resume_count|default(0) }});
 
-        var r_and_p_count = myCount();
-        r_and_p_count.init({{ r_and_p_count|default(0) }});
+      var _edu_lv = [];
+      {% for temp in edu_lv %}
+          temp = [];
+          temp.push({{ temp[0] }});
+          temp.push("{{ temp[1] }}");
+          _edu_lv.push(temp);
+      {% endfor %}
 
-        var edu_count = myCount();
-        edu_count.init({{ edu_count|default(0) }});
+      var _learn_from = [];
+      {% for temp in learn_form %}
+          temp = [];
+          temp.push({{ temp[0] }});
+          temp.push("{{ temp[1] }}");
+          _learn_from.push(temp);
+      {% endfor %}
 
-        var title_count = myCount();
-        title_count.init({{ title_count|default(0) }});
+      var _titles = {};
+      {% for title in title_names %}
+          _titles["{{ title[0] }}"] = ["{{ title[2] }}", "{{ title[3] }}"];
+      {% endfor %}
 
-        var _edu_lv = [];
-        {% for temp in edu_lv %}
-            temp = [];
-            temp.push({{ temp[0] }});
-            temp.push("{{ temp[1] }}");
-            _edu_lv.push(temp);
-        {% endfor %}
+      var _dept_names = {};
+      {% for name in dept_names %}
+          _dept_names["{{ name[0] }}"] = ["{{ name[2] }}", "{{ name[3] }}"];
+      {% endfor %}
 
-        var _learn_from = [];
-        {% for temp in learn_form %}
-            temp = [];
-            temp.push({{ temp[0] }});
-            temp.push("{{ temp[1] }}");
-            _learn_from.push(temp);
-        {% endfor %}
+      var title_change = function (id) {
+          var tds = $('#'+ id).find('td');
+          var title_id = tds.eq(3).find('select').val();
+          tds.eq(2).find('input').val(_titles[title_id][1]);
+          tds.eq(1).find('input').val(_titles[title_id][0]);
+      };
 
-        var _titles = {};
-        {% for title in title_names %}
-            _titles["{{ title[0] }}"] = ["{{ title[2] }}", "{{ title[3] }}"];
-        {% endfor %}
+      var dept_name_change = function () {
+        var dept_id = $('#dept_name').val();
+        $('#system').val(_dept_names[dept_id][0]);
+        $('#dept_pro').val(_dept_names[dept_id][1]);
+      };
 
-        var title_change = function (id) {
-            var tds = $('#'+ id).find('td');
-            var title_id = tds.eq(3).find('select').val();
-            tds.eq(2).find('input').val(_titles[title_id][1]);
-            tds.eq(1).find('input').val(_titles[title_id][0]);
-        };
-
-        var title_name = "<td class='input-group-inline input-group-sm'>" +
-            "<select class='mt-1'>" +
-            {% for title in title_names %}
-                "<option value=\"{{ title[0] }}\">{{ title[1] }}</option>" +
-            {% endfor %}
-            "</select>" +
-            "</td>";
+      var title_name = "<td class='input-group-inline input-group-sm'>" +
+          "<select class='mt-1'>" +
+          {% for title in title_names %}
+              "<option value=\"{{ title[0] }}\">{{ title[1] }}</option>" +
+          {% endfor %}
+          "</select>" +
+          "</td>";
 
 
-        $(document).ready(function () {
-            $('.mydate').datepicker({
-                language: "zh-CN"
-            });
+      $(document).ready(function () {
+          $('.mydate').datepicker({
+              language: "zh-CN"
+          });
 
-            $('#add-title-tr').bind('click', function () {
-                title_count.increment();
-                var title_id = "title-" + title_count.value();
-                var title_tr = $('<tr id="'+ title_id + '"></tr>');
-                var _title_name = $(title_name);
-                _title_name.attr('onchange', 'title_change("' + title_id + '")');
+          $('#dept_name').bind('change', dept_name_change);
 
-                title_tr.append($('<td class="index">'+ title_count.value() + '</td>'));
-                title_tr.append($(myDisText));
-                title_tr.children(':last-child').find('input').val
-                (_titles[1][0]);
-                title_tr.append($(myDisText));
-                title_tr.children(':last-child').find('input').val
-                (_titles[1][1]);
-                title_tr.append(_title_name);
-                title_tr.append($(myText));
-                title_tr.append($(myDate));
-                title_tr.append($(myText));
-                var engage = $(select);
-                engage.find('select').append("<option " +
-					"value='true'>是</option>");
-                engage.find('select').append("<option " +
-					"value='false'>否</option>");
-                title_tr.append(engage);
-                title_tr.append($(myDate));
-                title_tr.append($(myText));
-                title_tr.append($("<td><button type='button' class='btn btn-link " +
-                    "btn-sm' onclick=" + "handle.del('title-" + title_count
-                        .value()
-                    + "')" + ">删除</button></td>"));
-                $('#title-tbody').append(title_tr);
-                $('.mydate').datepicker({
-                    language: "zh-CN"
-                });
-            });
+          // 监听form表单
+          $('#add-per').bind('submit', function () {
+              var data = JSON.stringify({
+                  families: get_families(),
+                  r_and_p: get_r_and_p(),
+                  edus: get_edu(),
+                  titlies: get_title(),
+                  resumes: get_resume()
+              });
 
-            // 监听form表单
-            $('#add-per').bind('submit', function () {
+              var _success = function (data) {
+                  alert(data.message);
+                  location.href = '/search';
+              };
 
-                var data = JSON.stringify({
-                    families: get_families(),
-                    r_and_p: get_r_and_p(),
-                    edus: get_edu()
-					// todo: get_titles()
-                });
+              a_json(
+                  '/v1/manage-per',
+                  'POST',
+                  data,
+                  _success
+              );
 
-                var _success = function (data) {
-                    alert(data.message);
-                    location.href = '/search';
-                };
+              return false;
+          })
+      });
+  </script>
 
-                a_json(
-                    '/v1/manage-per',
-                    'POST',
-                    data,
-                    _success
-                );
-
-                return false;
-            })
-        });
-	</script>
-	{{ render_static('js', 'js/per.js') }}
 {% endblock %}

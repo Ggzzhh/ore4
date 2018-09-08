@@ -16,7 +16,7 @@ function uEdit(id) {
         };
 
         a_json(
-            "{{ url_for('v1.manage_user') }}",
+            "/v1/manage-user",
             "POST",
             data,
             _success);
@@ -68,7 +68,7 @@ function dutyEdit(name, id, order, lv_id) {
         };
 
         a_json(
-            "{{ url_for('v1.manage_duty') }}",
+            "/v1/manage-duty",
             "POST",
             data,
             _success);
@@ -124,7 +124,7 @@ function deptEdit(name, id, order, system_id, pro_id) {
             }, 1000);
         };
         a_json(
-            "{{ url_for('v1.manage_dept') }}",
+            "/v1/manage-dept",
             "POST",
             data,
             _success);
