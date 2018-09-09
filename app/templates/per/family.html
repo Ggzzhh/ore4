@@ -1,8 +1,10 @@
 
 <div class="new-family">
+  {% if current_user.role.id == 1 %}
 	<button class="btn btn-outline-dark" type="button" id="add-family-tr">
 		+ 新增
 	</button>
+  {% endif %}
 </div>
 <div class="family-tab mt-2">
 	<table class="table table-bordered text-center">

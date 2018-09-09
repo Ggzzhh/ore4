@@ -20,6 +20,24 @@
       width: 100%;
       height: 90%;
     }
+    #info-tbody td {
+      font-size: 0.85rem;
+      max-height: 1rem;
+    }
+
+    #info-tbody td>span{
+      display: block;
+      padding-top: 0.4rem;
+      min-width: 6rem;
+    }
+
+    #info-tbody tr > td > div{
+      vertical-align: center;
+      display: inline-block;
+      padding-top: 0.4rem;
+      min-width: 6rem;
+    }
+
     form#add-per {
       width: 100%;
       height: 100%;
@@ -47,12 +65,13 @@
     <div class="per-content">
       <form id="add-per">
         {% include 'per/infotable.html' %}
-
-        <div class="input-group justify-content-end">
+        {% if current_user.role.id == 1 %}
+          <div class="input-group justify-content-end">
           <button type="submit" class="btn btn-outline-dark
 				mr-3">提交</button>
           <button type="reset" class="btn btn-outline-dark
 				mr-3">重置</button>
+        {% endif %}
         </div>
       </form>
     </div>
@@ -116,9 +135,9 @@
       };
 
       var dept_name_change = function () {
-        var dept_id = $('#dept_name').val();
-        $('#system').val(_dept_names[dept_id][0]);
-        $('#dept_pro').val(_dept_names[dept_id][1]);
+          var dept_id = $('#dept_name').val();
+          $('#system').val(_dept_names[dept_id][0]);
+          $('#dept_pro').val(_dept_names[dept_id][1]);
       };
 
       var title_name = "<td class='input-group-inline input-group-sm'>" +
@@ -129,13 +148,56 @@
           "</select>" +
           "</td>";
 
+      var get_info = function () {
+          var info_dic = {};
+          info_dic.cadre_id = $('#cadre_id').val();
+          info_dic.dept_name = $('#dept_name').val();
+          info_dic.name = $('#name').val();
+          info_dic.sex = $('input[name="sex"]').val();
+          info_dic.nation = $('#nation').val();
+          info_dic.specialty = $('#specialty').val();
+          info_dic.photo_src = $('#photo_src').attr("src");
+          info_dic.id_card = $('#id_card').val();
+          info_dic.birthday = $('#birthday').val();
+          info_dic.age = $('#age').val();
+          info_dic.policital_status = $('#policital_status').val();
+          info_dic.identity = $('#identity').val();
+          info_dic.party_member = $('#party_member').val();
+          info_dic.work_time = $('#work_time').val();
+          info_dic.native_place = $('#native_place').val();
+          info_dic.birth_place = $('#birth_place').val();
+          info_dic.work_no = $('#work_no').val();
+          info_dic.s_work_year = $('#s_work_year').val();
+          info_dic.bonus = $('#bonus').val();
+          info_dic.duty = $('#duty').val();
+          info_dic.duty_lv = $('#duty_lv').val();
+          info_dic.remarks = $('#remarks').val();
+          info_dic.deputy_sc_time = $('#deputy_sc_time').val();
+          info_dic.sc_time = $('#sc_time').val();
+          info_dic.position_time = $('#position_time').val();
+          info_dic.VGM_time = $('#VGM_time').val();
+          info_dic.agent_time = $('#agent_time').val();
+          info_dic.remarks_2 = $('#remarks_2').val();
+          return info_dic
+      }
+
 
       $(document).ready(function () {
           $('.mydate').datepicker({
               language: "zh-CN"
           });
-
+          {% if current_user.role.id != 1 %}
+              $('input').attr('disabled', 'true');
+              $('select').attr('disabled', 'true');
+          {% endif %}
           $('#dept_name').bind('change', dept_name_change);
+          $('#birthday').bind('change', function () {
+              var birthday = $('#birthday').val();
+              var age = moment(birthday, "YYYY年MM月DD日").fromNow(true);
+              var re = /(\d{1,2}) [年]/;
+              if (re.test(age))
+                  $('#age').val(re.exec(age)[1]);
+          });
 
           // 监听form表单
           $('#add-per').bind('submit', function () {
@@ -144,7 +206,8 @@
                   r_and_p: get_r_and_p(),
                   edus: get_edu(),
                   titlies: get_title(),
-                  resumes: get_resume()
+                  resumes: get_resume(),
+                  info: get_info()
               });
 
               var _success = function (data) {

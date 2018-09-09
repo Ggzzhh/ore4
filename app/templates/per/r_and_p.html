@@ -1,23 +1,25 @@
 
 <div class="new-r-and-p">
-	<button class="btn btn-outline-dark" type="button" id="add-r-and-p-tr">
-		+ 新增
-	</button>
+  {% if current_user.role.id == 1 %}
+    <button class="btn btn-outline-dark" type="button" id="add-r-and-p-tr">
+      + 新增
+    </button>
+  {% endif %}
 </div>
 <div class="r-and-p-tab mt-2">
-	<table class="table table-bordered text-center">
-		<thead>
-		<tr>
-			<th class="index">序&nbsp;&nbsp;号</th>
-			<th>时&nbsp;&nbsp;间</th>
-			<th>奖惩单位</th>
-			<th>奖惩原因</th>
-			<th>奖惩结果</th>
-			<th>备注</th>
-			<th>操作</th>
-		</tr>
-		</thead>
-		<tbody id="r-and-p-tbody">
-		</tbody>
-	</table>
+  <table class="table table-bordered text-center">
+    <thead>
+    <tr>
+      <th class="index">序&nbsp;&nbsp;号</th>
+      <th>时&nbsp;&nbsp;间</th>
+      <th>奖惩单位</th>
+      <th>奖惩原因</th>
+      <th>奖惩结果</th>
+      <th>备注</th>
+      <th>操作</th>
+    </tr>
+    </thead>
+    <tbody id="r-and-p-tbody">
+    </tbody>
+  </table>
 </div>

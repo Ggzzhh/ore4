@@ -1,7 +1,9 @@
 <div class="new-edu">
+  {% if current_user.role.id == 1 %}
 	<button class="btn btn-outline-dark" type="button" id="add-edu-tr">
 		+ 新增
 	</button>
+  {% endif %}
 </div>
 <div class="edu-tab mt-2">
 	<table class="table table-bordered text-center">

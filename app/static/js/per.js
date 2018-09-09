@@ -139,8 +139,9 @@ var get_resume = function () {
         var td_arr = resume.eq(i).find('td');
         temp.change_time = td_arr.eq(1).find('input').val();
         temp.dept = td_arr.eq(2).find('input').val();
-        temp.identifier = td_arr.eq(3).find('input').val();
-        temp.work_time = td_arr.eq(4).find('input').val();
+        temp.duty = td_arr.eq(3).find('input').val();
+        temp.identifier = td_arr.eq(4).find('input').val();
+        temp.work_time = td_arr.eq(5).find('input').val();
         resume_arr.push(temp);
     }
     return resume_arr;
@@ -261,13 +262,14 @@ $(document).ready(function () {
         });
     });
 
-    // 添加新的奖惩行
+    // 添加新的简历行
     $('#add-resume-tr').bind('click', function () {
         resume_count.increment();
         var resume_id = "resume-" + resume_count.value();
         var resume_tr = $('<tr id="'+ resume_id + '"></tr>');
         resume_tr.append($('<td class="index">'+ resume_count.value() + '</td>'));
         resume_tr.append($(myDate));
+        resume_tr.append($(myText));
         resume_tr.append($(myText));
         resume_tr.append($(myText));
         resume_tr.append($(myDate));

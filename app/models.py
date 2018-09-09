@@ -174,6 +174,8 @@ class Personnel(db.Model):
     work_time = db.Column(db.DateTime)
     # 入党时间
     party_member = db.Column(db.DateTime)
+    # policital status 政治面貌
+    policital_status = db.Column(db.String(16))
     # 籍贯
     native_place = db.Column(db.String(32))
     # 出生地
@@ -191,7 +193,7 @@ class Personnel(db.Model):
     # 任代理时间
     agent_time = db.Column(db.DateTime)
     # 身份
-    identity = db.Column(db.DateTime)
+    identity = db.Column(db.String(16))
     # 工号
     work_no = db.Column(db.Integer)
     # 特殊工作年限
@@ -243,6 +245,8 @@ class Resume(db.Model):
     change_time = db.Column(db.DateTime)
     # 任职时间
     work_time = db.Column(db.DateTime)
+    # 职务
+    duty = db.Column(db.String(32))
     # 单位
     dept = db.Column(db.String(64))
     # 任职文号

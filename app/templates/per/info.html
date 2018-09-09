@@ -2,13 +2,17 @@
   <table class="table table-bordered text-center">
     <tbody id="info-tbody">
     <tr>
-      <td>编号</td>
+      <td>
+        <span>编号</span>
+      </td>
       <td class='input-group-inline input-group-sm'>
         <input type="text" id="cadre_id"
                class="form-control" value=""
                placeholder="请输入..."/>
       </td>
-      <td>单位简称</td>
+      <td>
+        <span>单位简称</span>
+      </td>
       <td colspan="2" class='input-group-inline input-group-sm'>
         <select name="dept_name" id="dept_name" class="form-control">
           {% for name in dept_names %}
@@ -16,146 +20,376 @@
           {% endfor %}
         </select>
       </td>
-      <td>系统</td>
+      <td>
+        <span>系统</span>
+      </td>
       <td class='input-group-inline input-group-sm'>
         <input type="text" id="system" disabled
                class="form-control" value=""
                placeholder="空"/>
       </td>
-      <td>单位属性</td>
+      <td>
+        <span>单位属性</span>
+      </td>
       <td class='input-group-inline input-group-sm' colspan="2">
         <input type="text" id="dept_pro" disabled
                class="form-control" value=""
                placeholder="空"/>
       </td>
-      <td colspan="2" rowspan="5" id="photo_src">
-        图片？？？
+      <td colspan="2" rowspan="4">
+        <div class="d-flex flex-column align-items-center">
+          <img src="/static/image/timg.jpg" alt="" width="122" height="185"
+               class = "img-thumbnail" id="photo_src">
+          <div class="fileupload">
+            <input type="file" accept="image/jpeg, image/png">
+            <button class="btn btn-default btn-sm mt-3" type="button">上传</button>
+          </div>
+        </div>
       </td>
     </tr>
     <tr>
-      <td>姓名</td>
+      <td>
+        <span>姓名</span>
+      </td>
       <td class='input-group-inline input-group-sm'>
         <input type="text" id="name"
                class="form-control" value=""
                placeholder="请输入..."/>
       </td>
-      <td>性别</td>
+      <td>
+        <span>性别</span>
+      </td>
       <td class='input-group-inline input-group-sm' colspan="2">
         <div class="form-check form-check-inline">
-
-          <input type="radio" name="sex" id="sex1"
+          <input type="radio" name="sex" id="sex1" checked
                  class="form-check-input" value="男"/>
           <label for="sex1" class="form-check-label">男</label>
         </div>
         <div class="form-check form-check-inline">
-
           <input type="radio" name="sex" id="sex2"
                  class="form-check-input" value="女"/>
           <label for="sex2" class="form-check-label">女</label>
         </div>
       </td>
-      <td>民族</td>
-      <td>:</td>
-      <td>专长</td>
-      <td colspan="2">:</td>
+      <td>
+        <span>民族</span>
+      </td>
+      <td class='input-group-inline input-group-sm'>
+        <input type="text" id="nation"
+               class="form-control" value=""
+               placeholder="请输入..."/>
+      </td>
+      <td>
+        <span>专长</span>
+      </td>
+      <td class='input-group-inline input-group-sm' colspan="2">
+        <input type="text" id="specialty"
+               class="form-control" value=""
+               placeholder="请输入..."/>
+      </td>
     </tr>
     <tr>
-      <td>身份证号</td>
-      <td colspan="4">:</td>
-      <td>出生日期</td>
-      <td>:</td>
-      <td>年龄</td>
-      <td colspan="2">:</td>
+      <td>
+        <span>身份证号</span>
+      </td>
+      <td class='input-group-inline input-group-sm' colspan="4">
+        <input type="text" id="id_card"
+               class="form-control" value=""
+               placeholder="请输入..."/>
+      </td>
+      <td>
+        <span>出生日期</span>
+      </td>
+      <td class='input-group-inline input-group-sm'>
+        <input type="text" id="birthday"
+               class="form-control mydate" value=""
+               placeholder="请选择..."/>
+      </td>
+      <td>
+        <span>年龄</span>
+      </td>
+      <td class='input-group-inline input-group-sm' colspan="2">
+        <input type="text" id="age"  disabled
+               class="form-control" value=""
+               placeholder="0"/>
+      </td>
     </tr>
     <tr>
-      <td>政治面貌</td>
-      <td>:</td>
-      <td>参加工作时间</td>
-      <td colspan="2">:</td>
-      <td>入党时间</td>
-      <td>:</td>
-      <td>身份</td>
-      <td colspan="2">:</td>
+      <td>
+        <span>政治面貌</span>
+      </td>
+      <td class='input-group-inline input-group-sm'>
+        <input type="text" id="policital_status"
+               class="form-control" value=""
+               placeholder="请输入..."/>
+      </td>
+      <td>
+        <span>身份</span>
+      </td>
+      <td class='input-group-inline input-group-sm' colspan="2">
+        <input type="text" id="identity"
+               class="form-control" value=""
+               placeholder="请输入..."/>
+      </td>
+      <td>
+        <span>入党时间</span>
+      </td>
+      <td class='input-group-inline input-group-sm'>
+        <input type="text" id="party_member"
+               class="form-control mydate" value=""
+               placeholder="请选择..."/>
+      </td>
+      <td>
+        <span>参加工作时间</span>
+      </td>
+      <td class='input-group-inline input-group-sm' colspan="2">
+        <input type="text" id="work_time"
+               class="form-control mydate" value=""
+               placeholder="请选择..."/>
+      </td>
+
     </tr>
     <tr>
-      <td>籍贯</td>
-      <td>:</td>
-      <td>出生地</td>
-      <td colspan="2">:</td>
-      <td>工号</td>
-      <td>:</td>
-      <td>特殊工种年限</td>
-      <td colspan="2">:</td>
+      <td>
+        <span>籍贯</span>
+      </td>
+      <td class='input-group-inline input-group-sm'>
+        <input type="text" id="native_place"
+               class="form-control" value=""
+               placeholder="请输入..."/>
+      </td>
+      <td>
+        <span>出生地</span>
+      </td>
+      <td class='input-group-inline input-group-sm' colspan="2">
+        <input type="text" id="birth_place"
+               class="form-control" value=""
+               placeholder="请输入..."/>
+      </td>
+      <td>
+        <span>工号</span>
+      </td>
+      <td class='input-group-inline input-group-sm' >
+        <input type="number" id="work_no"
+               class="form-control" value=""
+               placeholder="请输入..."/>
+      </td>
+      <td>
+        <span>特殊工种年限</span>
+      </td>
+      <td class='input-group-inline input-group-sm' colspan="5">
+        <input type="text" id="s_work_year"
+               class="form-control" value=""
+               placeholder="请输入..."/>
+      </td>
     </tr>
     <tr>
-      <td>荣誉金</td>
-      <td></td>
-      <td>职务</td>
-      <td></td>
-      <td>级别</td>
-      <td></td>
-      <td>调入备注</td>
-      <td colspan="5"></td>
+      <td>
+        <span>荣誉金</span>
+      </td>
+      <td class='input-group-inline input-group-sm'>
+        <input type="text" id="bonus"
+               class="form-control" value=""
+               placeholder="请输入..."/>
+      </td>
+      <td>
+        <span>职务</span>
+      </td>
+      <td class='input-group-inline input-group-sm'>
+        <input type="text" id="duty"
+               class="form-control" value=""
+               placeholder="暂无"/>
+      </td>
+      <td>
+        <span>级别</span>
+      </td>
+      <td class='input-group-inline input-group-sm'>
+        <select name="duty_lv" id="duty_lv" class="form-control">
+          {% for lv in duty_lvs %}
+            <option value="{{ lv[0] }}">{{ lv[1] }}</option>
+          {% endfor %}
+        </select>
+      </td>
+      <td>
+        <span>调入备注</span>
+      </td>
+      <td class='input-group-inline input-group-sm' colspan="5">
+        <input type="text" id="remarks"
+               class="form-control" value=""
+               placeholder="请输入..."/>
+      </td>
     </tr>
     <tr>
-      <td>现有职称</td>
-      <td></td>
-      <td>任副科级年月</td>
-      <td></td>
-      <td>任正科级年月</td>
-      <td></td>
-      <td>任现职年月</td>
-      <td></td>
-      <td>任副总年月</td>
-      <td></td>
-      <td>任代理年月</td>
-      <td></td>
+      <td>
+        <span>现有职称</span>
+      </td>
+      <td class='input-group-inline input-group-sm'>
+        <input type="text" id="title" disabled
+               class="form-control" value=""
+               placeholder="暂无"/>
+      </td>
+      <td>
+        <span>任副科级时间</span>
+      </td>
+      <td class='input-group-inline input-group-sm'>
+        <input type="text" id="deputy_sc_time"
+               class="form-control mydate" value=""
+               placeholder="请选择..."/>
+      </td>
+      <td>
+        <span>任正科级时间</span>
+      </td>
+      <td class='input-group-inline input-group-sm'>
+        <input type="text" id="sc_time"
+               class="form-control mydate" value=""
+               placeholder="请选择..."/>
+      </td>
+      <td>
+        <span>任现职时间</span>
+      </td>
+      <td class='input-group-inline input-group-sm'>
+        <input type="text" id="position_time"
+               class="form-control mydate" value=""
+               placeholder="请选择..."/>
+      </td>
+      <td>
+        <span>任副总时间</span>
+      </td>
+      <td class='input-group-inline input-group-sm'>
+        <input type="text" id="VGM_time"
+               class="form-control mydate" value=""
+               placeholder="请选择..."/>
+      </td>
+      <td>
+        <span>任代理时间</span>
+      </td>
+      <td class='input-group-inline input-group-sm'>
+        <input type="text" id="agent_time"
+               class="form-control mydate" value=""
+               placeholder="请选择..."/>
+      </td>
     </tr>
-    <tr>
+    <tr id="max_edu">
       <td>最高学历</td>
-      <td></td>
+      <td class='input-group-inline input-group-sm'>
+        <input type="text" disabled
+               class="form-control" value=""
+               placeholder="暂无"/>
+      </td>
       <td>入学时间</td>
-      <td></td>
+      <td class='input-group-inline input-group-sm'>
+        <input type="text" disabled
+               class="form-control" value=""
+               placeholder="暂无"/>
+      </td>
       <td>毕业时间</td>
-      <td></td>
+      <td class='input-group-inline input-group-sm'>
+        <input type="text" disabled
+               class="form-control" value=""
+               placeholder="暂无"/>
+      </td>
       <td>毕业院校</td>
-      <td></td>
+      <td class='input-group-inline input-group-sm'>
+        <input type="text" disabled
+               class="form-control" value=""
+               placeholder="暂无"/>
+      </td>
       <td>专业</td>
-      <td></td>
+      <td class='input-group-inline input-group-sm'>
+        <input type="text" disabled
+               class="form-control" value=""
+               placeholder="暂无"/>
+      </td>
       <td>学习形式</td>
-      <td></td>
+      <td class='input-group-inline input-group-sm'>
+        <input type="text" disabled
+               class="form-control" value=""
+               placeholder="暂无"/>
+      </td>
     </tr>
-    <tr>
+    <tr id="all_time_edu">
       <td>全日制学历</td>
-      <td></td>
+      <td class='input-group-inline input-group-sm'>
+        <input type="text" disabled
+               class="form-control" value=""
+               placeholder="暂无"/>
+      </td>
       <td>入学时间</td>
-      <td></td>
+      <td class='input-group-inline input-group-sm'>
+        <input type="text" disabled
+               class="form-control" value=""
+               placeholder="暂无"/>
+      </td>
       <td>毕业时间</td>
-      <td></td>
+      <td class='input-group-inline input-group-sm'>
+        <input type="text" disabled
+               class="form-control" value=""
+               placeholder="暂无"/>
+      </td>
       <td>毕业院校</td>
-      <td></td>
+      <td class='input-group-inline input-group-sm'>
+        <input type="text" disabled
+               class="form-control" value=""
+               placeholder="暂无"/>
+      </td>
       <td>专业</td>
-      <td></td>
+      <td class='input-group-inline input-group-sm'>
+        <input type="text" disabled
+               class="form-control" value=""
+               placeholder="暂无"/>
+      </td>
       <td>学习形式</td>
-      <td></td>
+      <td class='input-group-inline input-group-sm'>
+        <input type="text" disabled
+               class="form-control" value=""
+               placeholder="暂无"/>
+      </td>
     </tr>
-    <tr>
+    <tr id="work_edu">
       <td>在职学历</td>
-      <td></td>
+      <td class='input-group-inline input-group-sm'>
+        <input type="text" disabled
+               class="form-control" value=""
+               placeholder="暂无"/>
+      </td>
       <td>入学时间</td>
-      <td></td>
+      <td class='input-group-inline input-group-sm'>
+        <input type="text" disabled
+               class="form-control" value=""
+               placeholder="暂无"/>
+      </td>
       <td>毕业时间</td>
-      <td></td>
+      <td class='input-group-inline input-group-sm'>
+        <input type="text" disabled
+               class="form-control" value=""
+               placeholder="暂无"/>
+      </td>
       <td>毕业院校</td>
-      <td></td>
+      <td class='input-group-inline input-group-sm'>
+        <input type="text" disabled
+               class="form-control" value=""
+               placeholder="暂无"/>
+      </td>
       <td>专业</td>
-      <td></td>
+      <td class='input-group-inline input-group-sm'>
+        <input type="text" disabled
+               class="form-control" value=""
+               placeholder="暂无"/>
+      </td>
       <td>学习形式</td>
-      <td></td>
+      <td class='input-group-inline input-group-sm'>
+        <input type="text" disabled
+               class="form-control" value=""
+               placeholder="暂无"/>
+      </td>
     </tr>
     <tr>
       <td>档案备注</td>
-      <td colspan="11"></td>
+      <td class='input-group-inline input-group-sm' colspan="11">
+        <input type="text" id="remarks_2"
+               class="form-control" value=""
+               placeholder="请输入..."/>
+      </td>
     </tr>
     </tbody>
   </table>
