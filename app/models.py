@@ -6,6 +6,7 @@ from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from . import db, login_manager
+from .tools import str2time, str2img
 
 
 @login_manager.user_loader
@@ -161,7 +162,7 @@ class Personnel(db.Model):
     # 拼音简称
     phonetic = db.Column(db.String(16))
     # 性别
-    sex = db.Column(db.String(2))
+    sex = db.Column(db.String(4))
     # 民族
     nation = db.Column(db.String(32))
     # 生日
@@ -169,7 +170,7 @@ class Personnel(db.Model):
     # 干部编号
     cadre_id = db.Column(db.String(64))
     # 身份证
-    id_card = db.Column(db.String(128))
+    id_card = db.Column(db.String(128), unique=True)
     # 参加工作时间
     work_time = db.Column(db.DateTime)
     # 入党时间
@@ -209,9 +210,9 @@ class Personnel(db.Model):
     # 照片地址
     photo_src = db.Column(db.String(128))
     # 家庭情况
-    families = db.relationship('Family', backref='personnel', lazy='dynamic')
+    families = db.relationship('Family', backref='personnel', lazy='joined')
     # 奖惩情况
-    r_and_p = db.relationship('RAndP', backref='personnel', lazy='dynamic')
+    r_and_ps = db.relationship('RAndP', backref='personnel', lazy='joined')
     # 学历
     edus = db.relationship('Education', backref='personnel', lazy='joined')
     # 简历
@@ -225,9 +226,41 @@ class Personnel(db.Model):
     # 状态
     state_id = db.Column(db.Integer, db.ForeignKey('states.id'))
 
-    def top_title(self):
-        l = self.titlies.order_by(Per2Title.date.desc()).all()
-        return l[0].title if l else None
+    @staticmethod
+    def from_json(data):
+        per = Personnel(name=data.get('name'))
+        per.cadre_id = data.get('cadre_id')
+        per.sex = data.get('sex')
+        per.nation = data.get('nation')
+        per.specialty = data.get('specialty')
+        photo_src = "/static/image/timg.jpg"
+        if data.get('photo_src'):
+            if data.get('photo_src') != photo_src:
+                photo_src = str2img(data.get('photo_src')[23:],
+                                    "app/static/per_img/",
+                                    data.get('id_card'))
+        per.photo_src = photo_src
+        per.id_card = data.get('id_card')
+        per.birthday = str2time(data.get('birthday'))
+        per.age = data.get('age')
+        per.policital_status = data.get('policital_status')
+        per.identity = data.get('identity')
+        per.party_member = str2time(data.get('party_member'))
+        per.work_time = str2time(data.get('work_time'))
+        per.native_place = data.get('native_place')
+        per.birth_place = data.get('birth_place')
+        if data.get('work_no'):
+            per.work_no = int(data.get('work_no'))
+        per.s_work_year = data.get('s_work_year')
+        per.bonus = data.get('bonus')
+        per.remarks = data.get('remarks')
+        per.remarks_2 = data.get('remarks_2')
+        per.deputy_sc_time = str2time(data.get('deputy_sc_time'))
+        per.sc_time = str2time(data.get('sc_time'))
+        per.position_time = str2time(data.get('position_time'))
+        per.VGM_time = str2time(data.get('VGM_time'))
+        per.agent_time = str2time(data.get('agent_time'))
+        return per
 
     @property
     def system(self):
@@ -252,8 +285,24 @@ class Resume(db.Model):
     # 任职文号
     identifier = db.Column(db.String(64))
 
+    @staticmethod
+    def from_json(data):
+        _id = data.get('id')
+        dept = data.get('dept')
+        duty = data.get('duty')
+        if dept is None or duty is None:
+            return None
+        if _id is None:
+            temp = Resume(duty=duty, dept=dept)
+        else:
+            temp = Resume.query.get_or_404(_id)
+        temp.change_time = str2time(data.get('change_time'))
+        temp.work_time = str2time(data.get('work_time'))
+        temp.identifier = data.get('identifier')
+        return temp
+
     def __repr__(self):
-        return "<{}的简历>".format(self.personnel.name)
+        return "<{}的简历>".format(self.duty)
 
 
 class RAndP(db.Model):
@@ -271,6 +320,22 @@ class RAndP(db.Model):
     result = db.Column(db.String(128))
     # 备注
     remarks = db.Column(db.String(200))
+
+    @staticmethod
+    def from_json(data):
+        _id = data.get('id')
+        result = data.get('result')
+        if result is None:
+            return None
+        if _id:
+            rp = RAndP.query.get_or_404(id)
+        else:
+            rp = RAndP(result=result)
+        rp.time = str2time(data.get('time'))
+        rp.dept = data.get('dept')
+        rp.reason = data.get('reason')
+        rp.remarks = data.get('remarks')
+        return rp
 
     def __repr__(self):
         return "<奖惩结果: {}>".format(self.result)
@@ -297,6 +362,25 @@ class Education(db.Model):
     learn_id = db.Column(db.Integer, db.ForeignKey('learn_forms.id'))
     # 备注
     remarks = db.Column(db.String(300))
+
+    @staticmethod
+    def from_json(data):
+        _id = data.get('id')
+        edu_name = data.get('edu_name')
+        edu_level = EduLevel.query.get(data.get('edu_level_id'))
+        if edu_name is None or edu_level is None:
+            return None
+        if _id:
+            edu = Education.query.get_or_404(_id)
+        else:
+            edu = Education(edu_level=edu_level, edu_name=edu_name)
+        edu.department = data.get('department')
+        edu.degree = data.get('degree')
+        edu.remarks = data.get('remarks')
+        edu.enrolment_time = str2time(data.get('enrolment_time'))
+        edu.graduation_time = str2time(data.get('graduation_time'))
+        edu.learn = LearnForm.query.get(data.get('learn_id'))
+        return edu
 
     def __repr__(self):
         return "<学校名: {}>".format(self.edu_name)
@@ -350,6 +434,26 @@ class Family(db.Model):
     # 工作地点
     workplace = db.Column(db.String(64))
 
+    @staticmethod
+    def from_json(data):
+        _id = data.get('id')
+        name = data.get('name')
+
+        if name is None:
+            return None
+
+        if _id:
+            family = Family.query.get_or_404(_id)
+        else:
+            family = Family(name=name)
+
+        family.relationship = data.get('relationship')
+        family.age = data.get('age')
+        family.p_c = data.get('p_c')
+        family.workplace = data.get('workplace')
+
+        return family
+
     def __repr__(self):
         return "<家人姓名: {}>".format(self.name)
 
@@ -375,17 +479,19 @@ class Duty(db.Model):
 
     @staticmethod
     def from_json(data):
-        if data is None or data.get('name') is None:
+        if data is None and data.get('name') is None:
             abort(403)
         _id = data.get('id')
         name = data.get('name')
         duty_level_id = data.get('duty_level_id')
+        if name is None or duty_level_id is None:
+            return None
         if _id is not None:
             temp = Duty.query.get_or_404(_id)
         else:
             temp = Duty()
         temp.name = name
-        temp.duty_level_id = duty_level_id
+        temp.duty_level = DutyLevel.query.get_or_404(duty_level_id)
         return temp
 
     def __repr__(self):
@@ -428,8 +534,27 @@ class Title(db.Model):
     # 聘任时间
     engage_time = db.Column(db.DateTime)
 
+    @staticmethod
+    def from_json(data):
+        name = TitleName.query.get(data.get('name_id'))
+        _id = data.get('id')
+        if name is None:
+            return None
+        if _id is None:
+            temp = Title(name=name)
+        else:
+            temp = Title.query.get_or_404(_id)
+        temp.major = data.get('major')
+        temp.remarks = data.get('remarks')
+        temp.page_no = data.get('page_no')
+        if data.get('engage') == "true":
+            temp.engage = True
+        temp.engage_time = str2time(data.get('engage_time'))
+        temp.get_time = str2time(data.get('get_time'))
+        return temp
+
     def __repr__(self):
-        return "<职称: {}>".format(self.name)
+        return "{}".format(self.name)
 
 
 class TitleName(db.Model):
@@ -488,6 +613,11 @@ class State(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(32))
     personnels = db.relationship('Personnel', backref='state', lazy='dynamic')
+
+    @staticmethod
+    def to_arr():
+        states = State.query.all()
+        return [[state.id, state.name] for state in states]
 
     def __repr__(self):
         return "<状态: {}>".format(self.name)

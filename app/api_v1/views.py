@@ -2,11 +2,13 @@
 import json
 
 from flask import flash, redirect, url_for, jsonify, \
-    current_app, request
+    current_app, request, abort
 from flask_login import logout_user, current_user, login_required
 
 from . import api_v1
-from ..models import db, User, Role, Duty, DutyLevel, Dept, Personnel
+from ..models import db, User, Role, Duty, DutyLevel, Dept, \
+    Personnel, State, Resume, Title, Education, RAndP, Family
+from ..tools import replace2none
 
 
 @api_v1.route('/manage-per', methods=["POST"])
@@ -17,8 +19,65 @@ def manage_per():
     res = request.get_json()
     if res is None:
         return jsonify({'error': True, 'error_message': '没有值传递'})
-    print(res)
-    return jsonify({'error': False, 'message': '测试ok'})
+    res = replace2none(res)
+    info = res.get('info')
+    if info:
+        _id = info.get('id')
+        name = info.get('name')
+        id_card = info.get('id_card')
+        dept = Dept.query.get(info.get('dept_name'))
+        state = State.query.get(info.get('state'))
+        duty = Duty.from_json({'name': info.get('duty'),
+                               'duty_level_id': info.get('duty_lv')})
+        if name is None:
+            abort(403)
+        if id_card is not None:
+            id_card = Personnel.query.filter_by(id_card=id_card).first()
+            if id_card is not None:
+                return jsonify({'error': True, 'error_message': '身份证号已存在! '
+                                                                '不可重复！'})
+        if _id:
+            per = Personnel.query.get_or_404(_id)
+        else:
+            per = Personnel.from_json(info)
+
+        if dept:
+            per.dept = dept
+
+        if state:
+            per.state = state
+
+        if duty:
+            per.duty = duty
+
+        for resume in res.get('resumes'):
+            resume = Resume.from_json(resume)
+            if resume and resume not in per.resumes:
+                per.resumes.append(resume)
+
+        for title in res.get('titlies'):
+            title = Title.from_json(title)
+            if title and title not in per.titlies:
+                per.titlies.append(title)
+
+        for edu in res.get('edus'):
+            edu = Education.from_json(edu)
+            if edu and edu not in per.edus:
+                per.edus.append(edu)
+
+        for rp in res.get('r_and_p'):
+            rp = RAndP.from_json(rp)
+            if rp and rp not in per.r_and_ps:
+                per.r_and_ps.append(rp)
+
+        for family in res.get('families'):
+            family = Family.from_json(family)
+            if family and family not in per.families:
+                per.families.append(family)
+
+        db.session.add(per)
+        return jsonify({'error': False, 'message': '测试ok'})
+    return jsonify({'error': True, 'error_message': '未知错误!'})
 
 
 @api_v1.route('/update-pwd', methods=["POST"])
@@ -135,3 +194,11 @@ def del_user(id):
     user = User.query.get_or_404(id)
     db.session.delete(user)
     return jsonify({'error': False, 'message': '已删除!'})
+
+
+@api_v1.route('/save-img', methods=["POST"])
+@login_required
+def save_img():
+    data = request.get_data()
+    print(data)
+    return jsonify({"data": "/static/image/timg.jpg"})

@@ -2,89 +2,94 @@
 {% import 'per/_models.html' as model %}
 {% from 'bootstrap/utils.html' import render_static %}
 {% block head %}
-  <style>
-    .per-content {
-      height: 100%;
-      width: 100%;
-    }
-    .per-table {
-      padding: 1.2rem 1rem;
-      width: 100%;
-      height: 100%;
-    }
-    .tab-content {
-      width: 100%;
-      min-height: 90%;
-    }
-    .fade {
-      width: 100%;
-      height: 90%;
-    }
-    #info-tbody td {
-      font-size: 0.85rem;
-      max-height: 1rem;
-    }
+	<style>
+		.per-content {
+			height: 100%;
+			width: 100%;
+		}
+		.per-table {
+			padding: 1.2rem 1rem;
+			width: 100%;
+			height: 100%;
+		}
+		.tab-content {
+			width: 100%;
+			min-height: 90%;
+		}
+		.fade {
+			width: 100%;
+			height: 90%;
+		}
+		#info-tbody td {
+			font-size: 0.85rem;
+			max-height: 1rem;
+		}
 
-    #info-tbody td>span{
-      display: block;
-      padding-top: 0.4rem;
-      min-width: 6rem;
-    }
+		#info-tbody td>span{
+			display: block;
+			padding-top: 0.4rem;
+		}
 
-    #info-tbody tr > td > div{
-      vertical-align: center;
-      display: inline-block;
-      padding-top: 0.4rem;
-      min-width: 6rem;
-    }
+		#info-tbody tr > td > div{
+			vertical-align: center;
+			display: inline-block;
+			padding-top: 0.4rem;
+			min-width: 6rem;
+		}
 
-    form#add-per {
-      width: 100%;
-      height: 100%;
-    }
-    td.index, th.index{
-      width: 3em;
-      padding-top: 1em;
-    }
-    table tbody{
-      font-size: 0.875rem;
-    }
-    td.index {
-      padding-top: 1.1rem;
-    }
-    td select {
-      min-width: 5rem;
-    }
-  </style>
+		form#add-per {
+			width: 100%;
+			height: 100%;
+		}
+		td.index, th.index{
+			width: 3em;
+			padding-top: 1em;
+		}
+		table tbody{
+			font-size: 0.875rem;
+		}
+		td.index {
+			padding-top: 1.1rem;
+		}
+		td select {
+			min-width: 5rem;
+		}
+
+		@media (min-width: 1400px){
+			#info-tbody td>span {
+				min-width: 6rem;
+			}
+		}
+
+	</style>
 {% endblock %}
 {% block content %}
-  <div class="iframe-content">
-    <div class="search d-flex mb-2">
-      <div class="title">{{ title }}</div>
-    </div>
-    <div class="per-content">
-      <form id="add-per">
-        {% include 'per/infotable.html' %}
-        {% if current_user.role.id == 1 %}
-          <div class="input-group justify-content-end">
-          <button type="submit" class="btn btn-outline-dark
+	<div class="iframe-content">
+		<div class="search d-flex mb-2">
+			<div class="title">{{ title }}</div>
+		</div>
+		<div class="per-content">
+			<form id="add-per">
+				{% include 'per/infotable.html' %}
+				{% if current_user.role.id == 1 %}
+					<div class="input-group justify-content-end">
+					<button type="submit" class="btn btn-outline-dark
 				mr-3">提交</button>
-          <button type="reset" class="btn btn-outline-dark
+					<button type="reset" class="btn btn-outline-dark
 				mr-3">重置</button>
-        {% endif %}
-        </div>
-      </form>
-    </div>
-  </div>
+				{% endif %}
+				</div>
+			</form>
+		</div>
+	</div>
 {% endblock %}
 {% block script %}
-  {{ render_static('js', 'js/per.js') }}
-  <script>
-
-
-  </script>
-  <script>
+	{{ render_static('js', 'js/per.js') }}
+	{{ render_static('js', 'js/main.js') }}
+	<script>
       var temp;
+
+      var img_src = "/static/image/timg.jpg";
 
       var f_count = myCount();
       f_count.init({{ f_count|default(0) }});
@@ -148,38 +153,7 @@
           "</select>" +
           "</td>";
 
-      var get_info = function () {
-          var info_dic = {};
-          info_dic.cadre_id = $('#cadre_id').val();
-          info_dic.dept_name = $('#dept_name').val();
-          info_dic.name = $('#name').val();
-          info_dic.sex = $('input[name="sex"]').val();
-          info_dic.nation = $('#nation').val();
-          info_dic.specialty = $('#specialty').val();
-          info_dic.photo_src = $('#photo_src').attr("src");
-          info_dic.id_card = $('#id_card').val();
-          info_dic.birthday = $('#birthday').val();
-          info_dic.age = $('#age').val();
-          info_dic.policital_status = $('#policital_status').val();
-          info_dic.identity = $('#identity').val();
-          info_dic.party_member = $('#party_member').val();
-          info_dic.work_time = $('#work_time').val();
-          info_dic.native_place = $('#native_place').val();
-          info_dic.birth_place = $('#birth_place').val();
-          info_dic.work_no = $('#work_no').val();
-          info_dic.s_work_year = $('#s_work_year').val();
-          info_dic.bonus = $('#bonus').val();
-          info_dic.duty = $('#duty').val();
-          info_dic.duty_lv = $('#duty_lv').val();
-          info_dic.remarks = $('#remarks').val();
-          info_dic.deputy_sc_time = $('#deputy_sc_time').val();
-          info_dic.sc_time = $('#sc_time').val();
-          info_dic.position_time = $('#position_time').val();
-          info_dic.VGM_time = $('#VGM_time').val();
-          info_dic.agent_time = $('#agent_time').val();
-          info_dic.remarks_2 = $('#remarks_2').val();
-          return info_dic
-      }
+
 
 
       $(document).ready(function () {
@@ -190,17 +164,18 @@
               $('input').attr('disabled', 'true');
               $('select').attr('disabled', 'true');
           {% endif %}
-          $('#dept_name').bind('change', dept_name_change);
-          $('#birthday').bind('change', function () {
-              var birthday = $('#birthday').val();
-              var age = moment(birthday, "YYYY年MM月DD日").fromNow(true);
-              var re = /(\d{1,2}) [年]/;
-              if (re.test(age))
-                  $('#age').val(re.exec(age)[1]);
+
+          $('#img-input').bind('change', function () {
+              upLoadImage(this.files[0], 'photo_src');
+              img_src = $('#photo_src').attr('src');
           });
 
           // 监听form表单
           $('#add-per').bind('submit', function () {
+              if ($('#name').val() == ""){
+                  alert('姓名不能为空！');
+                  return false;
+              }
               var data = JSON.stringify({
                   families: get_families(),
                   r_and_p: get_r_and_p(),
@@ -212,7 +187,7 @@
 
               var _success = function (data) {
                   alert(data.message);
-                  location.href = '/search';
+{#                  location.href = '/search';#}
               };
 
               a_json(
@@ -225,6 +200,6 @@
               return false;
           })
       });
-  </script>
+	</script>
 
 {% endblock %}

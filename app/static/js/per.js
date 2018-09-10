@@ -85,7 +85,7 @@ var get_r_and_p = function () {
         temp.time = td_arr.eq(1).find('input').val();
         temp.dept = td_arr.eq(2).find('input').val();
         temp.reason = td_arr.eq(3).find('input').val();
-        temp.workplace = td_arr.eq(4).find('input').val();
+        temp.result = td_arr.eq(4).find('input').val();
         temp.remarks = td_arr.eq(5).find('input').val();
         r_and_p_arr.push(temp);
     }
@@ -147,7 +147,52 @@ var get_resume = function () {
     return resume_arr;
 };
 
+var get_info = function () {
+    var info_dic = {};
+    info_dic.cadre_id = $('#cadre_id').val();
+    info_dic.dept_name = $('#dept_name').val();
+    info_dic.name = $('#name').val();
+    info_dic.sex = $('input[name="sex"]').val();
+    info_dic.nation = $('#nation').val();
+    info_dic.specialty = $('#specialty').val();
+    if (img_src == null) img_src = "/static/image/timg.jpg";
+    info_dic.photo_src = $('#photo_src').attr('src');
+    info_dic.id_card = $('#id_card').val();
+    info_dic.birthday = $('#birthday').val();
+    info_dic.age = $('#age').val();
+    info_dic.policital_status = $('#policital_status').val();
+    info_dic.identity = $('#identity').val();
+    info_dic.party_member = $('#party_member').val();
+    info_dic.work_time = $('#work_time').val();
+    info_dic.native_place = $('#native_place').val();
+    info_dic.birth_place = $('#birth_place').val();
+    info_dic.work_no = $('#work_no').val();
+    info_dic.s_work_year = $('#s_work_year').val();
+    info_dic.bonus = $('#bonus').val();
+    info_dic.duty = $('#duty').val();
+    info_dic.duty_lv = $('#duty_lv').val();
+    info_dic.remarks = $('#remarks').val();
+    info_dic.deputy_sc_time = $('#deputy_sc_time').val();
+    info_dic.sc_time = $('#sc_time').val();
+    info_dic.position_time = $('#position_time').val();
+    info_dic.VGM_time = $('#VGM_time').val();
+    info_dic.agent_time = $('#agent_time').val();
+    info_dic.remarks_2 = $('#remarks_2').val();
+    info_dic.state = $('#state').val();
+    return info_dic
+};
+
 $(document).ready(function () {
+
+    $('#dept_name').bind('change', dept_name_change);
+    $('#birthday').bind('change', function () {
+        var birthday = $('#birthday').val();
+        var age = moment(birthday, "YYYY年MM月DD日").fromNow(true);
+        var re = /(\d{1,2}) [年]/;
+        if (re.test(age))
+            $('#age').val(re.exec(age)[1]);
+    });
+
     // 添加一行新的插入家庭表格
     $('#add-family-tr').bind('click', function () {
         f_count.increment();

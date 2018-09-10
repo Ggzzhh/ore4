@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from app import db
 
-from app.models import LearnForm, EduLevel
+from app.models import LearnForm, EduLevel, State
 
 
 def init_learn_form():
@@ -26,3 +26,14 @@ def init_edu_lv():
         res.value = temp[1]
         db.session.add(res)
     print("学历写入完毕!")
+
+
+def init_state():
+    l = ["在职：管理人员", "在职：专技人员", "在职：一般管理人员",
+         "协理", "调离", "退休", "去世"]
+    for temp in l:
+        res = State.query.filter_by(name=temp).first()
+        if res is None:
+            state = State(name=temp)
+            db.session.add(state)
+    print("状态写入完毕!")
