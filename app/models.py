@@ -6,7 +6,7 @@ from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from . import db, login_manager
-from .tools import str2time, str2img
+from .tools import str2time, str2img, calculate_age, time2str
 
 
 @login_manager.user_loader
@@ -269,20 +269,21 @@ class Personnel(db.Model):
         data['phonetic'] = self.phonetic
         data['sex'] = self.sex
         data['nation'] = self.nation
-        data['birthday'] = self.birthday
+        data['birthday'] = time2str(self.birthday)
+        data['age'] = calculate_age(self.birthday)
         data['cadre_id'] = self.cadre_id
         data['id_card'] = self.id_card
-        data['work_time'] = self.work_time
-        data['party_member'] = self.party_member
+        data['work_time'] = time2str(self.work_time)
+        data['party_member'] = time2str(self.party_member)
         data['policital_status'] = self.policital_status
         data['native_place'] = self.native_place
         data['birth_place'] = self.birth_place
         data['specialty'] = self.specialty
-        data['deputy_sc_time'] = self.deputy_sc_time
-        data['sc_time'] = self.sc_time
-        data['position_time'] = self.position_time
-        data['VGM_time'] = self.VGM_time
-        data['agent_time'] = self.agent_time
+        data['deputy_sc_time'] = time2str(self.deputy_sc_time)
+        data['sc_time'] = time2str(self.sc_time)
+        data['position_time'] = time2str(self.position_time)
+        data['VGM_time'] = time2str(self.VGM_time)
+        data['agent_time'] = time2str(self.agent_time)
         data['identity'] = self.identity
         data['work_no'] = self.work_no
         data['s_work_year'] = self.s_work_year
@@ -293,17 +294,81 @@ class Personnel(db.Model):
         data['photo_src'] = self.photo_src
         data['families'] = self.families
         data['r_and_ps'] = self.r_and_ps
-        data['edus'] = self.edus
         data['resumes'] = self.resumes
         data['titlies'] = self.titlies
-        data['duty'] = self.duty.to_json()
-        data['dept'] = self.dept.to_json()
-        data['state'] = self.state.name
+        data['title_name'] = self.title
+        if self.duty:
+            duty = self.duty.to_json()
+            data['duty'] = duty
+            data['duty_name'] = duty['name']
+            data['duty_lv'] = duty['duty_level']
+        if self.dept:
+            dept = self.dept.to_json()
+            data['dept'] = dept
+            data['dept_name'] = dept['name']
+            data['system'] = dept['system']
+            data['dept_pro'] = dept['dept_pro']
+        if self.state:
+            data['state'] = self.state.name
+        data['edus'] = self.edus
+        if self.max_edu:
+            data['max_edu'] = self.max_edu
+            data['max_edu_lv'] = self.max_edu.edu_level.level
+            data['max_edu_time'] = time2str(self.max_edu.graduation_time)
+            data['max_edu_dept'] = self.max_edu.department
+            data['max_edu_name'] = self.max_edu.edu_name
+        if self.at_edu:
+            data['at_edu'] = self.at_edu
+            data['at_edu_lv'] = self.at_edu.edu_level.level
+            data['at_edu_time'] = time2str(self.at_edu.graduation_time)
+            data['at_edu_name'] = self.at_edu.edu_name
+            data['at_edu_dept'] = self.at_edu.department
+        if self.ot_edu:
+            data['ot_edu'] = self.ot_edu
+            data['ot_edu_lv'] = self.ot_edu.edu_level.level
+            data['ot_edu_time'] = time2str(self.ot_edu.graduation_time)
+            data['ot_edu_name'] = self.ot_edu.edu_name
+            data['ot_edu_dept'] = self.ot_edu.department
         return data
 
     @property
-    def system(self):
-        return self.duty.system.system_name
+    def title(self):
+        if self.titlies:
+            return self.titlies[-1].name.name
+        return
+
+    @property
+    def max_edu(self):
+        return self.max_edus(self.edus)
+
+    @property
+    def at_edu(self):
+        L = []
+        for edu in self.edus:
+            if edu.learn_form:
+                if edu.learn_form.id == 1:
+                    L.append(edu)
+        return self.max_edus(L)
+
+    @property
+    def ot_edu(self):
+        L = []
+        for edu in self.edus:
+            if edu.learn_form:
+                if edu.learn_form.id != 1:
+                    L.append(edu)
+        return self.max_edus(L)
+
+    @staticmethod
+    def max_edus(edus):
+        temp = None
+        max = 0
+        if edus:
+            for edu in edus:
+                if edu.edu_level.value > max:
+                    max = edu.edu_level.value
+                    temp = edu
+        return temp
 
     def __repr__(self):
         return "<员工姓名: {}>".format(self.name)

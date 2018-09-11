@@ -8,8 +8,10 @@ from flask_login import login_user, login_required, current_user, logout_user
 import flask_excel as excel
 
 from . import index
-from ..models import User, Dept, System, Title, Duty, DutyLevel, DeptPro
+from ..models import User, Dept, System, Title, Duty, DutyLevel, \
+    DeptPro, Personnel
 from ..const import NAV
+from ..tools import filter_field
 
 
 @index.route('/login2ore4manageSystem', methods=['GET', 'POST'])
@@ -61,34 +63,12 @@ def main():
 @index.route('/search')
 @login_required
 def search():
-    l = [i for i in range(1, 19)]
-    user = {
-        'name': '张三',
-        'mz': '汉',
-        'sex': '男',
-        'birthday': '19930113',
-    }
-    dic = {
-        1: ['name', '姓名'],
-        2: ['mz', '民族'],
-        3: ['sex', '性别'],
-        4: ['birthday', '生日'],
-        5: ['birthday', '生日'],
-        6: ['birthday', '生日'],
-        7: ['birthday', '生日'],
-        8: ['birthday', '生日'],
-        9: ['birthday', '生日'],
-        10: ['birthday', '生日'],
-        11: ['birthday', '生日'],
-        12: ['birthday', '生日'],
-        13: ['birthday', '生日'],
-        14: ['birthday', '生日'],
-        15: ['birthday', '生日'],
-        16: ['birthday', '生日'],
-        17: ['birthday', '生日'],
-        18: ['birthday', '生日'],
-    }
-    return render_template('search.html', user=user, dic=dic, l=l)
+    fields = ['姓名', '性别', '民族', '生日', '年龄', '工作时间', '入党时间',
+              '职务', '职务级别', '最高学历:学历', '最高学历:毕业时间',
+              '最高学历:院校', '最高学历:专业', '籍贯', '职称', '身份']
+    pers = Personnel.query.all()
+    pers = filter_field(pers, fields)
+    return render_template('search.html', fields=fields, pers=pers)
 
 
 @index.route('/system-manage/user')
