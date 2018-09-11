@@ -42,8 +42,38 @@ NAV = {
     }
 }
 
-TITLE_NO = {
-    1: ['干部编号', 'cadre_id'],
-    2: ['身份证号', 'id_card'],
-    3: ['系统', 'dept.'],
+FIELDS = {
+    '干部编号': 'cadre_id',
+    '身份证号': 'id_card',
+    '职务': 'duty',
+    '单位简称': 'dept_name',
+    '系统': 'system',
+    '性别': 'sex',
+    '姓名': 'name',
+    '民族': 'nation',
+    '生日': 'birthday',
+    '参加工作时间': 'work_time',
+    '入党时间': 'party_member',
+    '政治面貌': 'policital_status',
+    '籍贯': 'native_place',
+    '出生地': 'birth_place',
+    '专长': 'specialty',
+    '任副科级时间': 'deputy_sc_time',
+    '任正科级时间': 'sc_time',
+    '任现职时间': 'position_time',
+    '任副总时间': 'VGM_time',
+    '任代理时间': 'agent_time',
+    '身份': 'identity',
+    '工号': 'work_no',
+    '特殊工作年限': 's_work_year',
+    '荣誉金': 'bonus',
+    '档案备注': 'remarks',
+    '调入备注': 'remarks_2',
+    '受处分': 'punished',
+    '照片': 'photo_src',
+    '最高学历': 'max_edu',
+    '全日制学历': 'at_edu',
+    '在职学历': 'ot_edu',
+    '职称': 'title',
+    '状态': 'state'
 }

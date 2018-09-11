@@ -262,6 +262,45 @@ class Personnel(db.Model):
         per.agent_time = str2time(data.get('agent_time'))
         return per
 
+    def to_json(self):
+        data = {}
+        data['id'] = self.id
+        data['name'] = self.name
+        data['phonetic'] = self.phonetic
+        data['sex'] = self.sex
+        data['nation'] = self.nation
+        data['birthday'] = self.birthday
+        data['cadre_id'] = self.cadre_id
+        data['id_card'] = self.id_card
+        data['work_time'] = self.work_time
+        data['party_member'] = self.party_member
+        data['policital_status'] = self.policital_status
+        data['native_place'] = self.native_place
+        data['birth_place'] = self.birth_place
+        data['specialty'] = self.specialty
+        data['deputy_sc_time'] = self.deputy_sc_time
+        data['sc_time'] = self.sc_time
+        data['position_time'] = self.position_time
+        data['VGM_time'] = self.VGM_time
+        data['agent_time'] = self.agent_time
+        data['identity'] = self.identity
+        data['work_no'] = self.work_no
+        data['s_work_year'] = self.s_work_year
+        data['bonus'] = self.bonus
+        data['remarks'] = self.remarks
+        data['remarks_2'] = self.remarks_2
+        data['punished'] = self.punished
+        data['photo_src'] = self.photo_src
+        data['families'] = self.families
+        data['r_and_ps'] = self.r_and_ps
+        data['edus'] = self.edus
+        data['resumes'] = self.resumes
+        data['titlies'] = self.titlies
+        data['duty'] = self.duty.to_json()
+        data['dept'] = self.dept.to_json()
+        data['state'] = self.state.name
+        return data
+
     @property
     def system(self):
         return self.duty.system.system_name
@@ -368,7 +407,7 @@ class Education(db.Model):
         _id = data.get('id')
         edu_name = data.get('edu_name')
         edu_level = EduLevel.query.get(data.get('edu_level_id'))
-        if edu_name is None or edu_level is None:
+        if edu_level is None:
             return None
         if _id:
             edu = Education.query.get_or_404(_id)
@@ -489,8 +528,9 @@ class Duty(db.Model):
         if _id is not None:
             temp = Duty.query.get_or_404(_id)
         else:
-            temp = Duty()
-        temp.name = name
+            temp = Duty.query.filter_by(name=name).first()
+            if temp is None:
+                temp = Duty(name=name)
         temp.duty_level = DutyLevel.query.get_or_404(duty_level_id)
         return temp
 

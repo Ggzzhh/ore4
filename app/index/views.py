@@ -9,7 +9,7 @@ import flask_excel as excel
 
 from . import index
 from ..models import User, Dept, System, Title, Duty, DutyLevel, DeptPro
-from ..const import NAV, TITLE_NO
+from ..const import NAV
 
 
 @index.route('/login2ore4manageSystem', methods=['GET', 'POST'])
