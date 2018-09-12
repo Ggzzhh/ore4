@@ -140,6 +140,7 @@ def manage_duty():
             message = '添加职务成功!'
         else:
             duty = Duty.query.get_or_404(res.get('id'))
+            duty.name = res['name']
             message = '修改职务成功!'
         if duty and lv:
             duty.duty_level = lv

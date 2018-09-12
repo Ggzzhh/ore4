@@ -65,6 +65,18 @@
 
 <script>
     $(document).ready(function () {
+        var checkeds = document.getElementsByName("per-id");
+
+        $('#all-check').bind('click', function () {
+					$('input[name="per-id"]').attr('checked', 'true')
+        });
+
+        $('#reverse-check').bind('click', function () {
+						for (var i=0; i < checkeds.length; i++) {
+						    checkeds[i].checked = !checkeds[i].checked
+						}
+        });
+
         $('#update-pwd').bind('submit', function () {
             var old_pwd = $('#old-pwd').val();
             var pwd = $('#pwd').val();

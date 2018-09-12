@@ -1,6 +1,7 @@
 <div class="search-table">
 	<table class="table table-bordered">
 		<thead>
+		<th>选择</th>
 		{% for field in fields %}
 			<th>{{ field }}</th>
 		{% endfor %}
@@ -8,14 +9,13 @@
 		<tbody>
 			{% for per in pers %}
 				<tr>
-					{% for p in per %}
+					<td><input type="checkbox" value="{{ per['id'] }}" name="per-id"></td>
+					<td><a href="#">{{ per['data'].pop(0) }}</a></td>
+					{% for p in per['data'] %}
 						<td>{{ p }}</td>
 					{% endfor %}
-
 				</tr>
 			{% endfor %}
 		</tbody>
 	</table>
-
-
 </div>

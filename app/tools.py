@@ -2,6 +2,8 @@
 import datetime, base64
 from collections import Iterable
 
+from xpinyin import Pinyin
+
 from .const import FIELDS
 
 
@@ -11,13 +13,21 @@ def filter_field(per_list, fields):
         for per in per_list:
             L = []
             data = per.to_json()
+            _id = data.get('id')
+            if _id is None:
+                continue
             for field in fields:
                 temp = data.get(FIELDS.get(field))
                 if temp is None:
                     temp = ' '
                 L.append(temp)
-            new_per_list.append(L)
+            new_per_list.append({'data': L, 'id': _id})
     return new_per_list
+
+
+def str2pinyin(_str):
+    p = Pinyin()
+    return p.get_initials(_str, '')
 
 
 def str2time(_str):

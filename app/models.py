@@ -6,7 +6,7 @@ from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from . import db, login_manager
-from .tools import str2time, str2img, calculate_age, time2str
+from .tools import str2time, str2img, calculate_age, time2str, str2pinyin
 
 
 @login_manager.user_loader
@@ -229,6 +229,7 @@ class Personnel(db.Model):
     @staticmethod
     def from_json(data):
         per = Personnel(name=data.get('name'))
+        per.phonetic = str2pinyin(per.name)
         per.cadre_id = data.get('cadre_id')
         per.sex = data.get('sex')
         per.nation = data.get('nation')
@@ -587,6 +588,8 @@ class Duty(db.Model):
             abort(403)
         _id = data.get('id')
         name = data.get('name')
+        if name == '':
+            return None
         duty_level_id = data.get('duty_level_id')
         if name is None or duty_level_id is None:
             return None

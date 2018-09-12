@@ -57,6 +57,7 @@ function dutyEdit(name, id, order, lv_id) {
     $('#duty-edit').bind('submit', function () {
         var data = JSON.stringify({
             id: id,
+            name: $('#i-dutyEdit').val(),
             lv_id: $('#select_lv_2').val(),
             order: $('#order_2').val(),
             new: false

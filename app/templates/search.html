@@ -1,8 +1,18 @@
 {% extends 'iframe_base.html' %}
-
+{% import '_models.html' as model %}
 {% block head %}
 	<style>
-
+		.search-table {
+			font-size: 0.9rem;
+			align-content: center;
+			text-align: center;
+		}
+		.search-table th, .search-table td {
+			min-width: 10rem;
+		}
+		.paginate {
+			width: 90%;
+		}
 	</style>
 {% endblock %}
 {% block content %}
@@ -12,17 +22,20 @@
 				<div class="title">人员信息管理</div>
 				<form class="form-inline ml-auto mr-4">
 					<input class="form-control-sm mr-sm-2 my-2 my-lg-0" type="search"
-						   placeholder="姓名/拼音" aria-label="Search">
+								 placeholder="姓名/拼音" aria-label="Search">
 					<button class="btn btn-sm btn-outline-light my-2 my-sm-0 ml-2"
-							type="submit">搜索</button>
+									type="submit">搜索</button>
 					<button class="btn btn-sm btn-outline-light my-2 my-sm-0 ml-2"
-							type="button">条件搜索</button>
+									type="button" id="">条件搜索</button>
 				</form>
 			</div>
 		{% endblock %}
 		<div class="info_manage">
-			<button type="button" class="btn btn-sm btn-link mr-3">
+			<button type="button" class="btn btn-sm btn-link mr-2" id="all-check">
 				全 选
+			</button>
+			<button type="button" class="btn btn-sm btn-link mr-3" id="reverse-check">
+				反 选
 			</button>
 			<button type="button" class="btn btn-sm btn-info mr-3">
 				在 职
@@ -41,5 +54,17 @@
 			</button>
 		</div>
 		{% include 'personel_list.html' %}
+		<div class="d-flex align-items-center">
+			<div class="foo ml-3">
+				<span class="count">共 {{ pagination.total }} 条结果</span>
+			</div>
+			<div class="d-flex mt-2 justify-content-center paginate">
+				{{ model.pagination_widget(pagination, 'index.search') }}
+			</div>
+		</div>
+
+
+
+
 	</div>
 {% endblock %}

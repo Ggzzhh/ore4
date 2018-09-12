@@ -73,7 +73,6 @@ FIELDS = {
     '档案备注': 'remarks',
     '调入备注': 'remarks_2',
     '受处分': 'punished',
-    '照片': 'photo_src',
     '最高学历:学历': 'max_edu_lv',
     '最高学历:毕业时间': 'max_edu_time',
     '最高学历:院校': 'max_edu_name',

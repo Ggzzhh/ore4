@@ -10,7 +10,7 @@ import flask_excel as excel
 from . import index
 from ..models import User, Dept, System, Title, Duty, DutyLevel, \
     DeptPro, Personnel
-from ..const import NAV
+from ..const import NAV, FIELDS
 from ..tools import filter_field
 
 
@@ -60,22 +60,32 @@ def main():
     return render_template('index.html', nav=nav_data, systems=systems)
 
 
-@index.route('/search')
+@index.route('/search', methods=["POST", "GET"])
 @login_required
 def search():
-    fields = ['姓名', '性别', '民族', '生日', '年龄', '工作时间', '入党时间',
-              '职务', '职务级别', '最高学历:学历', '最高学历:毕业时间',
-              '最高学历:院校', '最高学历:专业', '籍贯', '职称', '身份']
-    pers = Personnel.query.all()
-    pers = filter_field(pers, fields)
-    return render_template('search.html', fields=fields, pers=pers)
+    page = request.args.get('page', 1, type=int)
+    if request.method == "GET":
+        fields = ['姓名', '性别', '民族', '生日', '年龄', '工作时间', '入党时间',
+                  '职务', '职务级别', '最高学历:学历', '最高学历:毕业时间',
+                  '最高学历:院校', '最高学历:专业', '籍贯', '职称', '身份']
+        pagination = Personnel.query.join(Duty, Duty.id == Personnel.duty_id)\
+            .order_by(Duty.order).paginate(
+            page, per_page=current_app.config['SEARCH_PAGE'],
+            error_out=False
+        )
+        pers = pagination.items
+        pers = filter_field(pers, fields)
+        all_fields = list(FIELDS.keys())
+    return render_template('search.html', fields=fields, pers=pers,
+                           all_fields=all_fields, pagination=pagination)
 
 
 @index.route('/system-manage/user')
 @login_required
 def system_manage_user():
     page = request.args.get('page', 1, type=int)
-    pagination = User.query.filter(User.id > 1).order_by(User.id).paginate(
+    pagination = User.query.filter(User.id != 1).order_by(
+        User.id).paginate(
         page, per_page=current_app.config['PER_PAGE'],
         error_out=False
     )
