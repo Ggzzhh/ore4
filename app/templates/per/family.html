@@ -1,10 +1,10 @@
 
 <div class="new-family">
-  {% if current_user.role.id == 1 %}
-	<button class="btn btn-outline-dark" type="button" id="add-family-tr">
-		+ 新增
-	</button>
-  {% endif %}
+	{% if current_user.role.id == 1 %}
+		<button class="btn btn-outline-dark" type="button" id="add-family-tr">
+			+ 新增
+		</button>
+	{% endif %}
 </div>
 <div class="family-tab mt-2">
 	<table class="table table-bordered text-center">
@@ -20,6 +20,39 @@
 		</tr>
 		</thead>
 		<tbody id="family-tbody">
+		{% for (index, family) in enumerate(per['families']) %}
+			{% set family = family.to_json() %}
+			<tr>
+				<td class="index">{{ index + 1 }}</td>
+				<td class="input-group-inline input-group-sm">
+					<input type="text" class="form-control" placeholder="空"
+								 value="{{ family['relationship'] or '' }}">
+				</td>
+				<td class="input-group-inline input-group-sm">
+					<input type="text" class="form-control" placeholder="空"
+								 value="{{ family['name'] or '' }}">
+				</td>
+				<td class="input-group-inline input-group-sm">
+					<input type="number" class="form-control" placeholder="空"
+								 value="{{ family['age'] or '' }}">
+				</td>
+				<td class="input-group-inline input-group-sm">
+					<input type="text" class="form-control" placeholder="空"
+								 value="{{ family['p_c'] or '' }}">
+				</td>
+				<td class="input-group-inline input-group-sm">
+					<input type="text" class="form-control" placeholder="空"
+								 value="{{ family['workplace'] or '' }}">
+				</td>
+				<td class="input-group-inline input-group-sm">
+					<a href="#" onclick="handle.family_del('{{ family.id }}')"
+						 class="btn btn-link btn-sm	">删除</a>
+				</td>
+				<td hidden>
+					<input type="text" value="{{ family.id }}" style="display: None;">
+				</td>
+			</tr>
+		{% endfor %}
 		</tbody>
 	</table>
 </div>

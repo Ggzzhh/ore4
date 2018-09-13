@@ -7,8 +7,8 @@
 			</td>
 			<td class='input-group-inline input-group-sm'>
 				<input type="text" id="cadre_id"
-							 class="form-control" value="{{ per['cadre_id']|safe }}"
-							 placeholder="请输入..."/>
+							 class="form-control" value="{{ per['cadre_id'] or '' }}"
+							 placeholder="空"/>
 			</td>
 			<td>
 				<span>单位简称</span>
@@ -17,7 +17,7 @@
 				<select name="dept_name" id="dept_name" class="form-control">
 					{% for name in dept_names %}
 						<option value="{{ name[0] }}"
-										{% if name[1] == per['dept_name']  %}
+										{% if name[1] == per['dept_name'] or '' %}
 										selected
 										{% endif %}
 						>{{ name[1] }}</option>
@@ -29,7 +29,7 @@
 			</td>
 			<td class='input-group-inline input-group-sm'>
 				<input type="text" id="system" disabled
-							 class="form-control" value="{{ per['system'] }}"
+							 class="form-control" value="{{ per['system'] or '' }}"
 							 placeholder="{{ dept_names[0][2] }}"/>
 			</td>
 			<td>
@@ -37,12 +37,12 @@
 			</td>
 			<td class='input-group-inline input-group-sm' colspan="2">
 				<input type="text" id="dept_pro" disabled
-							 class="form-control" value="{{ per['dept_pro'] }}"
+							 class="form-control" value="{{ per['dept_pro'] or '' }}"
 							 placeholder="{{ dept_names[0][3] }}"/>
 			</td>
 			<td colspan="2" rowspan="4">
 				<div class="d-flex flex-column align-items-center">
-					<img src="{{ per['photo_src']|default('/static/image/timg.jpg') }}"
+					<img src="{{ per['photo_src']|default('/static/image/timg.jpg')}}"
 							 alt="" width="122" height="185"
 							 class = "img-thumbnail" id="photo_src">
 					<div class="fileupload">
@@ -58,8 +58,8 @@
 			</td>
 			<td class='input-group-inline input-group-sm'>
 				<input type="text" id="name"
-							 class="form-control" value="{{ per['name'] }}"
-							 placeholder="请输入..."/>
+							 class="form-control" value="{{ per['name'] or '' }}"
+							 placeholder="空"/>
 			</td>
 			<td>
 				<span>性别</span>
@@ -83,16 +83,16 @@
 			</td>
 			<td class='input-group-inline input-group-sm'>
 				<input type="text" id="nation"
-							 class="form-control" value="{{ per['nation'] }}"
-							 placeholder="请输入..."/>
+							 class="form-control" value="{{ per['nation'] or '' }}"
+							 placeholder="空"/>
 			</td>
 			<td>
 				<span>专长</span>
 			</td>
 			<td class='input-group-inline input-group-sm' colspan="2">
 				<input type="text" id="specialty"
-							 class="form-control" value="{{ per['specialty'] }}"
-							 placeholder="请输入..."/>
+							 class="form-control" value="{{ per['specialty'] or '' }}"
+							 placeholder="空"/>
 			</td>
 		</tr>
 		<tr>
@@ -101,23 +101,23 @@
 			</td>
 			<td class='input-group-inline input-group-sm' colspan="4">
 				<input type="text" id="id_card"
-							 class="form-control" value="{{ per['id_card'] }}"
-							 placeholder="请输入..."/>
+							 class="form-control" value="{{ per['id_card'] or '' }}"
+							 placeholder="空"/>
 			</td>
 			<td>
 				<span>出生日期</span>
 			</td>
 			<td class='input-group-inline input-group-sm'>
 				<input type="text" id="birthday"
-							 class="form-control mydate" value="{{ per['birthday'] }}"
-							 placeholder="请选择..."/>
+							 class="form-control mydate" value="{{ per['birthday'] or '' }}"
+							 placeholder="空"/>
 			</td>
 			<td>
 				<span>年龄</span>
 			</td>
 			<td class='input-group-inline input-group-sm' colspan="2">
 				<input type="text" id="age"  disabled
-							 class="form-control" value="{{ per['age'] }}"
+							 class="form-control" value="{{ per['age'] or '' }}"
 							 placeholder="0"/>
 			</td>
 		</tr>
@@ -127,32 +127,32 @@
 			</td>
 			<td class='input-group-inline input-group-sm'>
 				<input type="text" id="policital_status"
-							 class="form-control" value="{{ per['policital_status'] }}"
-							 placeholder="请输入..."/>
+							 class="form-control" value="{{ per['policital_status'] or '' }}"
+							 placeholder="空"/>
 			</td>
 			<td>
 				<span>身份</span>
 			</td>
 			<td class='input-group-inline input-group-sm' colspan="2">
 				<input type="text" id="identity"
-							 class="form-control" value="{{ per['identity'] }}"
-							 placeholder="请输入..."/>
+							 class="form-control" value="{{ per['identity'] or '' }}"
+							 placeholder="空"/>
 			</td>
 			<td>
 				<span>入党时间</span>
 			</td>
 			<td class='input-group-inline input-group-sm'>
 				<input type="text" id="party_member"
-							 class="form-control mydate" value="{{ per['party_member'] }}"
-							 placeholder="请选择..."/>
+							 class="form-control mydate" value="{{ per['party_member'] or ''}}"
+							 placeholder="空"/>
 			</td>
 			<td>
 				<span>参加工作时间</span>
 			</td>
 			<td class='input-group-inline input-group-sm' colspan="2">
 				<input type="text" id="work_time"
-							 class="form-control mydate" value="{{ per['work_time'] }}"
-							 placeholder="请选择..."/>
+							 class="form-control mydate" value="{{ per['work_time'] or '' }}"
+							 placeholder="空"/>
 			</td>
 
 		</tr>
@@ -162,32 +162,32 @@
 			</td>
 			<td class='input-group-inline input-group-sm'>
 				<input type="text" id="native_place"
-							 class="form-control" value="{{ per['native_place'] }}"
-							 placeholder="请输入..."/>
+							 class="form-control" value="{{ per['native_place'] or '' }}"
+							 placeholder="空"/>
 			</td>
 			<td>
 				<span>出生地</span>
 			</td>
 			<td class='input-group-inline input-group-sm' colspan="2">
 				<input type="text" id="birth_place"
-							 class="form-control" value="{{ per['birth_place'] }}"
-							 placeholder="请输入..."/>
+							 class="form-control" value="{{ per['birth_place'] or '' }}"
+							 placeholder="空"/>
 			</td>
 			<td>
 				<span>工号</span>
 			</td>
 			<td class='input-group-inline input-group-sm' >
 				<input type="number" id="work_no"
-							 class="form-control" value="{{ per['work_no'] }}"
-							 placeholder="请输入..."/>
+							 class="form-control" value="{{ per['work_no'] or '' }}"
+							 placeholder="空"/>
 			</td>
 			<td>
 				<span>特殊工种年限</span>
 			</td>
 			<td class='input-group-inline input-group-sm' colspan="1">
 				<input type="text" id="s_work_year"
-							 class="form-control" value="{{ per['s_work_year'] }}"
-							 placeholder="请输入..."/>
+							 class="form-control" value="{{ per['s_work_year'] or '' }}"
+							 placeholder="空"/>
 			</td>
 			<td>
 				<span>状态</span>
@@ -210,15 +210,15 @@
 			</td>
 			<td class='input-group-inline input-group-sm'>
 				<input type="text" id="bonus"
-							 class="form-control" value="{{ per['bonus'] }}"
-							 placeholder="请输入..."/>
+							 class="form-control" value="{{ per['bonus'] or '' }}"
+							 placeholder="空"/>
 			</td>
 			<td>
 				<span>职务</span>
 			</td>
 			<td class='input-group-inline input-group-sm'>
 				<input type="text" id="duty"
-							 class="form-control" value="{{ per['duty_name'] }}"
+							 class="form-control" value="{{ per['duty_name'] or '' }}"
 							 placeholder="暂无"/>
 			</td>
 			<td>
@@ -240,8 +240,8 @@
 			</td>
 			<td class='input-group-inline input-group-sm' colspan="5">
 				<input type="text" id="remarks"
-							 class="form-control" value="{{ per['remarks_2'] }}"
-							 placeholder="请输入..."/>
+							 class="form-control" value="{{ per['remarks_2'] or '' }}"
+							 placeholder="空"/>
 			</td>
 		</tr>
 		<tr>
@@ -250,7 +250,7 @@
 			</td>
 			<td class='input-group-inline input-group-sm'>
 				<input type="text" id="title" disabled
-							 class="form-control" value="{{ per['title_name'] }}"
+							 class="form-control" value="{{ per['title_name'] or '' }}"
 							 placeholder="暂无"/>
 			</td>
 			<td>
@@ -258,77 +258,80 @@
 			</td>
 			<td class='input-group-inline input-group-sm'>
 				<input type="text" id="deputy_sc_time"
-							 class="form-control mydate" value="{{ per['deputy_sc_time'] }}"
-							 placeholder="请选择..."/>
+							 class="form-control mydate"
+							 value="{{ per['deputy_sc_time'] or '' }}"
+							 placeholder="空"/>
 			</td>
 			<td>
 				<span>任正科级时间</span>
 			</td>
 			<td class='input-group-inline input-group-sm'>
 				<input type="text" id="sc_time"
-							 class="form-control mydate" value="{{ per['sc_time'] }}"
-							 placeholder="请选择..."/>
+							 class="form-control mydate" value="{{ per['sc_time'] or '' }}"
+							 placeholder="空"/>
 			</td>
 			<td>
 				<span>任现职时间</span>
 			</td>
 			<td class='input-group-inline input-group-sm'>
 				<input type="text" id="position_time"
-							 class="form-control mydate" value="{{ per['position_time'] }}"
-							 placeholder="请选择..."/>
+							 class="form-control mydate"
+							 value="{{ per['position_time'] or '' }}"
+							 placeholder="空"/>
 			</td>
 			<td>
 				<span>任副总时间</span>
 			</td>
 			<td class='input-group-inline input-group-sm'>
 				<input type="text" id="VGM_time"
-							 class="form-control mydate" value="{{ per['VGM_time'] }}"
-							 placeholder="请选择..."/>
+							 class="form-control mydate" value="{{ per['VGM_time'] or '' }}"
+							 placeholder="空"/>
 			</td>
 			<td>
 				<span>任代理时间</span>
 			</td>
 			<td class='input-group-inline input-group-sm'>
 				<input type="text" id="agent_time"
-							 class="form-control mydate" value="{{ per['agent_time'] }}"
-							 placeholder="请选择..."/>
+							 class="form-control mydate" value="{{ per['agent_time'] or '' }}"
+							 placeholder="空"/>
 			</td>
 		</tr>
 		<tr id="max_edu">
 			<td>最高学历</td>
 			<td class='input-group-inline input-group-sm'>
 				<input type="text" disabled
-							 class="form-control" value="{{ per['max_edu_lv'] }}"
+							 class="form-control" value="{{ per['max_edu_lv'] or '' }}"
 							 placeholder="暂无"/>
 			</td>
 			<td>入学时间</td>
 			<td class='input-group-inline input-group-sm'>
 				<input type="text" disabled
-							 class="form-control" value="{{ per['max_edu_in_time'] }}"
+							 class="form-control" value="{{ per['max_edu_in_time'] or '' }}"
 							 placeholder="暂无"/>
 			</td>
 			<td>毕业时间</td>
 			<td class='input-group-inline input-group-sm'>
 				<input type="text" disabled
-							 class="form-control" value="{{ per['max_edu_time'] }}"
+							 class="form-control" value="{{ per['max_edu_time'] or '' }}"
 							 placeholder="暂无"/>
 			</td>
 			<td>毕业院校</td>
 			<td class='input-group-inline input-group-sm'>
 				<input type="text" disabled
-							 class="form-control" value="{{ per['max_edu_name'] }}"
+							 class="form-control" value="{{ per['max_edu_name'] or '' }}"
 							 placeholder="暂无"/>
 			</td>
 			<td>专业</td>
 			<td class='input-group-inline input-group-sm'>
 				<input type="text" disabled
-							 class="form-control" value="{{ per['max_edu_dept'] }}"
+							 class="form-control" value="{{ per['max_edu_dept'] or '' }}"
 							 placeholder="暂无"/>
 			</td>
 			<td>学习形式</td>
 			<td class='input-group-inline input-group-sm'>
 				<input type="text" disabled
-							 class="form-control" value="{{ per['max_edu_learn_form'] }}"
+							 class="form-control"
+							 value="{{ per['max_edu_learn_form'] or '' }}"
 							 placeholder="暂无"/>
 			</td>
 		</tr>
@@ -336,37 +339,37 @@
 			<td>全日制学历</td>
 			<td class='input-group-inline input-group-sm'>
 				<input type="text" disabled
-							 class="form-control" value="{{ per['at_edu_lv'] }}"
+							 class="form-control" value="{{ per['at_edu_lv'] or '' }}"
 							 placeholder="暂无"/>
 			</td>
 			<td>入学时间</td>
 			<td class='input-group-inline input-group-sm'>
 				<input type="text" disabled
-							 class="form-control" value="{{ per['at_edu_in_time'] }}"
+							 class="form-control" value="{{ per['at_edu_in_time'] or '' }}"
 							 placeholder="暂无"/>
 			</td>
 			<td>毕业时间</td>
 			<td class='input-group-inline input-group-sm'>
 				<input type="text" disabled
-							 class="form-control" value="{{ per['at_edu_time'] }}"
+							 class="form-control" value="{{ per['at_edu_time'] or '' }}"
 							 placeholder="暂无"/>
 			</td>
 			<td>毕业院校</td>
 			<td class='input-group-inline input-group-sm'>
 				<input type="text" disabled
-							 class="form-control" value="{{ per['at_edu_name'] }}"
+							 class="form-control" value="{{ per['at_edu_name'] or '' }}"
 							 placeholder="暂无"/>
 			</td>
 			<td>专业</td>
 			<td class='input-group-inline input-group-sm'>
 				<input type="text" disabled
-							 class="form-control" value="{{ per['at_edu_dept'] }}"
+							 class="form-control" value="{{ per['at_edu_dept'] or '' }}"
 							 placeholder="暂无"/>
 			</td>
 			<td>学习形式</td>
 			<td class='input-group-inline input-group-sm'>
 				<input type="text" disabled
-							 class="form-control" value="{{ per['at_edu_learn_form'] }}"
+							 class="form-control" value="{{ per['at_edu_learn_form'] or '' }}"
 							 placeholder="暂无"/>
 			</td>
 		</tr>
@@ -374,37 +377,37 @@
 			<td>在职学历</td>
 			<td class='input-group-inline input-group-sm'>
 				<input type="text" disabled
-							 class="form-control" value="{{ per['ot_edu_lv'] }}"
+							 class="form-control" value="{{ per['ot_edu_lv'] or '' }}"
 							 placeholder="暂无"/>
 			</td>
 			<td>入学时间</td>
 			<td class='input-group-inline input-group-sm'>
 				<input type="text" disabled
-							 class="form-control" value="{{ per['ot_edu_in_time'] }}"
+							 class="form-control" value="{{ per['ot_edu_in_time'] or '' }}"
 							 placeholder="暂无"/>
 			</td>
 			<td>毕业时间</td>
 			<td class='input-group-inline input-group-sm'>
 				<input type="text" disabled
-							 class="form-control" value="{{ per['ot_edu_time'] }}"
+							 class="form-control" value="{{ per['ot_edu_time'] or '' }}"
 							 placeholder="暂无"/>
 			</td>
 			<td>毕业院校</td>
 			<td class='input-group-inline input-group-sm'>
 				<input type="text" disabled
-							 class="form-control" value="{{ per['ot_edu_name'] }}"
+							 class="form-control" value="{{ per['ot_edu_name'] or '' }}"
 							 placeholder="暂无"/>
 			</td>
 			<td>专业</td>
 			<td class='input-group-inline input-group-sm'>
 				<input type="text" disabled
-							 class="form-control" value="{{ per['ot_edu_dept'] }}"
+							 class="form-control" value="{{ per['ot_edu_dept'] or '' }}"
 							 placeholder="暂无"/>
 			</td>
 			<td>学习形式</td>
 			<td class='input-group-inline input-group-sm'>
 				<input type="text" disabled
-							 class="form-control" value="{{ per['ot_edu_learn_form'] }}"
+							 class="form-control" value="{{ per['ot_edu_learn_form'] or '' }}"
 							 placeholder="暂无"/>
 			</td>
 		</tr>
@@ -412,8 +415,8 @@
 			<td>档案备注</td>
 			<td class='input-group-inline input-group-sm' colspan="11">
 				<input type="text" id="remarks_2"
-							 class="form-control" value="{{ per['remarks_2'] }}"
-							 placeholder="请输入..."/>
+							 class="form-control" value="{{ per['remarks_2'] or '' }}"
+							 placeholder="空"/>
 			</td>
 		</tr>
 		</tbody>

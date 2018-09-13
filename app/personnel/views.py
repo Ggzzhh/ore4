@@ -22,7 +22,7 @@ def add_per():
     return render_template('per/personnel.html', title='新增人员', edu_lv=edu_lv,
                            learn_form=learn_form, title_names=title_names,
                            dept_names=dept_names, duty_lvs=duty_lvs,
-                           states=states, form_id='add-per', per={})
+                           states=states, form_id='add-per', per={}, enumerate=enumerate)
 
 
 @per.route('/edit/per/<int:_id>')
@@ -41,27 +41,20 @@ def edit_per(_id):
     title_count = 0
     resume_count = 0
 
-    def get_max_id(L):
-        _max = 0
-        if L:
-            for i in L:
-                if i.id > _max:
-                    _max = i.id
-        return _max
-
     if per is not None:
         per = per.to_json()
-        f_count = get_max_id(per['families'])
-        r_and_p_count = get_max_id(per['r_and_ps'])
-        edu_count = get_max_id(per['edus'])
-        title_count = get_max_id(per['titlies'])
-        resume_count = get_max_id(per['resumes'])
+        f_count = len(per['families'])
+        r_and_p_count = len(per['r_and_ps'])
+        edu_count = len(per['edus'])
+        title_count = len(per['titlies'])
+        resume_count = len(per['resumes'])
     else:
         per = None
+
     return render_template('per/personnel.html', title='人员信息', edu_lv=edu_lv,
                            learn_form=learn_form, title_names=title_names,
                            dept_names=dept_names, duty_lvs=duty_lvs,
                            states=states, per=per, form_id='edit-per',
                            f_count=f_count, r_and_p_count=r_and_p_count,
                            edu_count=edu_count, title_count=title_count,
-                           resume_count=resume_count)
+                           resume_count=resume_count, enumerate=enumerate)

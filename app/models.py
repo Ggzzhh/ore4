@@ -238,11 +238,13 @@ class Personnel(db.Model):
         per.nation = data.get('nation')
         per.specialty = data.get('specialty')
         photo_src = "/static/image/timg.jpg"
-        if data.get('photo_src'):
-            if data.get('photo_src') != photo_src:
-                photo_src = str2img(data.get('photo_src')[23:],
-                                    "/static/per_img/",
-                                    data.get('id_card'))
+        src = data.get('photo_src')
+        if src:
+            if src != photo_src:
+                if src[-4:] != '.jpg':
+                    src = src[23:]
+                photo_src = str2img(src, "/static/per_img/", data.get(
+                    'id_card'))
         per.photo_src = photo_src
         per.id_card = data.get('id_card')
         per.birthday = str2time(data.get('birthday'))
@@ -447,6 +449,16 @@ class RAndP(db.Model):
     # 备注
     remarks = db.Column(db.String(200))
 
+    def to_json(self):
+        data = {}
+        data['id'] = self.id
+        data['time'] = time2str(self.time)
+        data['dept'] = self.dept
+        data['reason'] = self.reason
+        data['result'] = self.result
+        data['remarks'] = self.remarks
+        return data
+
     @staticmethod
     def from_json(data):
         _id = data.get('id')
@@ -454,7 +466,7 @@ class RAndP(db.Model):
         if result is None:
             return None
         if _id:
-            rp = RAndP.query.get_or_404(id)
+            rp = RAndP.query.get_or_404(_id)
         else:
             rp = RAndP(result=result)
         rp.time = str2time(data.get('time'))
@@ -489,12 +501,24 @@ class Education(db.Model):
     # 备注
     remarks = db.Column(db.String(300))
 
+    def to_json(self):
+        data = {}
+        data['id'] = self.id
+        data['lv'] = self.edu_level.level
+        data['enrolment_time'] = time2str(self.enrolment_time)
+        data['graduation_time'] = time2str(self.graduation_time)
+        data['edu_name'] = self.edu_name
+        data['department'] = self.department
+        data['degree'] = self.degree
+        data['learn_form'] = self.learn_form.name
+        return data
+
     @staticmethod
     def from_json(data):
         _id = data.get('id')
         edu_name = data.get('edu_name')
         edu_level = EduLevel.query.get(data.get('edu_level_id'))
-        if edu_level is None:
+        if edu_level is None or edu_name is None:
             return None
         if _id:
             edu = Education.query.get_or_404(_id)
@@ -559,6 +583,16 @@ class Family(db.Model):
     p_c = db.Column(db.String(16))
     # 工作地点
     workplace = db.Column(db.String(64))
+
+    def to_json(self):
+        data = {}
+        data['id'] = self.id
+        data['relationship'] = self.relationship
+        data['name'] = self.name
+        data['age'] = self.age
+        data['p_c'] = self.p_c
+        data['workplace'] = self.workplace
+        return data
 
     @staticmethod
     def from_json(data):
@@ -681,14 +715,15 @@ class Title(db.Model):
     @staticmethod
     def from_json(data):
         name = TitleName.query.get(data.get('name_id'))
+        major = data.get('major')
         _id = data.get('id')
-        if name is None:
+        if name is None or major is None:
             return None
         if _id is None:
             temp = Title(name=name)
         else:
             temp = Title.query.get_or_404(_id)
-        temp.major = data.get('major')
+        temp.major = major
         temp.remarks = data.get('remarks')
         temp.page_no = data.get('page_no')
         if data.get('engage') == "true":

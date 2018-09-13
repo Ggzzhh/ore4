@@ -21,27 +21,27 @@ var myCount = function () {
 
 var notNullText = "<td class='input-group-inline input-group-sm'>" +
     "<input type='text' class='form-control' " + "required " +
-    "placeholder='请输入...'>" +
+    "placeholder='空'>" +
     "</td>";
 
 var myText = "<td class='input-group-inline input-group-sm'>" +
     "<input type='text' class='form-control' " +
-    "placeholder='请输入...'>" +
+    "placeholder='空'>" +
     "</td>";
 
 var myNum = "<td class='input-group-inline input-group-sm'>" +
     "<input type='number' class='form-control' " +
-    "placeholder='请输入...'>" +
+    "placeholder='空'>" +
     "</td>";
 
 var myDate = "<td class='input-group-inline input-group-sm'>" +
     "<input type='text' class='form-control mydate' " +
-    "placeholder='请选择...'>" +
+    "placeholder='空'>" +
     "</td>";
 
 var myDisText = "<td class='input-group-inline input-group-sm'>" +
     "<input type='text' class='form-control' disabled " +
-    "placeholder='请输入...'>" +
+    "placeholder='空'>" +
     "</td>";
 
 var td = "<td class='input-group-inline input-group-sm'></td>";
@@ -50,13 +50,6 @@ var select = "<td class='input-group-inline input-group-sm'>" +
     "</select>" +
     "</td>";
 
-
-var handle = {
-    del: function (id, d_id) {
-        if (confirm('确定删除该项么？'))
-            $('#'+id).remove();
-    }
-};
 
 var get_families = function () {
     var family_arr = [];
@@ -70,6 +63,7 @@ var get_families = function () {
         temp.age = Number(td_arr.eq(3).find('input').val());
         temp.p_c = td_arr.eq(4).find('input').val();
         temp.workplace = td_arr.eq(5).find('input').val();
+        temp.id = td_arr.eq(7).find('input').val();
         family_arr.push(temp);
     }
     return family_arr;
@@ -87,6 +81,7 @@ var get_r_and_p = function () {
         temp.reason = td_arr.eq(3).find('input').val();
         temp.result = td_arr.eq(4).find('input').val();
         temp.remarks = td_arr.eq(5).find('input').val();
+        temp.id = td_arr.eq(7).find('input').val();
         r_and_p_arr.push(temp);
     }
     return r_and_p_arr;
@@ -106,6 +101,7 @@ var get_edu = function () {
         temp.department = td_arr.eq(5).find('input').val();
         temp.degree = td_arr.eq(6).find('input').val();
         temp.learn_id = td_arr.eq(7).find('select').val();
+        temp.id = td_arr.eq(9).find('input').val();
         edu_arr.push(temp);
     }
     return edu_arr;
@@ -125,6 +121,7 @@ var get_title = function () {
         temp.engage = td_arr.eq(7).find('select').val();
         temp.engage_time = td_arr.eq(8).find('input').val();
         temp.remarks = td_arr.eq(9).find('input').val();
+        temp.id = td_arr.eq(11).find('input').val();
         title_arr.push(temp);
     }
     return title_arr;
@@ -142,6 +139,7 @@ var get_resume = function () {
         temp.duty = td_arr.eq(3).find('input').val();
         temp.identifier = td_arr.eq(4).find('input').val();
         temp.work_time = td_arr.eq(5).find('input').val();
+        temp.id = td_arr.eq(7).find('input').val();
         resume_arr.push(temp);
     }
     return resume_arr;
@@ -152,7 +150,7 @@ var get_info = function () {
     info_dic.cadre_id = $('#cadre_id').val();
     info_dic.dept_name = $('#dept_name').val();
     info_dic.name = $('#name').val();
-    info_dic.sex = $('input[name="sex"]').val();
+    info_dic.sex = $('input[name="sex"]:checked').val();
     info_dic.nation = $('#nation').val();
     info_dic.specialty = $('#specialty').val();
     if (img_src == null) img_src = "/static/image/timg.jpg";
@@ -205,7 +203,7 @@ $(document).ready(function () {
         f_tr.append($(myText));
         f_tr.append($(myText));
         f_tr.append($("<td><button type='button' class='btn btn-link " +
-            "btn-sm' onclick=" + "handle.del('family-" + f_count
+            "btn-sm' onclick=" + "空.del('family-" + f_count
                 .value() + "')" + ">删除</button></td>"));
         $('#family-tbody').append(f_tr)
     });
@@ -224,7 +222,7 @@ $(document).ready(function () {
         r_and_p_tr.append($(myText));
         r_and_p_tr.append($(myText));
         r_and_p_tr.append($("<td><button type='button' class='btn btn-link " +
-            "btn-sm' onclick=" + "handle.del('r-and-p-" + r_and_p_count.value()
+            "btn-sm' onclick=" + "空.del('r-and-p-" + r_and_p_count.value()
             + "')" + ">删除</button></td>"));
         $('#r-and-p-tbody').append(r_and_p_tr);
 
@@ -260,7 +258,7 @@ $(document).ready(function () {
         edu_tr.append($(myText));
         edu_tr.append($(learn_form));
         edu_tr.append($("<td><button type='button' class='btn btn-link " +
-            "btn-sm' onclick=" + "handle.del('edu-" + edu_count
+            "btn-sm' onclick=" + "空.del('edu-" + edu_count
                 .value()
             + "')" + ">删除</button></td>"));
         $('#edu-tbody').append(edu_tr);
@@ -298,7 +296,7 @@ $(document).ready(function () {
         title_tr.append($(myDate));
         title_tr.append($(myText));
         title_tr.append($("<td><button type='button' class='btn btn-link " +
-            "btn-sm' onclick=" + "handle.del('title-" + title_count
+            "btn-sm' onclick=" + "空.del('title-" + title_count
                 .value()
             + "')" + ">删除</button></td>"));
         $('#title-tbody').append(title_tr);
@@ -319,7 +317,7 @@ $(document).ready(function () {
         resume_tr.append($(myText));
         resume_tr.append($(myDate));
         resume_tr.append($("<td><button type='button' class='btn btn-link " +
-            "btn-sm' onclick=" + "handle.del('resume-" + resume_count.value()
+            "btn-sm' onclick=" + "空.del('resume-" + resume_count.value()
             + "')" + ">删除</button></td>"));
         $('#resume-tbody').append(resume_tr);
 

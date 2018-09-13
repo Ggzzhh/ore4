@@ -198,6 +198,56 @@ def del_user(id):
     return jsonify({'error': False, 'message': '已删除!'})
 
 
+@api_v1.route('/del-resume/<int:id>', methods=["DELETE"])
+@login_required
+def del_resume(id):
+    if current_user.username != current_app.config['ADMIN_USERNAME']:
+        return jsonify({'error': True, 'error_message': '权限不足'})
+    resume = Resume.query.get_or_404(id)
+    db.session.delete(resume)
+    return jsonify({'error': False, 'message': '已删除!'})
+
+
+@api_v1.route('/del-title/<int:id>', methods=["DELETE"])
+@login_required
+def del_title(id):
+    if current_user.username != current_app.config['ADMIN_USERNAME']:
+        return jsonify({'error': True, 'error_message': '权限不足'})
+    title = Title.query.get_or_404(id)
+    db.session.delete(title)
+    return jsonify({'error': False, 'message': '已删除!'})
+
+
+@api_v1.route('/del-edu/<int:id>', methods=["DELETE"])
+@login_required
+def del_edu(id):
+    if current_user.username != current_app.config['ADMIN_USERNAME']:
+        return jsonify({'error': True, 'error_message': '权限不足'})
+    edu = Education.query.get_or_404(id)
+    db.session.delete(edu)
+    return jsonify({'error': False, 'message': '已删除!'})
+
+
+@api_v1.route('/del-r-and-p/<int:id>', methods=["DELETE"])
+@login_required
+def del_r_and_p(id):
+    if current_user.username != current_app.config['ADMIN_USERNAME']:
+        return jsonify({'error': True, 'error_message': '权限不足'})
+    r_and_p = RAndP.query.get_or_404(id)
+    db.session.delete(r_and_p)
+    return jsonify({'error': False, 'message': '已删除!'})
+
+
+@api_v1.route('/del-family/<int:id>', methods=["DELETE"])
+@login_required
+def del_family(id):
+    if current_user.username != current_app.config['ADMIN_USERNAME']:
+        return jsonify({'error': True, 'error_message': '权限不足'})
+    family = Family.query.get_or_404(id)
+    db.session.delete(family)
+    return jsonify({'error': False, 'message': '已删除!'})
+
+
 @api_v1.route('/save-img', methods=["POST"])
 @login_required
 def save_img():

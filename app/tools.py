@@ -31,7 +31,7 @@ def str2pinyin(_str):
 
 
 def str2time(_str):
-    if _str is None or _str == "":
+    if _str is None or _str == "" or _str == "None":
         return
     return datetime.datetime.strptime(_str, "%Y年%m月%d日")
 
@@ -44,6 +44,8 @@ def time2str(time):
 
 
 def str2img(_str, base_url="", _id=""):
+    if _str[-4:] == ".jpg":
+        return _str
     img = base64.b64decode(_str)
     if _id is None:
         _id = "temp"

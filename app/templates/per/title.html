@@ -23,37 +23,49 @@
 		</tr>
 		</thead>
 		<tbody id="title-tbody">
-		{% for title in per['titlies'] %}
+		{% for (index, title) in enumerate(per['titlies']) %}
 			{% set title = title.to_json() %}
-			<tr>
-				<td class="index">{{ title['id'] }}</td>
+			<tr id="title-{{ index + 1 }}">
+				<td class="index">{{ index + 1 }}</td>
 				<td class="input-group-inline input-group-sm">
 					<input type="text" class="form-control"
-								 disabled="" placeholder="请输入..."
-								 value="{{ title['dept'] }}" />
+								 disabled="" placeholder="空"
+								 value="{{ title['dept'] or '' }}" />
 				</td>
 				<td class="input-group-inline input-group-sm">
 					<input type="text" class="form-control"
-								 disabled="" placeholder="请输入..."
-								 value="{{ title['lv'] }}" />
+								 disabled="" placeholder="空"
+								 value="{{ title['lv'] or '' }}" />
 				</td>
-				<td class="input-group-inline input-group-sm">
-					修改这里{{ title['name'] }}
+				<td class="input-group-inline input-group-sm" onchange="title_change('title-{{ index + 1 }}')">
+					<select class="mt-1">
+						{% for name in title_names %}
+							<option value="{{ name[0] }}"
+											{% if name[1] == title['name'] %}
+											selected
+											{% endif %}
+
+							>
+								{{ name[1] }}
+							</option>
+
+						{% endfor %}
+					</select>
 				</td>
 				<td class="input-group-inline input-group-sm">
 					<input type="text" class="form-control"
-								 placeholder="请输入..."
-								 value="{{ title['major'] }}" />
+								 placeholder="空"
+								 value="{{ title['major'] or '' }}" />
 				</td>
 				<td class="input-group-inline input-group-sm">
 					<input type="text" class="form-control mydate"
-								 placeholder="请选择..."
-								 value="{{ title['get_time'] }}" />
+								 placeholder="空"
+								 value="{{ title['get_time'] or '' }}" />
 				</td>
 				<td class="input-group-inline input-group-sm">
 					<input type="text" class="form-control"
-								 placeholder="请输入..."
-								 value="{{ title['page_no'] }}" />
+								 placeholder="空"
+								 value="{{ title['page_no'] or '' }}" />
 				</td>
 				<td class="input-group-inline input-group-sm">
 					<select class="mt-1">
@@ -68,16 +80,21 @@
 				</td>
 				<td class="input-group-inline input-group-sm">
 					<input type="text" class="form-control"
-								 placeholder="请输入..."
-								 value="{{ title['engage_time'] }}" />
+								 placeholder="空"
+								 value="{{ title['engage_time'] or '' }}" />
 				</td>
 				<td class="input-group-inline input-group-sm">
 					<input type="text" class="form-control"
-								 placeholder="请输入..."
-								 value="{{ title['remarks'] }}" />
+								 placeholder="空"
+								 value="{{ title['remarks'] or '' }}" />
 				</td>
 				<td class="input-group-inline input-group-sm">
-					<a href="#" class="btn btn-link btn-sm">删除</a>
+					<a href="#" class="btn btn-link btn-sm"
+						 onclick="handle.title_del('{{ title.id }}')"
+					>删除</a>
+				</td>
+				<td hidden>
+					<input type="text" value="{{ title.id }}" style="display: None;">
 				</td>
 			</tr>
 		{% endfor %}

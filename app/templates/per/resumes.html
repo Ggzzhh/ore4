@@ -19,33 +19,36 @@
 		</tr>
 		</thead>
 		<tbody id="resume-tbody">
-		{% for resume in per['resumes'] %}
+		{% for (index, resume) in enumerate(per['resumes']) %}
 			{% set resume = resume.to_json() %}
 			<tr>
-				<td class="index">{{ resume['id'] }}</td>
+				<td class="index">{{ index + 1 }}</td>
 				<td class="input-group-inline input-group-sm">
-					<input type="text" class="form-control mydate" placeholder="请选择..."
-					value="{{ resume['change_time'] }}">
-					</td>
-				<td class="input-group-inline input-group-sm">
-					<input type="text" class="form-control" placeholder="请输入..."
-					value="{{ resume['dept'] }}">
+					<input type="text" class="form-control mydate" placeholder="空"
+								 value="{{ resume['change_time'] or '' }}">
 				</td>
 				<td class="input-group-inline input-group-sm">
-					<input type="text" class="form-control" placeholder="请输入..."
-					value="{{ resume['duty'] }}">
+					<input type="text" class="form-control" placeholder="空"
+								 value="{{ resume['dept'] or '' }}">
 				</td>
 				<td class="input-group-inline input-group-sm">
-					<input type="text" class="form-control" placeholder="请输入..."
-					value="{{ resume['identifier'] }}">
+					<input type="text" class="form-control" placeholder="空"
+								 value="{{ resume['duty'] or '' }}">
 				</td>
 				<td class="input-group-inline input-group-sm">
-					<input type="text" class="form-control mydate" placeholder="请选择..."
-					value="{{ resume['work_time'] }}">
+					<input type="text" class="form-control" placeholder="空"
+								 value="{{ resume['identifier'] or '' }}">
+				</td>
+				<td class="input-group-inline input-group-sm">
+					<input type="text" class="form-control mydate" placeholder="空"
+								 value="{{ resume['work_time'] or '' }}">
 				</td>
 				<td class="input-group-inline input-group-sm">
 					<a href="#" onclick="handle.resume_del('{{ resume.id }}')"
 						 class="btn btn-link btn-sm	">删除</a>
+				</td>
+				<td hidden>
+					<input type="text" value="{{ resume.id }}" style="display: None;">
 				</td>
 			</tr>
 		{% endfor %}

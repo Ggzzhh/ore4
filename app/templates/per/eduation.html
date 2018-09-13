@@ -1,9 +1,9 @@
 <div class="new-edu">
-  {% if current_user.role.id == 1 %}
-	<button class="btn btn-outline-dark" type="button" id="add-edu-tr">
-		+ 新增
-	</button>
-  {% endif %}
+	{% if current_user.role.id == 1 %}
+		<button class="btn btn-outline-dark" type="button" id="add-edu-tr">
+			+ 新增
+		</button>
+	{% endif %}
 </div>
 <div class="edu-tab mt-2">
 	<table class="table table-bordered text-center">
@@ -21,6 +21,66 @@
 		</tr>
 		</thead>
 		<tbody id="edu-tbody">
+		{% for (index, edu) in enumerate(per['edus']) %}
+			{% set edu = edu.to_json() %}
+			<tr>
+				<td class="index">{{ index + 1 }}</td>
+				<td class="input-group-inline input-group-sm">
+					<select class="mt-1">
+						{% for lv in edu_lv %}
+							<option value="{{ lv[0] }}"
+											{% if lv[1] == edu['lv'] %}
+											selected
+											{% endif %}
+							>
+								{{ lv[1] }}
+							</option>
+						{% endfor %}
+					</select>
+
+				</td>
+				<td class="input-group-inline input-group-sm">
+					<input type="text" class="form-control mydate" placeholder="空"
+								 value="{{ edu['enrolment_time'] or '' }}">
+				</td>
+				<td class="input-group-inline input-group-sm">
+					<input type="text" class="form-control mydate" placeholder="空"
+								 value="{{ edu['graduation_time'] or '' }}">
+				</td>
+				<td class="input-group-inline input-group-sm">
+					<input type="text" class="form-control" placeholder="空"
+								 value="{{ edu['edu_name'] or '' }}">
+				</td>
+				<td class="input-group-inline input-group-sm">
+					<input type="text" class="form-control mydate" placeholder="空"
+								 value="{{ edu['department'] or ''}}">
+				</td>
+				<td class="input-group-inline input-group-sm">
+					<input type="text" class="form-control mydate" placeholder="空"
+								 value="{{ edu['degree'] or '' }}">
+				</td>
+				<td class="input-group-inline input-group-sm">
+					<select class="mt-1">
+						{% for learn in learn_form %}
+							<option value="{{ learn[0] }}"
+											{% if learn[1] == edu['learn_form'] %}
+											selected
+											{% endif %}
+							>
+								{{ learn[1] }}
+							</option>
+						{% endfor %}
+					</select>
+				</td>
+				<td class="input-group-inline input-group-sm">
+					<a href="#" onclick="handle.edu_del('{{ edu.id }}')"
+						 class="btn btn-link btn-sm	">删除</a>
+				</td>
+				<td hidden>
+					<input type="text" value="{{ edu.id }}" style="display: None;">
+				</td>
+			</tr>
+		{% endfor %}
 		</tbody>
 	</table>
 </div>

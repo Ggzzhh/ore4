@@ -153,7 +153,36 @@
           "</select>" +
           "</td>";
 
-
+      var handle = {
+          _success : function (data) {
+                  alert(data.message);
+                  location.reload();
+              },
+          del: function (id, d_id) {
+              if (confirm('确定删除该项么？'))
+                  $('#'+id).remove();
+          },
+					resume_del: function (id) {
+              if (confirm('确定删除该项么？'))
+								a_json('/v1/del-resume/'+id, "DELETE", {}, this._success)
+          },
+					title_del: function (id) {
+              if (confirm('确定删除该项么？'))
+								a_json('/v1/del-title/'+id, "DELETE", {}, this._success)
+          },
+					edu_del: function (id) {
+              if (confirm('确定删除该项么？'))
+								a_json('/v1/del-edu/'+id, "DELETE", {}, this._success)
+          },
+					r_and_p_del: function (id) {
+              if (confirm('确定删除该项么？'))
+								a_json('/v1/del-r-and-p/'+id, "DELETE", {}, this._success)
+          },
+					family_del: function (id) {
+              if (confirm('确定删除该项么？'))
+								a_json('/v1/del-family/'+id, "DELETE", {}, this._success)
+          }
+      };
 
 
       $(document).ready(function () {
@@ -187,7 +216,7 @@
 
               var _success = function (data) {
                   alert(data.message);
-{#                  location.href = '/search';#}
+                  location.href = '/search';
               };
 
               a_json(
@@ -209,7 +238,7 @@
               var pros = url.split('/');
               var id = pros[pros.length - 1];
               var data = JSON.stringify({
-									id: id,
+                  id: id,
                   families: get_families(),
                   r_and_p: get_r_and_p(),
                   edus: get_edu(),
@@ -220,7 +249,7 @@
 
               var _success = function (data) {
                   alert(data.message);
-{#                  location.href = '/search';#}
+                  location.reload();
               };
 
               a_json(

@@ -1,25 +1,58 @@
 
 <div class="new-r-and-p">
-  {% if current_user.role.id == 1 %}
-    <button class="btn btn-outline-dark" type="button" id="add-r-and-p-tr">
-      + 新增
-    </button>
-  {% endif %}
+	{% if current_user.role.id == 1 %}
+		<button class="btn btn-outline-dark" type="button" id="add-r-and-p-tr">
+			+ 新增
+		</button>
+	{% endif %}
 </div>
 <div class="r-and-p-tab mt-2">
-  <table class="table table-bordered text-center">
-    <thead>
-    <tr>
-      <th class="index">序&nbsp;&nbsp;号</th>
-      <th>时&nbsp;&nbsp;间</th>
-      <th>奖惩单位</th>
-      <th>奖惩原因</th>
-      <th>奖惩结果</th>
-      <th>备注</th>
-      <th>操作</th>
-    </tr>
-    </thead>
-    <tbody id="r-and-p-tbody">
-    </tbody>
-  </table>
+	<table class="table table-bordered text-center">
+		<thead>
+		<tr>
+			<th class="index">序&nbsp;&nbsp;号</th>
+			<th>时&nbsp;&nbsp;间</th>
+			<th>奖惩单位</th>
+			<th>奖惩原因</th>
+			<th>奖惩结果</th>
+			<th>备注</th>
+			<th>操作</th>
+		</tr>
+		</thead>
+		<tbody id="r-and-p-tbody">
+		{% for (index, r_and_p) in enumerate(per['r_and_ps']) %}
+			{% set r_and_p = r_and_p.to_json() %}
+			<tr>
+				<td class="index">{{ index + 1 }}</td>
+				<td class="input-group-inline input-group-sm">
+					<input type="text" class="form-control mydate" placeholder="空"
+								 value="{{ r_and_p['time'] or '' }}">
+				</td>
+				<td class="input-group-inline input-group-sm">
+					<input type="text" class="form-control" placeholder="空"
+								 value="{{ r_and_p['dept'] or '' }}">
+				</td>
+				<td class="input-group-inline input-group-sm">
+					<input type="text" class="form-control" placeholder="空"
+								 value="{{ r_and_p['reason'] or '' }}">
+				</td>
+				<td class="input-group-inline input-group-sm">
+					<input type="text" class="form-control" placeholder="空"
+								 value="{{ r_and_p['result'] or '' }}">
+				</td>
+				<td class="input-group-inline input-group-sm">
+					<input type="text" class="form-control" placeholder="空"
+								 value="{{ r_and_p['remarks'] or '' }}">
+				</td>
+				<td class="input-group-inline input-group-sm">
+					<a href="#" onclick="handle.r_and_p_del('{{ r_and_p.id }}')"
+						 class="btn btn-link btn-sm	">删除</a>
+				</td>
+				<td hidden>
+					<input type="text" value="{{ r_and_p.id }}" style="display: None;">
+				</td>
+			</tr>
+		{% endfor %}
+		</tbody>
+	</table>
 </div>
