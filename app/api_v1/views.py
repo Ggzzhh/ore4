@@ -22,7 +22,7 @@ def manage_per():
     res = replace2none(res)
     info = res.get('info')
     if info:
-        _id = info.get('id')
+        _id = res.get('id')
         name = info.get('name')
         id_card = info.get('id_card')
         dept = Dept.query.get(info.get('dept_name'))
@@ -33,11 +33,12 @@ def manage_per():
             abort(403)
         if id_card is not None:
             id_card = Personnel.query.filter_by(id_card=id_card).first()
-            if id_card is not None:
+            if id_card is not None and _id is None:
                 return jsonify({'error': True, 'error_message': '身份证号已存在! '
                                                                 '不可重复！'})
         if _id:
             per = Personnel.query.get_or_404(_id)
+            per.from_json(info, _id)
         else:
             per = Personnel.from_json(info)
 
@@ -76,7 +77,7 @@ def manage_per():
                 per.families.append(family)
 
         db.session.add(per)
-        return jsonify({'error': False, 'message': '测试ok'})
+        return jsonify({'error': False, 'message': '操作成功！'})
     return jsonify({'error': True, 'error_message': '未知错误!'})
 
 

@@ -65,11 +65,10 @@ def main():
 def search():
     page = request.args.get('page', 1, type=int)
     if request.method == "GET":
-        fields = ['姓名', '性别', '民族', '生日', '年龄', '工作时间', '入党时间',
-                  '职务', '职务级别', '最高学历:学历', '最高学历:毕业时间',
-                  '最高学历:院校', '最高学历:专业', '籍贯', '职称', '身份']
+        fields = ['姓名', '性别', '年龄', '单位简称',
+                  '职务', '职务级别', '最高学历:学历', '职称', '状态']
         pagination = Personnel.query.join(Duty, Duty.id == Personnel.duty_id)\
-            .order_by(Duty.order).paginate(
+            .order_by(Duty.order, Duty.duty_level_id.desc()).paginate(
             page, per_page=current_app.config['SEARCH_PAGE'],
             error_out=False
         )
@@ -93,6 +92,7 @@ def system_manage_user():
 
     return render_template('system_manage/user.html', title='用户管理',
                            users=users, pagination=pagination)
+
 
 
 @index.route('/system-manage/duty')

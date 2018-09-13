@@ -227,8 +227,11 @@ class Personnel(db.Model):
     state_id = db.Column(db.Integer, db.ForeignKey('states.id'))
 
     @staticmethod
-    def from_json(data):
-        per = Personnel(name=data.get('name'))
+    def from_json(data, id=None):
+        if id is not None:
+            per = Personnel.query.get_or_404(id)
+        else:
+            per = Personnel(name=data.get('name'))
         per.phonetic = str2pinyin(per.name)
         per.cadre_id = data.get('cadre_id')
         per.sex = data.get('sex')
@@ -238,7 +241,7 @@ class Personnel(db.Model):
         if data.get('photo_src'):
             if data.get('photo_src') != photo_src:
                 photo_src = str2img(data.get('photo_src')[23:],
-                                    "app/static/per_img/",
+                                    "/static/per_img/",
                                     data.get('id_card'))
         per.photo_src = photo_src
         per.id_card = data.get('id_card')
@@ -303,6 +306,7 @@ class Personnel(db.Model):
             data['duty'] = duty
             data['duty_name'] = duty['name']
             data['duty_lv'] = duty['duty_level']
+            data['duty_level_id'] = duty['duty_level_id']
         if self.dept:
             dept = self.dept.to_json()
             data['dept'] = dept
@@ -310,26 +314,33 @@ class Personnel(db.Model):
             data['system'] = dept['system']
             data['dept_pro'] = dept['dept_pro']
         if self.state:
+            data['state_id'] = self.state_id
             data['state'] = self.state.name
         data['edus'] = self.edus
         if self.max_edu:
             data['max_edu'] = self.max_edu
             data['max_edu_lv'] = self.max_edu.edu_level.level
+            data['max_edu_in_time'] = time2str(self.max_edu.enrolment_time)
             data['max_edu_time'] = time2str(self.max_edu.graduation_time)
             data['max_edu_dept'] = self.max_edu.department
             data['max_edu_name'] = self.max_edu.edu_name
+            data['max_edu_learn_form'] = self.max_edu.learn_form.name
         if self.at_edu:
             data['at_edu'] = self.at_edu
             data['at_edu_lv'] = self.at_edu.edu_level.level
             data['at_edu_time'] = time2str(self.at_edu.graduation_time)
+            data['at_edu_in_time'] = time2str(self.at_edu.enrolment_time)
             data['at_edu_name'] = self.at_edu.edu_name
             data['at_edu_dept'] = self.at_edu.department
+            data['at_edu_learn_form'] = self.at_edu.learn_form.name
         if self.ot_edu:
             data['ot_edu'] = self.ot_edu
             data['ot_edu_lv'] = self.ot_edu.edu_level.level
             data['ot_edu_time'] = time2str(self.ot_edu.graduation_time)
+            data['ot_edu_in_time'] = time2str(self.ot_edu.enrolment_time)
             data['ot_edu_name'] = self.ot_edu.edu_name
             data['ot_edu_dept'] = self.ot_edu.department
+            data['ot_edu_learn_form'] = self.ot_edu.learn_form.name
         return data
 
     @property
@@ -389,6 +400,16 @@ class Resume(db.Model):
     dept = db.Column(db.String(64))
     # 任职文号
     identifier = db.Column(db.String(64))
+
+    def to_json(self):
+        data = {}
+        data['id'] = self.id
+        data['change_time'] = time2str(self.change_time)
+        data['work_time'] = time2str(self.work_time)
+        data['duty'] = self.duty
+        data['dept'] = self.dept
+        data['identifier'] = self.identifier
+        return data
 
     @staticmethod
     def from_json(data):
@@ -484,7 +505,7 @@ class Education(db.Model):
         edu.remarks = data.get('remarks')
         edu.enrolment_time = str2time(data.get('enrolment_time'))
         edu.graduation_time = str2time(data.get('graduation_time'))
-        edu.learn = LearnForm.query.get(data.get('learn_id'))
+        edu.learn_form = LearnForm.query.get(data.get('learn_id'))
         return edu
 
     def __repr__(self):
@@ -641,6 +662,21 @@ class Title(db.Model):
     engage = db.Column(db.Boolean, default=False)
     # 聘任时间
     engage_time = db.Column(db.DateTime)
+
+    def to_json(self):
+        data = {}
+        if self.name:
+            data['id'] = self.id
+            data['name'] = self.name.name
+            data['dept'] = self.name.dept.name
+            data['lv'] = self.name.lv.name
+            data['major'] = self.major
+            data['remarks'] = self.remarks
+            data['page_no'] = self.page_no
+            data['engage'] = '是' if self.engage else '否'
+            data['get_time'] = time2str(self.get_time)
+            data['engage_time'] = time2str(self.engage_time)
+        return data
 
     @staticmethod
     def from_json(data):

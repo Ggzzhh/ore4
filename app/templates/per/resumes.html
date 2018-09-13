@@ -1,24 +1,54 @@
 <div class="new-resume">
-  {% if current_user.role.id == 1 %}
-    <button class="btn btn-outline-dark" type="button" id="add-resume-tr">
-      + 新增
-    </button>
-  {% endif %}
+	{% if current_user.role.id == 1 %}
+		<button class="btn btn-outline-dark" type="button" id="add-resume-tr">
+			+ 新增
+		</button>
+	{% endif %}
 </div>
 <div class="resume-tab mt-2">
-  <table class="table table-bordered text-center">
-    <thead>
-    <tr>
-      <th class="index">序&nbsp;&nbsp;号</th>
-      <th>变动时间</th>
-      <th>单位</th>
-      <th>职务</th>
-      <th>任职文号</th>
-      <th>任职时间</th>
-      <th>操作</th>
-    </tr>
-    </thead>
-    <tbody id="resume-tbody">
-    </tbody>
-  </table>
+	<table class="table table-bordered text-center">
+		<thead>
+		<tr>
+			<th class="index">序&nbsp;&nbsp;号</th>
+			<th>变动时间</th>
+			<th>单位</th>
+			<th>职务</th>
+			<th>任职文号</th>
+			<th>任职时间</th>
+			<th>操作</th>
+		</tr>
+		</thead>
+		<tbody id="resume-tbody">
+		{% for resume in per['resumes'] %}
+			{% set resume = resume.to_json() %}
+			<tr>
+				<td class="index">{{ resume['id'] }}</td>
+				<td class="input-group-inline input-group-sm">
+					<input type="text" class="form-control mydate" placeholder="请选择..."
+					value="{{ resume['change_time'] }}">
+					</td>
+				<td class="input-group-inline input-group-sm">
+					<input type="text" class="form-control" placeholder="请输入..."
+					value="{{ resume['dept'] }}">
+				</td>
+				<td class="input-group-inline input-group-sm">
+					<input type="text" class="form-control" placeholder="请输入..."
+					value="{{ resume['duty'] }}">
+				</td>
+				<td class="input-group-inline input-group-sm">
+					<input type="text" class="form-control" placeholder="请输入..."
+					value="{{ resume['identifier'] }}">
+				</td>
+				<td class="input-group-inline input-group-sm">
+					<input type="text" class="form-control mydate" placeholder="请选择..."
+					value="{{ resume['work_time'] }}">
+				</td>
+				<td class="input-group-inline input-group-sm">
+					<a href="#" onclick="handle.resume_del('{{ resume.id }}')"
+						 class="btn btn-link btn-sm	">删除</a>
+				</td>
+			</tr>
+		{% endfor %}
+		</tbody>
+	</table>
 </div>

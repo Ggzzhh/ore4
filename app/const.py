@@ -55,7 +55,7 @@ FIELDS = {
     '民族': 'nation',
     '生日': 'birthday',
     '年龄': 'age',
-    '工作时间': 'work_time',
+    '参加工作时间': 'work_time',
     '入党时间': 'party_member',
     '政治面貌': 'policital_status',
     '籍贯': 'native_place',

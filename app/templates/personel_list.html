@@ -7,15 +7,19 @@
 		{% endfor %}
 		</thead>
 		<tbody>
-			{% for per in pers %}
-				<tr>
-					<td><input type="checkbox" value="{{ per['id'] }}" name="per-id"></td>
-					<td><a href="#">{{ per['data'].pop(0) }}</a></td>
-					{% for p in per['data'] %}
-						<td>{{ p }}</td>
-					{% endfor %}
-				</tr>
-			{% endfor %}
+		{% for per in pers %}
+			<tr>
+				<td><input type="checkbox" value="{{ per['id'] }}" name="per-id"></td>
+				<td>
+					<a href="{{ url_for('per.edit_per', _id=per['id']) }}">
+						{{ per['data'].pop(0) }}
+					</a>
+				</td>
+				{% for p in per['data'] %}
+					<td>{{ p }}</td>
+				{% endfor %}
+			</tr>
+		{% endfor %}
 		</tbody>
 	</table>
 </div>

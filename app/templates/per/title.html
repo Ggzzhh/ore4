@@ -1,28 +1,87 @@
 <div class="new-title">
-  {% if current_user.role.id == 1 %}
-    <button class="btn btn-outline-dark" type="button" id="add-title-tr">
-      + 新增
-    </button>
-  {% endif %}
+	{% if current_user.role.id == 1 %}
+		<button class="btn btn-outline-dark" type="button" id="add-title-tr">
+			+ 新增
+		</button>
+	{% endif %}
 </div>
 <div class="title-tab mt-2">
-  <table class="table table-bordered text-center">
-    <thead>
-    <tr>
-      <th class="index">序&nbsp;&nbsp;号</th>
-      <th>职称系列</th>
-      <th>级别</th>
-      <th>现有职称</th>
-      <th>职称专业</th>
-      <th>取得时间</th>
-      <th>证书编号</th>
-      <th>在聘</th>
-      <th>聘任时间</th>
-      <th>备注</th>
-      <th>操作</th>
-    </tr>
-    </thead>
-    <tbody id="title-tbody">
-    </tbody>
-  </table>
+	<table class="table table-bordered text-center">
+		<thead>
+		<tr>
+			<th class="index">序&nbsp;&nbsp;号</th>
+			<th>职称系列</th>
+			<th>级别</th>
+			<th>现有职称</th>
+			<th>职称专业</th>
+			<th>取得时间</th>
+			<th>证书编号</th>
+			<th>在聘</th>
+			<th>聘任时间</th>
+			<th>备注</th>
+			<th>操作</th>
+		</tr>
+		</thead>
+		<tbody id="title-tbody">
+		{% for title in per['titlies'] %}
+			{% set title = title.to_json() %}
+			<tr>
+				<td class="index">{{ title['id'] }}</td>
+				<td class="input-group-inline input-group-sm">
+					<input type="text" class="form-control"
+								 disabled="" placeholder="请输入..."
+								 value="{{ title['dept'] }}" />
+				</td>
+				<td class="input-group-inline input-group-sm">
+					<input type="text" class="form-control"
+								 disabled="" placeholder="请输入..."
+								 value="{{ title['lv'] }}" />
+				</td>
+				<td class="input-group-inline input-group-sm">
+					修改这里{{ title['name'] }}
+				</td>
+				<td class="input-group-inline input-group-sm">
+					<input type="text" class="form-control"
+								 placeholder="请输入..."
+								 value="{{ title['major'] }}" />
+				</td>
+				<td class="input-group-inline input-group-sm">
+					<input type="text" class="form-control mydate"
+								 placeholder="请选择..."
+								 value="{{ title['get_time'] }}" />
+				</td>
+				<td class="input-group-inline input-group-sm">
+					<input type="text" class="form-control"
+								 placeholder="请输入..."
+								 value="{{ title['page_no'] }}" />
+				</td>
+				<td class="input-group-inline input-group-sm">
+					<select class="mt-1">
+
+						<option value="true"
+										{% if title['engage'] == '是' %}selected{% endif %}>
+							是
+						</option>
+						<option value="false" {% if title['engage'] == '否' %}
+										selected{% endif %}>否</option>
+					</select>
+				</td>
+				<td class="input-group-inline input-group-sm">
+					<input type="text" class="form-control"
+								 placeholder="请输入..."
+								 value="{{ title['engage_time'] }}" />
+				</td>
+				<td class="input-group-inline input-group-sm">
+					<input type="text" class="form-control"
+								 placeholder="请输入..."
+								 value="{{ title['remarks'] }}" />
+				</td>
+				<td class="input-group-inline input-group-sm">
+					<a href="#" class="btn btn-link btn-sm">删除</a>
+				</td>
+			</tr>
+		{% endfor %}
+
+		</tbody>
+	</table>
 </div>

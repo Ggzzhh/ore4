@@ -69,7 +69,7 @@
 			<div class="title">{{ title }}</div>
 		</div>
 		<div class="per-content">
-			<form id="add-per">
+			<form id="{{ form_id }}">
 				{% include 'per/infotable.html' %}
 				{% if current_user.role.id == 1 %}
 					<div class="input-group justify-content-end">
@@ -177,6 +177,39 @@
                   return false;
               }
               var data = JSON.stringify({
+                  families: get_families(),
+                  r_and_p: get_r_and_p(),
+                  edus: get_edu(),
+                  titlies: get_title(),
+                  resumes: get_resume(),
+                  info: get_info()
+              });
+
+              var _success = function (data) {
+                  alert(data.message);
+{#                  location.href = '/search';#}
+              };
+
+              a_json(
+                  '/v1/manage-per',
+                  'POST',
+                  data,
+                  _success
+              );
+
+              return false;
+          });
+
+          $('#edit-per').bind('submit', function () {
+              if ($('#name').val() == ""){
+                  alert('姓名不能为空！');
+                  return false;
+              }
+              var url = window.location.href;
+              var pros = url.split('/');
+              var id = pros[pros.length - 1];
+              var data = JSON.stringify({
+									id: id,
                   families: get_families(),
                   r_and_p: get_r_and_p(),
                   edus: get_edu(),

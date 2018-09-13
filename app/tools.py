@@ -48,7 +48,7 @@ def str2img(_str, base_url="", _id=""):
     if _id is None:
         _id = "temp"
     url = base_url + _id + ".jpg"
-    with open(url, "wb") as f:
+    with open("app/" + url, "wb") as f:
         f.write(img)
     return url
 
