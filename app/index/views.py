@@ -67,7 +67,7 @@ def search():
     if request.method == "GET":
         fields = ['姓名', '性别', '年龄', '单位简称',
                   '职务', '职务级别', '最高学历:学历', '职称', '状态']
-        pagination = Personnel.query.join(Duty, Duty.id == Personnel.duty_id)\
+        pagination = Personnel.query.join(Duty, Duty.id == Personnel.duty_id) \
             .order_by(Duty.order, Duty.duty_level_id.desc()).paginate(
             page, per_page=current_app.config['SEARCH_PAGE'],
             error_out=False
@@ -75,6 +75,27 @@ def search():
         pers = pagination.items
         pers = filter_field(pers, fields)
         all_fields = list(FIELDS.keys())
+    return render_template('search.html', fields=fields, pers=pers,
+                           all_fields=all_fields, pagination=pagination)
+
+
+@index.route('/search-criteria', methods=["POST"])
+@login_required
+def search_criteria():
+    page = request.args.get('page', 1, type=int)
+    all_fields = list(FIELDS.keys())
+    form = request.form
+    fields = form.getlist('fields')
+    pagination = Personnel.query.join(Duty, Duty.id == Personnel.duty_id) \
+        .order_by(Duty.order, Duty.duty_level_id.desc()).paginate(
+        page, per_page=current_app.config['SEARCH_PAGE'],
+        error_out=False
+    )
+    pers = pagination.items
+    if fields == []:
+        fields = ['姓名', '性别', '年龄', '单位简称',
+                  '职务', '职务级别', '最高学历:学历', '职称', '状态']
+    pers = filter_field(pers, fields)
     return render_template('search.html', fields=fields, pers=pers,
                            all_fields=all_fields, pagination=pagination)
 
@@ -92,7 +113,6 @@ def system_manage_user():
 
     return render_template('system_manage/user.html', title='用户管理',
                            users=users, pagination=pagination)
-
 
 
 @index.route('/system-manage/duty')

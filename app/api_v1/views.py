@@ -254,3 +254,64 @@ def save_img():
     data = request.get_data()
     print(data)
     return jsonify({"data": "/static/image/timg.jpg"})
+
+
+@api_v1.route('/punished', methods=["UPDATE"])
+@login_required
+def punished():
+    data = request.get_json()
+    ids = data.get('ids')
+    if ids is not None and ids != []:
+        for _id in ids:
+            per = Personnel.query.get(_id)
+            if per is not None:
+                if per.punished is None:
+                    per.punished = False
+                per.punished = not per.punished
+                db.session.add(per)
+            else:
+                jsonify({'error': True, 'error_message': '数据出错!'})
+        return jsonify({'error': False, 'message': '调配完成!'})
+    else:
+        return jsonify({'error': False, 'message': '没有选择调配目标!'})
+
+
+@api_v1.route('/choice-state', methods=["UPDATE"])
+@login_required
+def choice_state():
+    data = request.get_json()
+    ids = data.get('ids')
+    _state = data.get('state')
+    if ids is not None and ids != []:
+        for _id in ids:
+            per = Personnel.query.get(_id)
+            if per is not None:
+                state = State.query.get(int(_state))
+                print(_state)
+                if state:
+                    per.state = state
+                else:
+                    jsonify({'error': True, 'error_message': '数据出错!'})
+                db.session.add(per)
+            else:
+                jsonify({'error': True, 'error_message': '数据出错!'})
+        return jsonify({'error': False, 'message': '调配完成!'})
+    else:
+        return jsonify({'error': False, 'message': '没有选择调配目标!'})
+
+
+@api_v1.route('/del_per', methods=["DELETE"])
+@login_required
+def del_per():
+    data = request.get_json()
+    ids = data.get('ids')
+    if ids is not None and ids != []:
+        for _id in ids:
+            per = Personnel.query.get(_id)
+            if per is not None:
+                db.session.delete(per)
+            else:
+                jsonify({'error': True, 'error_message': '数据出错!'})
+        return jsonify({'error': False, 'message': '删除成功!'})
+    else:
+        return jsonify({'error': False, 'message': '没有选择目标!'})

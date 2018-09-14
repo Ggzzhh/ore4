@@ -206,7 +206,7 @@ class Personnel(db.Model):
     # 调入备注
     remarks_2 = db.Column(db.Text)
     # 受处分
-    punished = db.Column(db.Boolean)
+    punished = db.Column(db.Boolean, default=False)
     # 照片地址
     photo_src = db.Column(db.String(128))
     # 家庭情况
@@ -296,7 +296,7 @@ class Personnel(db.Model):
         data['bonus'] = self.bonus
         data['remarks'] = self.remarks
         data['remarks_2'] = self.remarks_2
-        data['punished'] = self.punished
+        data['punished'] = '是' if self.punished else '否'
         data['photo_src'] = self.photo_src
         data['families'] = self.families
         data['r_and_ps'] = self.r_and_ps

@@ -11,7 +11,7 @@
 			<tr>
 				<td><input type="checkbox" value="{{ per['id'] }}" name="per-id"></td>
 				<td>
-					<a href="{{ url_for('per.edit_per', _id=per['id']) }}">
+					<a href="{{ url_for('per.edit_per', _id=per['id']) 	}}">
 						{{ per['data'].pop(0) }}
 					</a>
 				</td>

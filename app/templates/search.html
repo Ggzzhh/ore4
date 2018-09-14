@@ -13,6 +13,9 @@
 		.paginate {
 			width: 90%;
 		}
+		#show-field {
+			font-size: 0.8rem;
+		}
 	</style>
 {% endblock %}
 {% block content %}
@@ -26,7 +29,9 @@
 					<button class="btn btn-sm btn-outline-light my-2 my-sm-0 ml-2"
 									type="submit">搜索</button>
 					<button class="btn btn-sm btn-outline-light my-2 my-sm-0 ml-2"
-									type="button" id="">条件搜索</button>
+									type="button" data-toggle="modal" data-target="#show-field">
+						条件搜索
+					</button>
 				</form>
 			</div>
 		{% endblock %}
@@ -37,21 +42,28 @@
 			<button type="button" class="btn btn-sm btn-link mr-3" id="reverse-check">
 				反 选
 			</button>
-			<button type="button" class="btn btn-sm btn-info mr-3">
+			<button type="button" class="btn btn-sm btn-info mr-3"
+							data-toggle="modal" data-target="#choice-state">
 				在 职
 			</button>
-			<button type="button" class="btn btn-sm btn-warning mr-3">
+			<button type="button" class="btn btn-sm btn-warning mr-3"
+							id="coordinator">
 				协 理
 			</button>
-			<button type="button" class="btn btn-sm btn-secondary mr-3">
+			<button type="button" class="btn btn-sm btn-secondary mr-3"
+							id="transfer">
 				调 离
 			</button>
-			<button type="button" class="btn btn-sm btn-danger mr-3">
-				受 处 分
+			<button type="button" class="btn btn-sm btn-danger mr-3" id="punished">
+				受处分/取消处分
 			</button>
-			<button type="button" class="btn btn-sm btn-success">
+			<button type="button" class="btn btn-sm btn-success mr-3">
 				调 动
 			</button>
+			<button type="button" class="btn btn-sm btn-dark" id="del_per">
+				删 除
+			</button>
+
 		</div>
 		{% include 'personel_list.html' %}
 		<div class="d-flex align-items-center">
@@ -61,10 +73,60 @@
 			<div class="d-flex mt-2 justify-content-center paginate">
 				{{ model.pagination_widget(pagination, 'index.search') }}
 			</div>
+			<div class="form">
+				<form action="/search-criteria" method="post">
+					{{ model.show_fields(all_fields, fields) }}
+				</form>
+			</div>
+			<div class="other-modal">
+				<div class="modal fade" id="choice-state">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<!-- 模态框头部 -->
+							<div class="modal-header">
+								<h4 class="modal-title">请选择调配状态</h4>
+								<button type="button" class="close" data-dismiss="modal">&times;</button>
+							</div>
+
+							<!-- 模态框主体 -->
+							<div class="modal-body">
+								<div class="input-group d-flex flex-column">
+									<div class="form-check form-check-inline">
+										<input type="radio" name="state" id="state1" checked=""
+													 class="form-check-input" value="1">
+										<label for="state1" class="form-check-label">在职：管理人员</label>
+									</div>
+									<div class="form-check form-check-inline mt-2">
+										<input type="radio" name="state" id="state2"
+													 class="form-check-input" value="2">
+										<label for="state2" class="form-check-label">在职：专技人员</label>
+									</div>
+									<div class="form-check form-check-inline mt-2">
+										<input type="radio" name="state" id="state3"
+													 class="form-check-input" value="3">
+										<label for="state3"
+													 class="form-check-label">在职：一般管理人员</label>
+									</div>
+								</div>
+							</div>
+
+							<!-- 模态框底部 -->
+							<div class="modal-footer">
+								<button type="button" class="btn btn-outline-primary"
+								id="choice_state">
+									确定
+								</button>
+								<button type="button" class="btn btn-secondary"
+												data-dismiss="modal">
+									关闭
+								</button>
+							</div>
+
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
-
-
-
 
 	</div>
 {% endblock %}

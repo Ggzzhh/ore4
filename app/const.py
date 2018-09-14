@@ -43,6 +43,11 @@ NAV = {
 }
 
 FIELDS = {
+    '姓名': 'name',
+    '性别': 'sex',
+    '民族': 'nation',
+    '生日': 'birthday',
+    '年龄': 'age',
     '干部编号': 'cadre_id',
     '身份证号': 'id_card',
     '职务': 'duty_name',
@@ -50,11 +55,6 @@ FIELDS = {
     '单位简称': 'dept_name',
     '系统': 'system',
     '单位属性': 'dept_pro',
-    '性别': 'sex',
-    '姓名': 'name',
-    '民族': 'nation',
-    '生日': 'birthday',
-    '年龄': 'age',
     '参加工作时间': 'work_time',
     '入党时间': 'party_member',
     '政治面貌': 'policital_status',
