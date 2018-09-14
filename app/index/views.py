@@ -74,15 +74,20 @@ def search():
         )
         pers = pagination.items
         pers = filter_field(pers, fields)
+        dept_names = Dept.to_arr()
+        duty_lvs = DutyLevel.to_array()
         all_fields = list(FIELDS.keys())
     return render_template('search.html', fields=fields, pers=pers,
-                           all_fields=all_fields, pagination=pagination)
+                           all_fields=all_fields, pagination=pagination,
+                           dept_names=dept_names, duty_lvs=duty_lvs)
 
 
 @index.route('/search-criteria', methods=["POST"])
 @login_required
 def search_criteria():
     page = request.args.get('page', 1, type=int)
+    dept_names = Dept.to_arr()
+    duty_lvs = DutyLevel.to_array()
     all_fields = list(FIELDS.keys())
     form = request.form
     fields = form.getlist('fields')
@@ -97,7 +102,8 @@ def search_criteria():
                   '职务', '职务级别', '最高学历:学历', '职称', '状态']
     pers = filter_field(pers, fields)
     return render_template('search.html', fields=fields, pers=pers,
-                           all_fields=all_fields, pagination=pagination)
+                           all_fields=all_fields, pagination=pagination,
+                           dept_names=dept_names, duty_lvs=duty_lvs)
 
 
 @index.route('/system-manage/user')

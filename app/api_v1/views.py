@@ -8,7 +8,7 @@ from flask_login import logout_user, current_user, login_required
 from . import api_v1
 from ..models import db, User, Role, Duty, DutyLevel, Dept, \
     Personnel, State, Resume, Title, Education, RAndP, Family
-from ..tools import replace2none
+from ..tools import replace2none, str2time
 
 
 @api_v1.route('/manage-per', methods=["POST"])
@@ -295,6 +295,50 @@ def choice_state():
                 db.session.add(per)
             else:
                 jsonify({'error': True, 'error_message': '数据出错!'})
+        return jsonify({'error': False, 'message': '调配完成!'})
+    else:
+        return jsonify({'error': False, 'message': '没有选择调配目标!'})
+
+
+@api_v1.route('/work-move', methods=["UPDATE"])
+@login_required
+def work_move():
+    data = request.get_json()
+    print(data)
+    _id = data.get('id')
+    dept_id = data.get('dept_id')
+    duty_name = data.get('duty_name')
+    duty_lv = data.get('duty_lv')
+    identifier = data.get('identifier')
+    work_time = str2time(data.get('work_time'))
+    if _id is not None and _id != "":
+        per = Personnel.query.get(_id)
+        last_dept = per.dept
+        last_duty = per.duty
+        if last_dept:
+            last_dept = last_dept.dept_name
+        if last_duty:
+            last_duty = last_duty.name
+        last_resume = Resume.query.filter(Resume.dept==last_dept,
+                                          Resume.duty==last_duty).first()
+        if last_resume is None:
+            last_resume = Resume(dept=last_dept, duty=last_duty)
+        last_resume.change_time = work_time
+
+        dept = Dept.query.get_or_404(dept_id)
+        duty = Duty.query.filter_by(name=duty_name).first()
+        if duty is None:
+            duty = Duty(name=duty_name)
+        duty_lv = DutyLevel.query.get_or_404(duty_lv)
+        duty.duty_level = duty_lv
+        per.dept = dept
+        per.duty = duty
+        resume = Resume(dept=dept.dept_name, duty=duty.name)
+        resume.identifier = identifier
+        resume.work_time = work_time
+        per.resumes.append(last_resume)
+        per.resumes.append(resume)
+        db.session.add(per)
         return jsonify({'error': False, 'message': '调配完成!'})
     else:
         return jsonify({'error': False, 'message': '没有选择调配目标!'})

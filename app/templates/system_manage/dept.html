@@ -16,6 +16,7 @@
 				<thead>
 				<tr>
 					<th>单位简称</th>
+					<th>单位全称</th>
 					<th>归属系统</th>
 					<th>单位属性</th>
 					<th>排序级别</th>
@@ -28,6 +29,9 @@
 						<td style="width: 33%">
 							{{ dept.name }}
 						</td>
+						<td style="width: 33%">
+							{{ dept.full_name }}
+						</td>
 						<td>
 							{{ dept.system }}
 						</td>
@@ -39,7 +43,8 @@
 						</td>
 						<td>
 							<button type="button" class="btn btn-link btn-sm"
-									onclick="deptEdit('{{ dept.name }}', '{{
+									onclick="deptEdit('{{ dept.name }}', '{{ dept.full_name
+													}}','{{
 											dept.id }}', '{{ dept.order }}',
 											'{{ dept.system_id }}', {{ dept.dept_pro_id
 											}})">

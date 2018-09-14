@@ -80,7 +80,7 @@ class Dept(db.Model):
     # 单位简称
     dept_name = db.Column(db.String(64))
     # 单位全称
-    full_name = db.Column(db.String(256))
+    full_name = db.Column(db.String(256), default='')
     # 支部名称
     branch_name = db.Column(db.String(128))
     # 级别编号
@@ -106,16 +106,17 @@ class Dept(db.Model):
             abort(403)
         system = System.query.get(data.get('system_id'))
         dept_pro = DeptPro.query.get(data.get('dept_pro_id'))
-        print(dept_pro)
         dept.system = system
         dept.dept_pro = dept_pro
         dept.order = data.get('order')
+        dept.full_name = data.get('full_name')
         return dept, add
 
     def to_json(self):
         data = {
             'id': self.id,
             'name': self.dept_name,
+            'full_name': self.full_name,
             'order': self.order,
             'system_id': self.system_id,
             'system': self.system.system_name if self.system is not None

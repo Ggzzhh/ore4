@@ -203,7 +203,7 @@ $(document).ready(function () {
         f_tr.append($(myText));
         f_tr.append($(myText));
         f_tr.append($("<td><button type='button' class='btn btn-link " +
-            "btn-sm' onclick=" + "空.del('family-" + f_count
+            "btn-sm' onclick=" + "handle.del('family-" + f_count
                 .value() + "')" + ">删除</button></td>"));
         $('#family-tbody').append(f_tr)
     });
@@ -222,7 +222,7 @@ $(document).ready(function () {
         r_and_p_tr.append($(myText));
         r_and_p_tr.append($(myText));
         r_and_p_tr.append($("<td><button type='button' class='btn btn-link " +
-            "btn-sm' onclick=" + "空.del('r-and-p-" + r_and_p_count.value()
+            "btn-sm' onclick=" + "handle.del('r-and-p-" + r_and_p_count.value()
             + "')" + ">删除</button></td>"));
         $('#r-and-p-tbody').append(r_and_p_tr);
 
@@ -258,7 +258,7 @@ $(document).ready(function () {
         edu_tr.append($(myText));
         edu_tr.append($(learn_form));
         edu_tr.append($("<td><button type='button' class='btn btn-link " +
-            "btn-sm' onclick=" + "空.del('edu-" + edu_count
+            "btn-sm' onclick=" + "handle.del('edu-" + edu_count
                 .value()
             + "')" + ">删除</button></td>"));
         $('#edu-tbody').append(edu_tr);
@@ -296,7 +296,7 @@ $(document).ready(function () {
         title_tr.append($(myDate));
         title_tr.append($(myText));
         title_tr.append($("<td><button type='button' class='btn btn-link " +
-            "btn-sm' onclick=" + "空.del('title-" + title_count
+            "btn-sm' onclick=" + "handle.del('title-" + title_count
                 .value()
             + "')" + ">删除</button></td>"));
         $('#title-tbody').append(title_tr);
@@ -317,7 +317,7 @@ $(document).ready(function () {
         resume_tr.append($(myText));
         resume_tr.append($(myDate));
         resume_tr.append($("<td><button type='button' class='btn btn-link " +
-            "btn-sm' onclick=" + "空.del('resume-" + resume_count.value()
+            "btn-sm' onclick=" + "handle.del('resume-" + resume_count.value()
             + "')" + ">删除</button></td>"));
         $('#resume-tbody').append(resume_tr);
 

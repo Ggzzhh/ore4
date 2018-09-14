@@ -43,7 +43,7 @@
 				反 选
 			</button>
 			<button type="button" class="btn btn-sm btn-info mr-3"
-							data-toggle="modal" data-target="#choice-state">
+							data-toggle="modal" data-target="#choice-state" id="choice-s-btn">
 				在 职
 			</button>
 			<button type="button" class="btn btn-sm btn-warning mr-3"
@@ -57,7 +57,8 @@
 			<button type="button" class="btn btn-sm btn-danger mr-3" id="punished">
 				受处分/取消处分
 			</button>
-			<button type="button" class="btn btn-sm btn-success mr-3">
+			<button type="button" class="btn btn-sm btn-success mr-3"
+							data-toggle="modal" data-target="#work-move" id="w-m-btn">
 				调 动
 			</button>
 			<button type="button" class="btn btn-sm btn-dark" id="del_per">
@@ -79,6 +80,7 @@
 				</form>
 			</div>
 			<div class="other-modal">
+
 				<div class="modal fade" id="choice-state">
 					<div class="modal-dialog">
 						<div class="modal-content">
@@ -113,7 +115,7 @@
 							<!-- 模态框底部 -->
 							<div class="modal-footer">
 								<button type="button" class="btn btn-outline-primary"
-								id="choice_state">
+												id="choice_state">
 									确定
 								</button>
 								<button type="button" class="btn btn-secondary"
@@ -122,6 +124,80 @@
 								</button>
 							</div>
 
+						</div>
+					</div>
+				</div>
+
+				<div class="modal fade" id="work-move">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<!-- 模态框头部 -->
+							<div class="modal-header">
+								<h4 class="modal-title">工作调动</h4>
+								<button type="button" class="close" data-dismiss="modal">&times;</button>
+							</div>
+							<form id="work-move-form">
+								<!-- 模态框主体 -->
+								<div class="modal-body">
+									<div class="input-group mb-3">
+										<div class="input-group-prepend">
+											<span class="input-group-text">单位名称</span>
+										</div>
+										<select name="dept-id" id="dept-id">
+											{% for dept in dept_names %}
+												<option value="{{ dept[0] }}">{{ dept[1] }}</option>
+											{% endfor %}
+										</select>
+									</div>
+									<div class="input-group mb-3">
+										<div class="input-group-prepend">
+											<span class="input-group-text">调动职务</span>
+										</div>
+										<input type="text" class="form-control" required
+													 placeholder="空" id="duty-name"
+													 value="">
+									</div>
+									<div class="input-group mb-3">
+										<div class="input-group-prepend">
+											<span class="input-group-text">职务级别</span>
+										</div>
+										<select name="dept-id" id="duty-lv">
+											{% for lv in duty_lvs %}
+												<option value="{{ lv[0] }}">{{ lv[1] }}</option>
+											{% endfor %}
+										</select>
+									</div>
+									<div class="input-group mb-3">
+										<div class="input-group-prepend">
+											<span class="input-group-text">任职文号</span>
+										</div>
+										<input type="text" class="form-control" required
+													 placeholder="空" id="identifier"
+													 value="">
+									</div>
+									<div class="input-group mb-3">
+										<div class="input-group-prepend">
+											<span class="input-group-text">任职时间</span>
+										</div>
+										<input type="text" class="form-control mydate" required
+													 placeholder="空" id="work_time"
+													 value="">
+									</div>
+
+								</div>
+
+								<!-- 模态框底部 -->
+								<div class="modal-footer">
+									<button type="submit" class="btn btn-outline-primary"
+													id="work-move-button">
+										确定
+									</button>
+									<button type="button" class="btn btn-secondary"
+													data-dismiss="modal">
+										关闭
+									</button>
+								</div>
+							</form>
 						</div>
 					</div>
 				</div>

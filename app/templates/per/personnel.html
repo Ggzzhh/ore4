@@ -186,9 +186,7 @@
 
 
       $(document).ready(function () {
-          $('.mydate').datepicker({
-              language: "zh-CN"
-          });
+
           {% if current_user.role.id != 1 %}
               $('input').attr('disabled', 'true');
               $('select').attr('disabled', 'true');

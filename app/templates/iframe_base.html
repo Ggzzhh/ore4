@@ -65,6 +65,10 @@
 
 <script>
     $(document).ready(function () {
+        $('.mydate').datepicker({
+            language: "zh-CN"
+        });
+
         var checkeds = document.getElementsByName("per-id");
 
         $('#all-check').bind('click', function () {
@@ -84,21 +88,25 @@
             $('input[name="per-id"]:checked').map(function (i, e) {
                 ids.push($(e).val())
             });
-            console.log(ids);
-            a_json(
-                "/v1/choice-state",
-                "UPDATE",
-                JSON.stringify(
-                    {
-												'ids': ids,
-												'state': 4
+            if (ids.length === 0) {
+                alert('请选择至少一个人进行调配！');
+                return false;
+            }
+            if (confirm("请确认，即将更改这些人员的数据！"))
+                a_json(
+                    "/v1/choice-state",
+                    "UPDATE",
+                    JSON.stringify(
+                        {
+                            'ids': ids,
+                            'state': 4
+                        }
+                    ),
+                    function (data) {
+                        alert(data.message);
+                        window.location.reload()
                     }
-                ),
-                function (data) {
-                    alert(data.message);
-										window.location.reload()
-                }
-            )
+                )
         });
 
         $('#transfer').bind('click', function () {
@@ -106,21 +114,25 @@
             $('input[name="per-id"]:checked').map(function (i, e) {
                 ids.push($(e).val())
             });
-            console.log(ids);
-            a_json(
-                "/v1/choice-state",
-                "UPDATE",
-                JSON.stringify(
-                    {
-												'ids': ids,
-												'state': 5
+            if (ids.length === 0) {
+                alert('请选择至少一个人进行调配！');
+                return false;
+            }
+            if (confirm("请确认，即将更改这些人员的数据！"))
+                a_json(
+                    "/v1/choice-state",
+                    "UPDATE",
+                    JSON.stringify(
+                        {
+                            'ids': ids,
+                            'state': 5
+                        }
+                    ),
+                    function (data) {
+                        alert(data.message);
+                        window.location.reload()
                     }
-                ),
-                function (data) {
-                    alert(data.message);
-										window.location.reload()
-                }
-            )
+                )
         });
 
         $('#punished').bind('click', function () {
@@ -128,18 +140,22 @@
             $('input[name="per-id"]:checked').map(function (i, e) {
                 ids.push($(e).val())
             });
-            console.log(ids);
-            a_json(
-                "/v1/punished",
-                "UPDATE",
-                JSON.stringify(
-                    {'ids': ids}
-                ),
-                function (data) {
-                    alert(data.message);
-										window.location.reload()
-                }
-            )
+            if (ids.length === 0) {
+                alert('请选择至少一个人进行调配！');
+                return false;
+            }
+            if (confirm("请确认，即将更改这些人员的数据！"))
+                a_json(
+                    "/v1/punished",
+                    "UPDATE",
+                    JSON.stringify(
+                        {'ids': ids}
+                    ),
+                    function (data) {
+                        alert(data.message);
+                        window.location.reload()
+                    }
+                )
         });
 
         $('#choice_state').bind('click', function () {
@@ -147,20 +163,76 @@
             $('input[name="per-id"]:checked').map(function (i, e) {
                 ids.push($(e).val())
             });
-            a_json(
-                "/v1/choice-state",
-                "UPDATE",
-                JSON.stringify(
-                    {
-												'ids': ids,
-												'state': $('input[name="state"]:checked').val()
+            if (ids.length === 0) {
+                alert('请选择至少一个人进行调配！');
+                return false;
+            }
+            if (confirm("请确认，即将更改这些人员的数据！"))
+                a_json(
+                    "/v1/choice-state",
+                    "UPDATE",
+                    JSON.stringify(
+                        {
+                            'ids': ids,
+                            'state': $('input[name="state"]:checked').val()
+                        }
+                    ),
+                    function (data) {
+                        alert(data.message);
+                        window.location.reload()
                     }
-                ),
-                function (data) {
-                    alert(data.message);
-										window.location.reload()
-                }
-            )
+                )
+        });
+
+        $('#choice-s-btn').bind('click', function () {
+            var per_id = $('input[name="per-id"]:checked');
+						if (per_id.length > 1) {
+                alert('选择人数不要超过1个！谢谢合作！');
+                return false;
+            }
+            else if (per_id.length === 0) {
+                alert('请选择一个人进行调动！');
+                return false;
+            }
+            this.modal('show');
+        });
+
+        $('#w-m-btn').bind('click', function () {
+            var per_id = $('input[name="per-id"]:checked');
+						if (per_id.length > 1) {
+                alert('选择人数不要超过1个！谢谢合作！');
+                return false;
+            }
+            else if (per_id.length === 0) {
+                alert('请选择一个人进行调动！');
+                return false;
+            }
+            this.modal('show');
+        });
+
+        $('#work-move-form').bind('submit', function () {
+            var per_id = $('input[name="per-id"]:checked');
+            var id = per_id.val();
+            if (confirm("请确认，即将更改人员的数据！"))
+                a_json(
+                    "/v1/work-move",
+                    "UPDATE",
+                    JSON.stringify(
+                        {
+                            'id': id,
+                            'dept_id': $('#dept-id').val(),
+                            'duty_name': $('#duty-name').val(),
+                            'duty_lv': $('#duty-lv').val(),
+                            'identifier': $('#identifier').val(),
+                            'work_time': $('#work_time').val()
+                        }
+                    ),
+                    function (data) {
+                        alert(data.message);
+                        window.location.reload()
+                    }
+                )
+						return false;
         });
 
         $('#del_per').bind('click', function () {
@@ -168,20 +240,20 @@
             $('input[name="per-id"]:checked').map(function (i, e) {
                 ids.push($(e).val())
             });
-            if (confirm("请确认，即将删除这些员工的数据！此操作不可逆！"))
-            a_json(
-                "/v1/del_per",
-                "DELETE",
-                JSON.stringify(
-                    {
-												'ids': ids
+            if (confirm("请确认，即将删除这些人员的数据！此操作不可逆！"))
+                a_json(
+                    "/v1/del_per",
+                    "DELETE",
+                    JSON.stringify(
+                        {
+                            'ids': ids
+                        }
+                    ),
+                    function (data) {
+                        alert(data.message);
+                        window.location.reload()
                     }
-                ),
-                function (data) {
-                    alert(data.message);
-										window.location.reload()
-                }
-            )
+                )
         });
 
         $('#update-pwd').bind('submit', function () {
@@ -262,6 +334,7 @@
             var data = JSON.stringify({
                 name: $('#i-new-dept').val(),
                 order: $('#order_1').val(),
+                full_name: $('#full_name_1').val(),
                 system_id: $('#system_1').val(),
                 dept_pro_id: $('#dept_pro_1').val(),
                 'new': true

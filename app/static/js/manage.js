@@ -96,11 +96,13 @@ function dutyDel(id) {
     return false;
 }
 
-function deptEdit(name, id, order, system_id, pro_id) {
+function deptEdit(name, full_name, id, order, system_id, pro_id) {
 
     $('#i-edit-dept').attr('value', name);
 
     $('#system_2').val(system_id);
+
+    $('#full_name_2').val(full_name);
 
     $('#dept_pro_2').val(pro_id);
 
@@ -112,6 +114,7 @@ function deptEdit(name, id, order, system_id, pro_id) {
         var data = JSON.stringify({
             id: id,
             name: $('#i-edit-dept').val(),
+            full_name: $('#full_name_2').val(),
             order: $('#order_2').val(),
             system_id: $('#system_2').val(),
             dept_pro_id: $('#dept_pro_2').val(),
