@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from app import db
 
-from app.models import LearnForm, EduLevel, State
+from app.models import LearnForm, EduLevel, State, Field
 
 
 def init_learn_form():
@@ -37,3 +37,14 @@ def init_state():
             state = State(name=temp)
             db.session.add(state)
     print("状态写入完毕!")
+
+
+def init_display():
+    l = ['姓名', '性别', '年龄', '单位简称',
+         '职务', '职务级别', '最高学历:学历', '职称', '状态']
+    for temp in l:
+        res = Field.query.filter_by(name=temp).first()
+        if res is None:
+            field = Field(name=temp)
+            db.session.add(field)
+    print("显示项初始化完毕！")

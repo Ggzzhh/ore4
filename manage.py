@@ -28,11 +28,13 @@ manager.add_command('db', MigrateCommand)
 @manager.command
 def init():
     from app.models import run_only
-    from app.sql_init import init_edu_lv, init_learn_form, init_state
-    run_only()
-    init_edu_lv()
-    init_learn_form()
-    init_state()
+    from app.sql_init import init_edu_lv, init_learn_form, \
+        init_state, init_display
+    # run_only()
+    # init_edu_lv()
+    # init_learn_form()
+    # init_state()
+    init_display()
 
 
 @manager.command

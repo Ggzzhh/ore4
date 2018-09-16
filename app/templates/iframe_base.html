@@ -2,55 +2,55 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-	<meta charset="utf-8">
-	{{ bootstrap.load_css() }}
-	{{ render_static('css', 'css/iframe.css') }}
-	{{ render_static('css', 'css/bootstrap-datepicker3.css') }}
-	<style>
-		body {
-			width: 100%;
-			height: 85vh;
-		}
-		.content {
-			width: 100%;
-			height: 100%;
-		}
-		::-webkit-scrollbar {
-			width: 8px;
-			height: 8px;
-		}
-		/*正常情况下滑块的样式*/
-		::-webkit-scrollbar-thumb {
-			background-color: rgba(39, 85, 130, 0.12);
-			border-radius: 10px;
-		{#			-webkit-box-shadow: inset 1px 1px 0 rgba(0,0,0,.1);#}
-		}
-		/*鼠标悬浮在该类指向的控件上时滑块的样式*/
-		:hover::-webkit-scrollbar-thumb {
-			background-color: rgba(0,0,0,.2);
-			border-radius: 10px;
-			-webkit-box-shadow: inset 1px 1px 0 rgba(0,0,0,.1);
-		}
-		/*鼠标悬浮在滑块上时滑块的样式*/
-		::-webkit-scrollbar-thumb:hover {
-			background-color: rgba(0,0,0,.4);
-			-webkit-box-shadow: inset 1px 1px 0 rgba(0,0,0,.1);
-		}
-		/*正常时候的主干部分*/
-		::-webkit-scrollbar-track {
-			border-radius: 10px;
-			-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0);
-			background-color: white;
-		}
-		/*鼠标悬浮在滚动条上的主干部分*/
-		::-webkit-scrollbar-track:hover {
-			-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.4);
-			background-color: rgba(0,0,0,.01);
-		}
-	</style>
-	{% block head %}
+  <meta charset="utf-8">
+  {{ bootstrap.load_css() }}
+  {{ render_static('css', 'css/iframe.css') }}
+  {{ render_static('css', 'css/bootstrap-datepicker3.css') }}
+  <style>
+    body {
+      width: 100%;
+      height: 85vh;
+    }
+    .content {
+      width: 100%;
+      height: 100%;
+    }
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    /*正常情况下滑块的样式*/
+    ::-webkit-scrollbar-thumb {
+      background-color: rgba(39, 85, 130, 0.12);
+      border-radius: 10px;
+    {#			-webkit-box-shadow: inset 1px 1px 0 rgba(0,0,0,.1);#}
+    }
+    /*鼠标悬浮在该类指向的控件上时滑块的样式*/
+    :hover::-webkit-scrollbar-thumb {
+      background-color: rgba(0,0,0,.2);
+      border-radius: 10px;
+      -webkit-box-shadow: inset 1px 1px 0 rgba(0,0,0,.1);
+    }
+    /*鼠标悬浮在滑块上时滑块的样式*/
+    ::-webkit-scrollbar-thumb:hover {
+      background-color: rgba(0,0,0,.4);
+      -webkit-box-shadow: inset 1px 1px 0 rgba(0,0,0,.1);
+    }
+    /*正常时候的主干部分*/
+    ::-webkit-scrollbar-track {
+      border-radius: 10px;
+      -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0);
+      background-color: white;
+    }
+    /*鼠标悬浮在滚动条上的主干部分*/
+    ::-webkit-scrollbar-track:hover {
+      -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.4);
+      background-color: rgba(0,0,0,.01);
+    }
+  </style>
+  {% block head %}
 
-	{% endblock %}
+  {% endblock %}
 </head>
 <body>
 {% block content %}
@@ -70,6 +70,30 @@
         });
 
         var checkeds = document.getElementsByName("per-id");
+        var fields = document.getElementsByName("fields");
+
+        $('#easy-search').bind('click', function () {
+            var frm = $('#es-frm');
+            var easy = frm.find('input').val();
+            if (easy == '' || easy == null){
+                alert('请输入姓名/拼音!');
+                return;
+            }
+            frm.attr('action', '/search');
+            frm.submit();
+        });
+
+        $('#all-field').click(function () {
+            for (var i=0; i < fields.length; i++) {
+                fields[i].checked = true
+            }
+        });
+
+        $('#reverse-field').bind('click', function () {
+            for (var i=0; i < fields.length; i++) {
+                fields[i].checked = !fields[i].checked
+            }
+        });
 
         $('#all-check').bind('click', function () {
             for (var i=0; i < checkeds.length; i++) {
@@ -186,7 +210,7 @@
 
         $('#choice-s-btn').bind('click', function () {
             var per_id = $('input[name="per-id"]:checked');
-						if (per_id.length > 1) {
+            if (per_id.length > 1) {
                 alert('选择人数不要超过1个！谢谢合作！');
                 return false;
             }
@@ -199,7 +223,7 @@
 
         $('#w-m-btn').bind('click', function () {
             var per_id = $('input[name="per-id"]:checked');
-						if (per_id.length > 1) {
+            if (per_id.length > 1) {
                 alert('选择人数不要超过1个！谢谢合作！');
                 return false;
             }
@@ -232,7 +256,7 @@
                         window.location.reload()
                     }
                 )
-						return false;
+            return false;
         });
 
         $('#del_per').bind('click', function () {
@@ -359,7 +383,33 @@
             if (!file) {
                 return false;
             };
-        })
+        });
+
+        $('#field-button').bind('click', function () {
+            var fields = $('#cs-form').find('input[name="fields"]:checked');
+            var data = {
+                fields: []
+            };
+
+            fields.each(function (i, e) {
+                data.fields.push($(e).val())
+            });
+
+            var _success = function (data) {
+                alert(data.message);
+                setTimeout(function () {
+                    location.reload();
+                }, 100);
+            };
+
+            data = JSON.stringify(data);
+            a_json(
+                "{{ url_for('v1.update_field') }}",
+                "POST",
+                data,
+                _success);
+
+        });
     });
 </script>
 {% block script %}

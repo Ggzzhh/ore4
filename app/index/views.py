@@ -6,10 +6,11 @@ from flask import render_template, request, jsonify, \
     current_app, url_for, redirect, flash
 from flask_login import login_user, login_required, current_user, logout_user
 import flask_excel as excel
+from sqlalchemy import or_, and_
 
 from . import index
 from ..models import User, Dept, System, Title, Duty, DutyLevel, \
-    DeptPro, Personnel
+    DeptPro, Personnel, Field
 from ..const import NAV, FIELDS
 from ..tools import filter_field
 
@@ -22,7 +23,7 @@ def login():
         user = User.query.filter_by(username=username).first()
         if user is not None:
             if user.disable_time and \
-                            user.disable_time.day >= datetime.now().day:
+                    user.disable_time.day >= datetime.now().day:
                 error_messgae = '该账号已被锁定！解锁时间{}!'.format(
                     user.disable_time.date() + timedelta(days=1))
             else:
@@ -64,43 +65,61 @@ def main():
 @login_required
 def search():
     page = request.args.get('page', 1, type=int)
+    dept_names = Dept.to_arr()
+    duty_lvs = DutyLevel.to_array()
+    all_fields = list(FIELDS.keys())
+    fields = Field.fields()
     if request.method == "GET":
-        fields = ['姓名', '性别', '年龄', '单位简称',
-                  '职务', '职务级别', '最高学历:学历', '职称', '状态']
+        base_query = Personnel.query.join(Duty, Duty.id == Personnel.duty_id)
+        dept_id = request.args.get('dept_id')
+        if dept_id:
+            base_query = base_query.filter(Personnel.dept_id == dept_id)
+        pagination = base_query.order_by(Duty.order, Duty.duty_level_id.desc())\
+            .paginate(
+            page, per_page=current_app.config['SEARCH_PAGE'],
+            error_out=False
+        )
+    else:
+        form = request.form
+        val = form['easy_search']
+        if val is None or val == '':
+            return redirect(url_for('index.search'))
+        query = Personnel.query.filter(
+            or_(
+                Personnel.name.like('%' + val + '%'),
+                Personnel.phonetic.like('%' + val + '%')
+            )
+        )
+        pagination = query.order_by(Duty.order, Duty.duty_level_id.desc()) \
+            .paginate(
+            page, per_page=current_app.config['SEARCH_PAGE'],
+            error_out=False)
+    pers = pagination.items
+    pers = filter_field(pers, fields)
+    return render_template('search.html', fields=fields, pers=pers,
+                           all_fields=all_fields, pagination=pagination,
+                           dept_names=dept_names, duty_lvs=duty_lvs,
+                           dept_id=dept_id)
+
+
+@index.route('/search-criteria', methods=["GET", "POST"])
+@login_required
+def search_criteria():
+    page = request.args.get('page', 1, type=int)
+    fields = Field.fields()
+    dept_names = Dept.to_arr()
+    duty_lvs = DutyLevel.to_array()
+    all_fields = list(FIELDS.keys())
+    if request.method == "POST":
+        form = request.form
         pagination = Personnel.query.join(Duty, Duty.id == Personnel.duty_id) \
             .order_by(Duty.order, Duty.duty_level_id.desc()).paginate(
             page, per_page=current_app.config['SEARCH_PAGE'],
             error_out=False
         )
-        pers = pagination.items
-        pers = filter_field(pers, fields)
-        dept_names = Dept.to_arr()
-        duty_lvs = DutyLevel.to_array()
-        all_fields = list(FIELDS.keys())
-    return render_template('search.html', fields=fields, pers=pers,
-                           all_fields=all_fields, pagination=pagination,
-                           dept_names=dept_names, duty_lvs=duty_lvs)
-
-
-@index.route('/search-criteria', methods=["POST"])
-@login_required
-def search_criteria():
-    page = request.args.get('page', 1, type=int)
-    dept_names = Dept.to_arr()
-    duty_lvs = DutyLevel.to_array()
-    all_fields = list(FIELDS.keys())
-    form = request.form
-    fields = form.getlist('fields')
-    pagination = Personnel.query.join(Duty, Duty.id == Personnel.duty_id) \
-        .order_by(Duty.order, Duty.duty_level_id.desc()).paginate(
-        page, per_page=current_app.config['SEARCH_PAGE'],
-        error_out=False
-    )
     pers = pagination.items
-    if fields == []:
-        fields = ['姓名', '性别', '年龄', '单位简称',
-                  '职务', '职务级别', '最高学历:学历', '职称', '状态']
     pers = filter_field(pers, fields)
+
     return render_template('search.html', fields=fields, pers=pers,
                            all_fields=all_fields, pagination=pagination,
                            dept_names=dept_names, duty_lvs=duty_lvs)

@@ -7,8 +7,24 @@ from flask_login import logout_user, current_user, login_required
 
 from . import api_v1
 from ..models import db, User, Role, Duty, DutyLevel, Dept, \
-    Personnel, State, Resume, Title, Education, RAndP, Family
+    Personnel, State, Resume, Title, Education, RAndP, Family, Field
 from ..tools import replace2none, str2time
+
+
+@api_v1.route('/field', methods=["POST"])
+@login_required
+def update_field():
+    if current_user.username != current_app.config['ADMIN_USERNAME']:
+        return jsonify({'error': True, 'error_message': '权限不足'})
+    res = request.get_json()
+    if res is None:
+        return jsonify({'error': True, 'error_message': '没有值传递'})
+    fields = res.get('fields')
+    Field.clear()
+    for field in fields:
+        new_f = Field(name=field)
+        db.session.add(new_f)
+    return jsonify({'error': False, 'message': '操作成功！'})
 
 
 @api_v1.route('/manage-per', methods=["POST"])

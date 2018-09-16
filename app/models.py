@@ -17,6 +17,24 @@ def load_user(user_id):
     return None
 
 
+class Field(db.Model):
+    __tablename__ = 'fields'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(64))
+
+    @staticmethod
+    def clear():
+        for field in Field.query.all():
+            db.session.delete(field)
+
+    @staticmethod
+    def fields():
+        fields = []
+        for field in Field.query.all():
+            fields.append(field.name)
+        return fields
+
+
 class Role(db.Model):
     __tablename__ = 'roles'
     id = db.Column(db.Integer, primary_key=True)

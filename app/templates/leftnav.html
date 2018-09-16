@@ -10,7 +10,7 @@
 			<div class="collapse left-list" id="system{{ system.id }}">
 				<div class="d-flex flex-column align-items-start ml-1">
 					{% for dept in system['depts'] %}
-						<a href="#">
+						<a href="#" onclick="search_dept(this)" data-id="{{ dept.id }}">
 							{{ dept.dept_name }}({{ dept.dept_pro.dept_pro_name
 								}})
 						</a>

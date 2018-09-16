@@ -1,7 +1,7 @@
 <div class="search-table">
 	<table class="table table-bordered">
 		<thead>
-		<th>选择</th>
+		<th style="width: 4rem; min-width: 4rem">选择</th>
 		{% for field in fields %}
 			<th>{{ field }}</th>
 		{% endfor %}
@@ -9,13 +9,15 @@
 		<tbody>
 		{% for per in pers %}
 			<tr>
-				<td><input type="checkbox" value="{{ per['id'] }}" name="per-id"></td>
+				<td style="width: 4rem; min-width: 4rem"><input type="checkbox"
+                                                      value="{{ per['id']
+                }}" name="per-id"></td>
 				<td>
 					<a href="{{ url_for('per.edit_per', _id=per['id']) 	}}">
-						{{ per['data'].pop(0) }}
+						{{ per['data'][0] }}
 					</a>
 				</td>
-				{% for p in per['data'] %}
+				{% for p in per['data'][1:] %}
 					<td>{{ p }}</td>
 				{% endfor %}
 			</tr>
