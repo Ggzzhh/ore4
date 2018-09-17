@@ -58,3 +58,9 @@ def edit_per(_id):
                            f_count=f_count, r_and_p_count=r_and_p_count,
                            edu_count=edu_count, title_count=title_count,
                            resume_count=resume_count, enumerate=enumerate)
+
+
+@per.route('/condition-search')
+@login_required
+def condition_search():
+    return '123'

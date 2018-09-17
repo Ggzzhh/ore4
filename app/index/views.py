@@ -10,7 +10,7 @@ from sqlalchemy import or_, and_
 
 from . import index
 from ..models import User, Dept, System, Title, Duty, DutyLevel, \
-    DeptPro, Personnel, Field
+    DeptPro, Personnel
 from ..const import NAV, FIELDS
 from ..tools import filter_field
 
@@ -68,10 +68,10 @@ def search():
     dept_names = Dept.to_arr()
     duty_lvs = DutyLevel.to_array()
     all_fields = list(FIELDS.keys())
-    fields = Field.fields()
+    fields = current_user.get_fields()
+    dept_id = request.args.get('dept_id')
     if request.method == "GET":
         base_query = Personnel.query.join(Duty, Duty.id == Personnel.duty_id)
-        dept_id = request.args.get('dept_id')
         if dept_id:
             base_query = base_query.filter(Personnel.dept_id == dept_id)
         pagination = base_query.order_by(Duty.order, Duty.duty_level_id.desc())\
@@ -106,7 +106,7 @@ def search():
 @login_required
 def search_criteria():
     page = request.args.get('page', 1, type=int)
-    fields = Field.fields()
+    fields = current_user.get_fields()
     dept_names = Dept.to_arr()
     duty_lvs = DutyLevel.to_array()
     all_fields = list(FIELDS.keys())

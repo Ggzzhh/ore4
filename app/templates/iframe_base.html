@@ -6,51 +6,7 @@
   {{ bootstrap.load_css() }}
   {{ render_static('css', 'css/iframe.css') }}
   {{ render_static('css', 'css/bootstrap-datepicker3.css') }}
-  <style>
-    body {
-      width: 100%;
-      height: 85vh;
-    }
-    .content {
-      width: 100%;
-      height: 100%;
-    }
-    ::-webkit-scrollbar {
-      width: 8px;
-      height: 8px;
-    }
-    /*正常情况下滑块的样式*/
-    ::-webkit-scrollbar-thumb {
-      background-color: rgba(39, 85, 130, 0.12);
-      border-radius: 10px;
-    {#			-webkit-box-shadow: inset 1px 1px 0 rgba(0,0,0,.1);#}
-    }
-    /*鼠标悬浮在该类指向的控件上时滑块的样式*/
-    :hover::-webkit-scrollbar-thumb {
-      background-color: rgba(0,0,0,.2);
-      border-radius: 10px;
-      -webkit-box-shadow: inset 1px 1px 0 rgba(0,0,0,.1);
-    }
-    /*鼠标悬浮在滑块上时滑块的样式*/
-    ::-webkit-scrollbar-thumb:hover {
-      background-color: rgba(0,0,0,.4);
-      -webkit-box-shadow: inset 1px 1px 0 rgba(0,0,0,.1);
-    }
-    /*正常时候的主干部分*/
-    ::-webkit-scrollbar-track {
-      border-radius: 10px;
-      -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0);
-      background-color: white;
-    }
-    /*鼠标悬浮在滚动条上的主干部分*/
-    ::-webkit-scrollbar-track:hover {
-      -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.4);
-      background-color: rgba(0,0,0,.01);
-    }
-  </style>
-  {% block head %}
-
-  {% endblock %}
+  {% block head %}{% endblock %}
 </head>
 <body>
 {% block content %}
@@ -60,6 +16,7 @@
 {{ moment.lang("zh-cn") }}
 {{ render_static('js', 'js/_ajax.js') }}
 {{ render_static('js', 'js/manage.js') }}
+{{ render_static('js', 'js/iframe.js') }}
 {{ render_static('js', 'js/bootstrap-datepicker.js') }}
 {{ render_static('js', 'locales/bootstrap-datepicker.zh-CN.min.js') }}
 
@@ -69,216 +26,6 @@
             language: "zh-CN"
         });
 
-        var checkeds = document.getElementsByName("per-id");
-        var fields = document.getElementsByName("fields");
-
-        $('#easy-search').bind('click', function () {
-            var frm = $('#es-frm');
-            var easy = frm.find('input').val();
-            if (easy == '' || easy == null){
-                alert('请输入姓名/拼音!');
-                return;
-            }
-            frm.attr('action', '/search');
-            frm.submit();
-        });
-
-        $('#all-field').click(function () {
-            for (var i=0; i < fields.length; i++) {
-                fields[i].checked = true
-            }
-        });
-
-        $('#reverse-field').bind('click', function () {
-            for (var i=0; i < fields.length; i++) {
-                fields[i].checked = !fields[i].checked
-            }
-        });
-
-        $('#all-check').bind('click', function () {
-            for (var i=0; i < checkeds.length; i++) {
-                checkeds[i].checked = true
-            }
-        });
-
-        $('#reverse-check').bind('click', function () {
-            for (var i=0; i < checkeds.length; i++) {
-                checkeds[i].checked = !checkeds[i].checked
-            }
-        });
-
-        $('#coordinator').bind('click', function () {
-            var ids= [];
-            $('input[name="per-id"]:checked').map(function (i, e) {
-                ids.push($(e).val())
-            });
-            if (ids.length === 0) {
-                alert('请选择至少一个人进行调配！');
-                return false;
-            }
-            if (confirm("请确认，即将更改这些人员的数据！"))
-                a_json(
-                    "/v1/choice-state",
-                    "UPDATE",
-                    JSON.stringify(
-                        {
-                            'ids': ids,
-                            'state': 4
-                        }
-                    ),
-                    function (data) {
-                        alert(data.message);
-                        window.location.reload()
-                    }
-                )
-        });
-
-        $('#transfer').bind('click', function () {
-            var ids= [];
-            $('input[name="per-id"]:checked').map(function (i, e) {
-                ids.push($(e).val())
-            });
-            if (ids.length === 0) {
-                alert('请选择至少一个人进行调配！');
-                return false;
-            }
-            if (confirm("请确认，即将更改这些人员的数据！"))
-                a_json(
-                    "/v1/choice-state",
-                    "UPDATE",
-                    JSON.stringify(
-                        {
-                            'ids': ids,
-                            'state': 5
-                        }
-                    ),
-                    function (data) {
-                        alert(data.message);
-                        window.location.reload()
-                    }
-                )
-        });
-
-        $('#punished').bind('click', function () {
-            var ids= [];
-            $('input[name="per-id"]:checked').map(function (i, e) {
-                ids.push($(e).val())
-            });
-            if (ids.length === 0) {
-                alert('请选择至少一个人进行调配！');
-                return false;
-            }
-            if (confirm("请确认，即将更改这些人员的数据！"))
-                a_json(
-                    "/v1/punished",
-                    "UPDATE",
-                    JSON.stringify(
-                        {'ids': ids}
-                    ),
-                    function (data) {
-                        alert(data.message);
-                        window.location.reload()
-                    }
-                )
-        });
-
-        $('#choice_state').bind('click', function () {
-            var ids= [];
-            $('input[name="per-id"]:checked').map(function (i, e) {
-                ids.push($(e).val())
-            });
-            if (ids.length === 0) {
-                alert('请选择至少一个人进行调配！');
-                return false;
-            }
-            if (confirm("请确认，即将更改这些人员的数据！"))
-                a_json(
-                    "/v1/choice-state",
-                    "UPDATE",
-                    JSON.stringify(
-                        {
-                            'ids': ids,
-                            'state': $('input[name="state"]:checked').val()
-                        }
-                    ),
-                    function (data) {
-                        alert(data.message);
-                        window.location.reload()
-                    }
-                )
-        });
-
-        $('#choice-s-btn').bind('click', function () {
-            var per_id = $('input[name="per-id"]:checked');
-            if (per_id.length > 1) {
-                alert('选择人数不要超过1个！谢谢合作！');
-                return false;
-            }
-            else if (per_id.length === 0) {
-                alert('请选择一个人进行调动！');
-                return false;
-            }
-            this.modal('show');
-        });
-
-        $('#w-m-btn').bind('click', function () {
-            var per_id = $('input[name="per-id"]:checked');
-            if (per_id.length > 1) {
-                alert('选择人数不要超过1个！谢谢合作！');
-                return false;
-            }
-            else if (per_id.length === 0) {
-                alert('请选择一个人进行调动！');
-                return false;
-            }
-            this.modal('show');
-        });
-
-        $('#work-move-form').bind('submit', function () {
-            var per_id = $('input[name="per-id"]:checked');
-            var id = per_id.val();
-            if (confirm("请确认，即将更改人员的数据！"))
-                a_json(
-                    "/v1/work-move",
-                    "UPDATE",
-                    JSON.stringify(
-                        {
-                            'id': id,
-                            'dept_id': $('#dept-id').val(),
-                            'duty_name': $('#duty-name').val(),
-                            'duty_lv': $('#duty-lv').val(),
-                            'identifier': $('#identifier').val(),
-                            'work_time': $('#work_time').val()
-                        }
-                    ),
-                    function (data) {
-                        alert(data.message);
-                        window.location.reload()
-                    }
-                )
-            return false;
-        });
-
-        $('#del_per').bind('click', function () {
-            var ids= [];
-            $('input[name="per-id"]:checked').map(function (i, e) {
-                ids.push($(e).val())
-            });
-            if (confirm("请确认，即将删除这些人员的数据！此操作不可逆！"))
-                a_json(
-                    "/v1/del_per",
-                    "DELETE",
-                    JSON.stringify(
-                        {
-                            'ids': ids
-                        }
-                    ),
-                    function (data) {
-                        alert(data.message);
-                        window.location.reload()
-                    }
-                )
-        });
 
         $('#update-pwd').bind('submit', function () {
             var old_pwd = $('#old-pwd').val();
@@ -382,7 +129,7 @@
             var file = checkFile();
             if (!file) {
                 return false;
-            };
+            }
         });
 
         $('#field-button').bind('click', function () {

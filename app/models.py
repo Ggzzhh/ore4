@@ -17,24 +17,6 @@ def load_user(user_id):
     return None
 
 
-class Field(db.Model):
-    __tablename__ = 'fields'
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(64))
-
-    @staticmethod
-    def clear():
-        for field in Field.query.all():
-            db.session.delete(field)
-
-    @staticmethod
-    def fields():
-        fields = []
-        for field in Field.query.all():
-            fields.append(field.name)
-        return fields
-
-
 class Role(db.Model):
     __tablename__ = 'roles'
     id = db.Column(db.Integer, primary_key=True)
@@ -53,6 +35,20 @@ class User(db.Model, UserMixin):
     retry_count = db.Column(db.Integer, default=10)
     disable_time = db.Column(db.DateTime)
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
+    fields = ",".join(["在职：管理人员", "在职：专技人员", "在职：一般管理人员",
+                       "协理", "调离", "退休", "去世"])
+    fields = db.Column(db.String(512), default=fields)
+
+    def get_fields(self):
+        if self.fields:
+            fields = self.fields.split(",")
+            return fields
+        else:
+            return []
+
+    def set_fields(self, L):
+        self.fields = ",".join(L)
+        return self
 
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)

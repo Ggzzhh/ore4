@@ -27,19 +27,19 @@
 				{% for dept in depts %}
 					<tr>
 						<td style="width: 33%">
-							{{ dept.name }}
+							{{ dept.name or "" }}
 						</td>
 						<td style="width: 33%">
-							{{ dept.full_name }}
+							{{ dept.full_name or "" }}
 						</td>
 						<td>
-							{{ dept.system }}
+							{{ dept.system or "" }}
 						</td>
 						<td>
-							{{ dept.dept_pro }}
+							{{ dept.dept_pro or "" }}
 						</td>
 						<td>
-							{{ dept.order }}
+							{{ dept.order or "" }}
 						</td>
 						<td>
 							<button type="button" class="btn btn-link btn-sm"
