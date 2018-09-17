@@ -71,7 +71,7 @@ def search():
     fields = current_user.get_fields()
     dept_id = request.args.get('dept_id')
     if request.method == "GET":
-        base_query = Personnel.query.join(Duty, Duty.id == Personnel.duty_id)
+        base_query = Personnel.query.join(Duty)
         if dept_id:
             base_query = base_query.filter(Personnel.dept_id == dept_id)
         pagination = base_query.order_by(Duty.order, Duty.duty_level_id.desc())\

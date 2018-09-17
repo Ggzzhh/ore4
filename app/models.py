@@ -4,6 +4,7 @@ from datetime import datetime, date
 from flask import current_app, abort
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
+from sqlalchemy import text
 
 from . import db, login_manager
 from .tools import str2time, str2img, calculate_age, time2str, str2pinyin
@@ -15,6 +16,20 @@ def load_user(user_id):
         user = User.query.get(int(user_id))
         return user
     return None
+
+
+class Nation(db.Model):
+    __tablename__ = 'nations'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(32), unique=True)
+
+    @staticmethod
+    def to_arr():
+        arr = []
+        nations = Nation.query.order_by(Nation.id).all()
+        for nation in nations:
+            arr.append(nation.name)
+        return arr
 
 
 class Role(db.Model):
@@ -182,6 +197,8 @@ class Personnel(db.Model):
     nation = db.Column(db.String(32))
     # 生日
     birthday = db.Column(db.DateTime)
+    # 年龄
+    age = db.Column(db.Integer)
     # 干部编号
     cadre_id = db.Column(db.String(64))
     # 身份证

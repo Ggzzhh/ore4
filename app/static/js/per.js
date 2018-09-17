@@ -46,7 +46,7 @@ var myDisText = "<td class='input-group-inline input-group-sm'>" +
 
 var td = "<td class='input-group-inline input-group-sm'></td>";
 var select = "<td class='input-group-inline input-group-sm'>" +
-    "<select class='mt-1'>" +
+    "<select class='form-control'>" +
     "</select>" +
     "</td>";
 

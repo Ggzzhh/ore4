@@ -82,9 +82,16 @@
 				<span>民族</span>
 			</td>
 			<td class='input-group-inline input-group-sm'>
-				<input type="text" id="nation"
-							 class="form-control" value="{{ per['nation'] or '' }}"
-							 placeholder="空"/>
+				<select type="text" id="nation" class="form-control">
+					{% for nation in nations %}
+						<option value="{{ nation }}"
+										{% if nation == per['nation']  %}
+										selected
+										{% endif %}>
+							{{ nation }}
+						</option>
+					{% endfor %}
+				</select>
 			</td>
 			<td>
 				<span>专长</span>

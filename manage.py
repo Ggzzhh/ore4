@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 import os
 
+
 from flask_script import Manager, Shell
 from flask_migrate import Migrate, MigrateCommand
 
@@ -29,12 +30,12 @@ manager.add_command('db', MigrateCommand)
 def init():
     from app.models import run_only
     from app.sql_init import init_edu_lv, init_learn_form, \
-        init_state, init_display
+        init_state, init_nation
     run_only()
     init_edu_lv()
     init_learn_form()
     init_state()
-    init_display()
+    init_nation()
 
 
 @manager.command

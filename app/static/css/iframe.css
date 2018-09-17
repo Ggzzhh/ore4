@@ -1,6 +1,6 @@
 body {
     width: 100%;
-    height: 85vh;
+    height: 90vh;
 }
 .content {
     width: 100%;
@@ -19,7 +19,7 @@ body {
 .search {
     height: 3rem;
     background-color: #0c3e67;
-    justify-content: center;
+    justify-content: flex-start;
     border-radius: 12px 12px 0 0;
 }
 .title {

@@ -38,7 +38,7 @@
 								 value="{{ title['lv'] or '' }}" />
 				</td>
 				<td class="input-group-inline input-group-sm" onchange="title_change('title-{{ index + 1 }}')">
-					<select class="mt-1">
+					<select class="form-control">
 						{% for name in title_names %}
 							<option value="{{ name[0] }}"
 											{% if name[1] == title['name'] %}
@@ -68,7 +68,7 @@
 								 value="{{ title['page_no'] or '' }}" />
 				</td>
 				<td class="input-group-inline input-group-sm">
-					<select class="mt-1">
+					<select class="form-control">
 
 						<option value="true"
 										{% if title['engage'] == '是' %}selected{% endif %}>

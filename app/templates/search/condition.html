@@ -1,0 +1,196 @@
+{% extends 'iframe_base.html' %}
+{% block head %}
+	<style>
+		.info_manage {
+			height: 100%;
+		}
+		.search-table {
+			color: white;
+			font-size: 1rem;
+			height: 100%;
+			background-color: rgba(12, 62, 103, 0.85);
+			border-radius: 15px 15px;
+		}
+		.search-tr {
+			width: 100%;
+		}
+		.search-td {
+			height: 90%;
+			border: 1px solid white;
+			border-radius: 10px 10px;
+			margin: 10px 0;
+		}
+		.container-fluid {
+			min-height: 90%;
+		}
+	</style>
+{% endblock %}
+{% block content %}
+	<div class="iframe-content">
+		<div class="search d-flex flex-row">
+			<div class="title">综合查询</div>
+		</div>
+		<div class="info_manage">
+			<div class="container-fluid">
+				<div class="search-btn mt-3">
+					<button type="button" class="btn btn-sm btn-outline-dark">新增查询
+						+</button>
+				</div>
+				<div class="search-table mt-3 table-responsive">
+					<div class="search-tr row p-3">
+						<div class="col-1 d-flex align-items-center
+						justify-content-center flex-column">
+							<div>查</div>
+							<div>询</div>
+						</div>
+						<div class="col-2 p-2 search-td">
+							<div class="input-group">
+								<select name="query-field" class="form-control">
+									<option value="" disabled selected hidden>请选择查询项</option>
+									<option value="1" >1</option>
+									<option value="2" >2</option>
+								</select>
+							</div>
+							<div class="input-group mt-2">
+								<select name="query-field" class="form-control">
+									<option value="" disabled selected hidden>请选择条件</option>
+									<option value="1" >1</option>
+									<option value="2" >2</option>
+								</select>
+							</div>
+							<div class="input-group mt-2">
+								<input type="text" class="form-control" placeholder="请输入查询内容">
+							</div>
+						</div>
+						<div class="col-1 d-flex align-items-center
+						justify-content-center flex-column">
+							<div>或</div>
+						</div>
+						<div class="col-2 p-2 search-td">
+							<div class="input-group">
+								<select name="query-field" class="form-control">
+									<option value="" disabled selected hidden>请选择查询项</option>
+									<option value="1" >1</option>
+									<option value="2" >2</option>
+								</select>
+							</div>
+							<div class="input-group mt-2">
+								<select name="query-field" class="form-control">
+									<option value="" disabled selected hidden>请选择条件</option>
+									<option value="1" >1</option>
+									<option value="2" >2</option>
+								</select>
+							</div>
+							<div class="input-group mt-2">
+								<input type="text" class="form-control" placeholder="请输入查询内容">
+							</div>
+						</div>
+						<div class="col-1 d-flex align-items-center
+						justify-content-center flex-column">
+							<div>或</div>
+						</div>
+						<div class="col-2 p-2 search-td">
+							<div class="input-group">
+								<select name="query-field" class="form-control">
+									<option value="" disabled selected hidden>请选择查询项</option>
+									<option value="1" >1</option>
+									<option value="2" >2</option>
+								</select>
+							</div>
+							<div class="input-group mt-2">
+								<select name="query-field" class="form-control">
+									<option value="" disabled selected hidden>请选择条件</option>
+									<option value="1" >1</option>
+									<option value="2" >2</option>
+								</select>
+							</div>
+							<div class="input-group mt-2">
+								<input type="text" class="form-control" placeholder="请输入查询内容">
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="search-table mt-3 table-responsive">
+					<div class="search-tr row p-3">
+						<div class="col-1 d-flex align-items-center
+						justify-content-center flex-column">
+							<div>查</div>
+							<div>询</div>
+						</div>
+						<div class="col-2 p-2 search-td">
+							<div class="input-group">
+								<select name="query-field" class="form-control">
+									<option value="" disabled selected hidden>请选择查询项</option>
+									<option value="1" >1</option>
+									<option value="2" >2</option>
+								</select>
+							</div>
+							<div class="input-group mt-2">
+								<select name="query-field" class="form-control">
+									<option value="" disabled selected hidden>请选择条件</option>
+									<option value="1" >1</option>
+									<option value="2" >2</option>
+								</select>
+							</div>
+							<div class="input-group mt-2">
+								<input type="text" class="form-control" placeholder="请输入查询内容">
+							</div>
+						</div>
+						<div class="col-1 d-flex align-items-center
+						justify-content-center flex-column">
+							<div>或</div>
+						</div>
+						<div class="col-2 p-2 search-td">
+							<div class="input-group">
+								<select name="query-field" class="form-control">
+									<option value="" disabled selected hidden>请选择查询项</option>
+									<option value="1" >1</option>
+									<option value="2" >2</option>
+								</select>
+							</div>
+							<div class="input-group mt-2">
+								<select name="query-field" class="form-control">
+									<option value="" disabled selected hidden>请选择条件</option>
+									<option value="1" >1</option>
+									<option value="2" >2</option>
+								</select>
+							</div>
+							<div class="input-group mt-2">
+								<input type="text" class="form-control" placeholder="请输入查询内容">
+							</div>
+						</div>
+						<div class="col-1 d-flex align-items-center
+						justify-content-center flex-column">
+							<div>或</div>
+						</div>
+						<div class="col-2 p-2 search-td">
+							<div class="input-group">
+								<select name="query-field" class="form-control">
+									<option value="" disabled selected hidden>请选择查询项</option>
+									<option value="1" >1</option>
+									<option value="2" >2</option>
+								</select>
+							</div>
+							<div class="input-group mt-2">
+								<select name="query-field" class="form-control">
+									<option value="" disabled selected hidden>请选择条件</option>
+									<option value="1" >1</option>
+									<option value="2" >2</option>
+								</select>
+							</div>
+							<div class="input-group mt-2">
+								<input type="text" class="form-control" placeholder="请输入查询内容">
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="input-group justify-content-end">
+				<button type="submit" class="btn btn-outline-dark
+				mr-3">提交</button>
+				<button type="reset" class="btn btn-outline-dark
+				mr-3">重置</button>
+			</div>
+		</div>
+	</div>
+{% endblock %}
