@@ -68,7 +68,7 @@
 
 {% macro title_name(title_names) %}
 	<td class='input-group-inline input-group-sm'>
-		<select class='mt-1'>
+		<select class='mt-1' name="s-title">
 			{% for title in title_names %}
 				<option value="{{ title[0] }}">{{ title[1] }}</option>
 			{% endfor %}

@@ -99,6 +99,14 @@ class System(db.Model):
         data = System.query.order_by('id').all()
         return [[s.id, s.system_name] for s in data]
 
+    def to_json(self):
+        data = {
+            'id': self.id,
+            'name': self.system_name,
+            'depts': [dept.to_json() for dept in self.depts]
+        }
+        return data
+
     def __repr__(self):
         return '<单位系统: %r>' % self.system_name
 
@@ -177,7 +185,6 @@ class DeptPro(db.Model):
     @staticmethod
     def to_array():
         pros = DeptPro.query.order_by('id').all()
-
         return [[p.id, p.dept_pro_name] for p in pros]
 
     def __repr__(self):

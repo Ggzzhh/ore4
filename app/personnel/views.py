@@ -6,8 +6,8 @@ from flask_login import login_user, login_required, current_user, logout_user
 import flask_excel as excel
 
 from . import per
-from ..models import EduLevel, LearnForm, TitleName, \
-    Dept, DutyLevel, State, Personnel, Nation
+from ..models import EduLevel, LearnForm, TitleName, DeptPro,\
+    Dept, DutyLevel, State, Personnel, Nation, System
 
 
 @per.route('/add')
@@ -64,7 +64,17 @@ def edit_per(_id):
                            nations=nations)
 
 
-@per.route('/condition-search')
+@per.route('/condition-search', methods=["GET", "POST"])
 @login_required
 def condition_search():
-    return render_template('search/condition.html')
+    systems = System.query.order_by('id').all()
+    nations = Nation.to_arr()
+    pros = DeptPro.to_array()
+    lvs = DutyLevel.to_array()
+    edu_lvs = EduLevel.to_arr()
+    states = State.to_arr()
+    if request.method == "POST":
+        print(request.form)
+    return render_template('search/condition.html', systems=systems,
+                           nations=nations, pros=pros, lvs=lvs,
+                           edu_lvs=edu_lvs, states=states)

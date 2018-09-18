@@ -1,0 +1,611 @@
+<script>
+    var systems = {
+        {% for system in systems %}
+            {% set system = system.to_json() %}
+            "{{ system['name'] }}": {
+                "id": "{{ system['id'] }}",
+                "depts": [
+                    {% for dept in system['depts'] %}
+                        {
+                            id: "{{ dept['id'] }}",
+                            "name": "{{ dept['name'] }}"
+                        },
+                    {% endfor %}
+                ]
+            },
+        {% endfor %}
+    };
+
+    var pros = {
+        {% for pro in pros %}
+            "{{ pro[0] }}":  "{{ pro[1] }}",
+        {% endfor %}
+    };
+
+    var duty_lvs = {
+        {% for lv in lvs %}
+            "{{ lv[0] }}":  "{{ lv[1] }}",
+        {% endfor %}
+    };
+
+    var edu_lvs = {
+        {% for lv in edu_lvs %}
+            "{{ lv[0] }}":  "{{ lv[1] }}",
+        {% endfor %}
+    };
+
+    var states = {
+        {% for state in states %}
+            "{{ state[0] }}":  "{{ state[1] }}",
+        {% endfor %}
+		}
+
+    var btn_obj = {
+        "s-name-btn": "姓名",
+        "s-phonetic-btn": "拼音简称",
+        "s-sex-btn": "性别",
+        "s-nation-btn": "民族",
+        "s-age-btn": "年龄",
+        "s-id-card-btn": "身份证",
+        "s-cadre-id-btn": "干部编号",
+        "s-dept-name-btn": "单位简称",
+        "s-system-btn": "单位系统",
+        "s-dept-pro-btn": "单位属性",
+        "s-duty-lv-btn": "职务级别",
+        "s-max-edu-btn": "最高学历",
+        "s-at-edu-btn": "全日制学历(最高)",
+        "s-ot-edu-btn": "在职学历(最高)",
+        "s-work-time-btn": "参加工作时间",
+        "s-party-member-btn": "入党时间",
+        "s-policital-status-btn": "政治面貌",
+        "s-native-place-btn": "籍贯",
+        "s-birth-place-btn": "出生地",
+        "s-identity-btn": "身份",
+        "s-work-no-btn": "工号",
+        "s-work-year-btn": "特殊工作年限",
+        "s-state-btn": "状态"
+    };
+
+    var nations = [
+        {% for nation in nations %}
+            "{{ nation }}",
+        {% endfor %}
+    ];
+
+    var ul_text = '<ul class="nav nav-tabs" role="tablist"></ul>',
+        li_text = '<li class="nav-item"></li>',
+        a_text = '<a class="nav-link" role="tab" data-toggle="tab"></a>',
+        tab_text = '<div role="tabpanel" class="tab-pane mt-3 row"></div>',
+        div_text = '<div></div>',
+        content_text = '<div class="tab-content"></div>',
+        radio_text = '<label class="c-input c-checkbox col-3">' +
+            '<input type="radio">' +
+            '<span class="c-indicator ml-1"></span> ' +
+            '</label>',
+        check_text = '<label class="c-input c-checkbox col-3">' +
+            '<input type="checkbox">' +
+            '<span class="c-indicator ml-1"></span> ' +
+            '</label>',
+        select_text = '<select class="form-control"></select>',
+        option_text = '<option></option>',
+        input_text = '<input type="text" class="form-control">';
+
+
+
+    var del_this = function (e) {
+        if (confirm("请确认删除这个查询项"))
+            $(e).parent().remove();
+    };
+
+    var create_element = function (label, label_id, e) {
+        var model_text = "<div class=\"form-group mt-3 p-3\">" +
+            "<button type=\"button\" class=\"del-this close\"" +
+            "onclick=\"del_this(this)\">&times;</button>"+
+            "<label for='" + label_id + "'>" + label + "</lavel>" +
+            "</div>";
+        var div = $(model_text);
+        div.append(e);
+        return div;
+    };
+
+
+    var add_btns = function (id) {
+        for (btn in btn_obj){
+            var btn = $('<div class="col-3 mt-3">' +
+                '<button class="btn btn-primary s-btn" ' +
+                'id="'+ btn +'">' + btn_obj[btn] + '</button>' +
+                '</div>');
+            $('#'+id).append(btn);
+        }
+    };
+
+
+    $(document).ready(function () {
+        console.log(systems);
+        add_btns('modal-btn');
+
+        // 姓名
+        $('#s-name-btn').click(function () {
+            var name = 'name';
+            var input = $(input_text);
+
+            input.attr(
+                {
+                    name: name,
+                    placeholder:'查询多个请使用 \'|\' 进行分割，如：张三|李四。'
+                }
+            );
+
+            $('#add-search').append(
+                create_element('姓名', name, input)
+            );
+
+            $('#show-search').modal('hide');
+        });
+
+        // 拼音简称
+        $('#s-phonetic-btn').click(function () {
+            var name = 'phonetic';
+            var input = $(input_text);
+
+            input.attr(
+                {
+                    name: name,
+                    placeholder:'查询多个请使用 \'|\' 进行分割，如：zz|ls。'
+                }
+            );
+
+            $('#add-search').append(
+                create_element('拼音简称', name, input)
+            );
+            $('#show-search').modal('hide');
+        });
+
+        // 性别
+        $('#s-sex-btn').click(function () {
+            if ($('input[name="sex"]').length > 0) {
+                alert('性别查询只能存在一个！')
+                return false;
+            }
+            var name = 'sex';
+            var div = $(div_text);
+            var radio1 = $(radio_text);
+            var radio2 = $(radio_text);
+            var radio3 = $(radio_text);
+            radio1.find('input').attr({name: name, value: '全部', checked: true});
+            radio2.find('input').attr({name: name, value: '男'});
+            radio3.find('input').attr({name: name, value: '女'});
+            radio1.append('全部');
+            radio2.append('男');
+            radio3.append('女');
+            div.append(radio1);
+            div.append(radio2);
+            div.append(radio3);
+            $('#add-search').append(
+                create_element('性别', name, div)
+            );
+            $('#show-search').modal('hide');
+        });
+
+        // 民族
+        $('#s-nation-btn').click(function () {
+            var name = 'nation', option;
+            var select = $(select_text);
+            select.attr('name', name);
+            for (var i=0; i < nations.length; i++){
+                option = $(option_text);
+                option.append(nations[i]);
+                select.append(option);
+            }
+
+            $('#add-search').append(
+                create_element('民族', name, select)
+            );
+            $('#show-search').modal('hide');
+        });
+
+        // 年龄
+        $('#s-age-btn').click(function () {
+            var name = 'age';
+            var div = $(div_text);
+            var div2 = $(div_text);
+            var age1 = $(input_text);
+            var age2 = $(input_text);
+            age1.attr({type: 'number', name: 'age1'});
+            age2.attr({type: 'number', name: 'age2'});
+            div.addClass('d-flex');
+            div2.addClass('ml-3 mr-3');
+            div2.append('至');
+            div.append(age1);
+            div.append(div2);
+            div.append(age2);
+
+            $('#add-search').append(
+                create_element('年龄', name, div)
+            );
+            $('#show-search').modal('hide');
+        });
+
+        // 身份证
+        $('#s-id-card-btn').click(function () {
+            var name = 'id_card';
+            var input = $(input_text);
+
+            input.attr(
+                {
+                    name: name,
+                    placeholder:'查询多个请使用 \'|\' 进行分割，如：123|456。'
+                }
+            );
+
+            $('#add-search').append(
+                create_element('身份证', name, input)
+            );
+
+            $('#show-search').modal('hide');
+        });
+
+        // 干部编号
+        $('#s-cadre-id-btn').click(function () {
+            var name = 'cadre_id';
+            var input = $(input_text);
+
+            input.attr(
+                {
+                    name: name,
+                    placeholder:'查询多个请使用 \'|\' 进行分割，如：123|456。'
+                }
+            );
+
+            $('#add-search').append(
+                create_element('干部编号', name, input)
+            );
+
+            $('#show-search').modal('hide');
+        });
+
+        // 单位简称
+        $('#s-dept-name-btn').click(function () {
+            var name = 'dept_id';
+            var div = $(div_text);
+            var ul = $(ul_text);
+            var content = $(content_text);
+
+            for (key in systems){
+                var a = $(a_text), tab = $(tab_text), li = $(li_text);
+                a.attr('href', '#system'+ systems[key]["id"]);
+                tab.attr('id', 'system'+ systems[key]["id"]);
+                a.append(key);
+
+                for (var i = 0; i < systems[key]['depts'].length; i++){
+                    var dept = systems[key]['depts'][i];
+                    var check = $(check_text);
+                    check.find('input').attr('name', name);
+                    check.find('input').attr('value', dept['id']);
+                    check.append(dept['name']);
+                    tab.append(check);
+                }
+
+                if (key == "矿领导"){
+                    tab.addClass('active');
+                    a.addClass('active');
+                }
+
+                li.append(a);
+                ul.append(li);
+                content.append(tab);
+            }
+
+            div.append(ul);
+            div.append(content);
+
+            $('#add-search').append(
+                create_element('单位简称', name, div)
+            );
+            $('#show-search').modal('hide');
+        });
+
+        // 单位系统
+        $('#s-system-btn').click(function () {
+            var name = 'system_id', check;
+            var div = $(div_text);
+            div.addClass('row');
+
+            for (key in systems){
+                check = $(check_text);
+                check.find('input').attr({name:name, value:systems[key]["id"]});
+                check.append(key);
+                div.append(check)
+            }
+
+
+
+            $('#add-search').append(
+                create_element('单位系统', name, div)
+            );
+            $('#show-search').modal('hide');
+        });
+
+        // 单位属性
+        $('#s-dept-pro-btn').click(function () {
+            var name = 'dept_pro_id', check;
+            var div = $(div_text);
+            div.addClass('row');
+
+            for (key in pros){
+                check = $(check_text);
+                check.find('input').attr({name:name, value:key});
+                check.append(pros[key]);
+                div.append(check)
+            }
+
+            $('#add-search').append(
+                create_element('单位属性', name, div)
+            );
+            $('#show-search').modal('hide');
+        });
+
+        // 职务级别
+        $('#s-duty-lv-btn').click(function () {
+            var name = 'duty_lv_id', check;
+            var div = $(div_text);
+            div.addClass('row');
+
+            for (key in duty_lvs){
+                check = $(check_text);
+                check.find('input').attr({name:name, value:key});
+                check.append(duty_lvs[key]);
+                div.append(check)
+            }
+
+            $('#add-search').append(
+                create_element('职务级别', name, div)
+            );
+            $('#show-search').modal('hide');
+        });
+
+        // 最高学历
+        $('#s-max-edu-btn').click(function () {
+            var name = 'max_edu_level_id', check;
+            var div = $(div_text);
+            div.addClass('row');
+
+            for (key in edu_lvs){
+                check = $(check_text);
+                check.find('input').attr({name:name, value:key});
+                check.append(edu_lvs[key]);
+                div.append(check)
+            }
+
+            $('#add-search').append(
+                create_element('最高学历', name, div)
+            );
+            $('#show-search').modal('hide');
+        });
+
+        // 全日制学历(最高)
+        $('#s-at-edu-btn').click(function () {
+            var name = 'at_edu_level_id', check;
+            var div = $(div_text);
+            div.addClass('row');
+
+            for (key in edu_lvs){
+                check = $(check_text);
+                check.find('input').attr({name:name, value:key});
+                check.append(edu_lvs[key]);
+                div.append(check)
+            }
+
+            $('#add-search').append(
+                create_element('全日制学历(最高)', name, div)
+            );
+            $('#show-search').modal('hide');
+        });
+
+        // 在职学历(最高)
+        $('#s-ot-edu-btn').click(function () {
+            var name = 'ot_edu_level_id', check;
+            var div = $(div_text);
+            div.addClass('row');
+
+            for (key in edu_lvs){
+                check = $(check_text);
+                check.find('input').attr({name:name, value:key});
+                check.append(edu_lvs[key]);
+                div.append(check)
+            }
+
+            $('#add-search').append(
+                create_element('在职学历(最高)', name, div)
+            );
+            $('#show-search').modal('hide');
+        });
+
+        // 参加工作时间
+        $('#s-work-time-btn').click(function () {
+            var name = 'work_time', check;
+            var div = $(div_text);
+            var time = $(input_text);
+            var select = $(select_text);
+            var option1 = $(option_text);
+            var option2 = $(option_text);
+            time.attr('name', 'work_time');
+            time.addClass('mydate');
+            div.addClass('d-flex');
+						option1.attr('value', '<');
+						option1.append('之前');
+						option2.attr('value', '>');
+						option2.append('之后');
+						select.attr('name', 'work_time_choice');
+            select.append(option1);
+            select.append(option2);
+            select.addClass('ml-3');
+            select.css('max-width', '10%');
+            div.append(time);
+            div.append(select);
+
+            $('#add-search').append(
+                create_element('参加工作时间', name, div)
+            );
+            $('#show-search').modal('hide');
+            $('.mydate').datepicker({
+                language: "zh-CN"
+            });
+        });
+
+        // 入党时间
+        $('#s-party-member-btn').click(function () {
+            var name = 'party_member', check;
+            var div = $(div_text);
+            var time = $(input_text);
+            var select = $(select_text);
+            var option1 = $(option_text);
+            var option2 = $(option_text);
+            time.attr('name', 'party_member');
+            time.addClass('mydate');
+            div.addClass('d-flex');
+						option1.attr('value', '<');
+						option1.append('之前');
+						option2.attr('value', '>');
+						option2.append('之后');
+						select.attr('name', 'party_member_choice');
+            select.append(option1);
+            select.append(option2);
+            select.addClass('ml-3');
+            select.css('max-width', '10%');
+            div.append(time);
+            div.append(select);
+
+            $('#add-search').append(
+                create_element('入党时间', name, div)
+            );
+            $('#show-search').modal('hide');
+            $('.mydate').datepicker({
+                language: "zh-CN"
+            });
+        });
+
+        // 政治面貌
+				$('#s-policital-status-btn').click(function () {
+            var name = 'policital_status';
+            var input = $(input_text);
+            input.attr(
+                {
+                    name: name,
+                    placeholder:'查询多个请使用 \'|\' 进行分割，如：党员|群众。'
+                }
+            );
+
+            $('#add-search').append(
+                create_element('政治面貌', name, input)
+            );
+            $('#show-search').modal('hide');
+        });
+
+				// 籍贯
+				$('#s-native-place-btn').click(function () {
+            var name = 'native_place';
+            var input = $(input_text);
+            input.attr(
+                {
+                    name: name,
+                    placeholder:'查询多个请使用 \'|\' 进行分割，如：河南|河北。'
+                }
+            );
+
+            $('#add-search').append(
+                create_element('籍贯', name, input)
+            );
+            $('#show-search').modal('hide');
+        });
+
+				// 出生地
+				$('#s-birth-place-btn').click(function () {
+            var name = 'birth_place';
+            var input = $(input_text);
+            input.attr(
+                {
+                    name: name,
+                    placeholder:'查询多个请使用 \'|\' 进行分割，如：河南|河北。'
+                }
+            );
+
+            $('#add-search').append(
+                create_element('出生地', name, input)
+            );
+            $('#show-search').modal('hide');
+        });
+
+				// 身份
+				$('#s-identity-btn').click(function () {
+            var name = 'identity';
+            var input = $(input_text);
+            input.attr(
+                {
+                    name: name,
+                    placeholder:'查询多个请使用 \'|\' 进行分割，如：工人|干部。'
+                }
+            );
+
+            $('#add-search').append(
+                create_element('身份', name, input)
+            );
+            $('#show-search').modal('hide');
+        });
+
+				// 工号
+				$('#s-work-no-btn').click(function () {
+            var name = 'work_no';
+            var input = $(input_text);
+            input.attr(
+                {
+                    name: name,
+                    placeholder:'查询多个请使用 \'|\' 进行分割，如：123|456。'
+                }
+            );
+
+            $('#add-search').append(
+                create_element('工号', name, input)
+            );
+            $('#show-search').modal('hide');
+        });
+
+				// 特殊工作年限
+				$('#s-work-year-btn').click(function () {
+            var name = 'work_year';
+            var input = $(input_text);
+            input.attr(
+                {
+                    name: name,
+                    placeholder:'查询多个请使用 \'|\' 进行分割，如：1|9+。'
+                }
+            );
+
+            $('#add-search').append(
+                create_element('特殊工作年限', name, input)
+            );
+            $('#show-search').modal('hide');
+        });
+
+				// 状态
+				$('#s-state-btn').click(function () {
+            var name = 'state_id', check;
+            var div = $(div_text);
+            div.addClass('row');
+
+            for (key in states){
+                check = $(check_text);
+                check.find('input').attr({name:name, value:key});
+                check.append(states[key]);
+                div.append(check)
+            }
+
+            $('#add-search').append(
+                create_element('状态', name, div)
+            );
+            $('#show-search').modal('hide');
+        });
+    });
+
+
+</script>
