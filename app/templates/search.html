@@ -78,7 +78,7 @@
 				<span class="count">共 {{ pagination.total }} 条结果</span>
 			</div>
 			<div class="d-flex mt-2 justify-content-center paginate">
-				{{ model.pagination_widget(pagination, 'index.search', dept_id=dept_id) }}
+				{{ model.pagination_widget(pagination, endpoint, dept_id=dept_id) }}
 			</div>
 			<div class="form">
 				<form action="/search-criteria" method="post" id="cs-form">

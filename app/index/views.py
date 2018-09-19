@@ -99,7 +99,7 @@ def search():
     return render_template('search.html', fields=fields, pers=pers,
                            all_fields=all_fields, pagination=pagination,
                            dept_names=dept_names, duty_lvs=duty_lvs,
-                           dept_id=dept_id)
+                           dept_id=dept_id, endpoint='index.search')
 
 
 # @index.route('/search-criteria', methods=["GET", "POST"])

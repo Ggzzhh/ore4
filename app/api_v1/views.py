@@ -88,6 +88,12 @@ def manage_per():
             if family and family not in per.families:
                 per.families.append(family)
 
+        per.max_edu_id = per.max_edu.edu_level.id if per.max_edu else None
+        per.at_edu_id = per.at_edu.edu_level.id if per.at_edu else None
+        per.ot_edu_id = per.ot_edu.edu_level.id if per.ot_edu else None
+        per.use_title_id = per.use_title()
+        per.use_title_name_id = per.use_title_name()
+
         db.session.add(per)
         return jsonify({'error': False, 'message': '操作成功！'})
     return jsonify({'error': True, 'error_message': '未知错误!'})

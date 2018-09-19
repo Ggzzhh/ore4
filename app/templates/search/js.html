@@ -38,7 +38,25 @@
         {% for state in states %}
             "{{ state[0] }}":  "{{ state[1] }}",
         {% endfor %}
-		}
+    };
+
+    var titlies = {
+        {% for title in title_names %}
+            "{{ title[0] }}":  "{{ title[1] }}",
+        {% endfor %}
+		};
+
+    var title_depts = {
+        {% for dept in title_depts %}
+            "{{ dept[0] }}":  "{{ dept[1] }}",
+        {% endfor %}
+		};
+
+    var title_lvs = {
+        {% for lv in title_lvs %}
+            "{{ lv[0] }}":  "{{ lv[1] }}",
+        {% endfor %}
+		};
 
     var btn_obj = {
         "s-name-btn": "姓名",
@@ -52,6 +70,9 @@
         "s-system-btn": "单位系统",
         "s-dept-pro-btn": "单位属性",
         "s-duty-lv-btn": "职务级别",
+        "s-title-btn": "职称",
+        "s-title-dept-btn": "职称系列",
+        "s-title-lv-btn": "职称级别",
         "s-max-edu-btn": "最高学历",
         "s-at-edu-btn": "全日制学历(最高)",
         "s-ot-edu-btn": "在职学历(最高)",
@@ -121,7 +142,6 @@
 
 
     $(document).ready(function () {
-        console.log(systems);
         add_btns('modal-btn');
 
         // 姓名
@@ -419,7 +439,7 @@
 
         // 参加工作时间
         $('#s-work-time-btn').click(function () {
-            var name = 'work_time', check;
+            var name = 'work_time';
             var div = $(div_text);
             var time = $(input_text);
             var select = $(select_text);
@@ -428,11 +448,11 @@
             time.attr('name', 'work_time');
             time.addClass('mydate');
             div.addClass('d-flex');
-						option1.attr('value', '<');
-						option1.append('之前');
-						option2.attr('value', '>');
-						option2.append('之后');
-						select.attr('name', 'work_time_choice');
+            option1.attr('value', '<');
+            option1.append('之前');
+            option2.attr('value', '>');
+            option2.append('之后');
+            select.attr('name', 'work_time_choice');
             select.append(option1);
             select.append(option2);
             select.addClass('ml-3');
@@ -460,11 +480,11 @@
             time.attr('name', 'party_member');
             time.addClass('mydate');
             div.addClass('d-flex');
-						option1.attr('value', '<');
-						option1.append('之前');
-						option2.attr('value', '>');
-						option2.append('之后');
-						select.attr('name', 'party_member_choice');
+            option1.attr('value', '<');
+            option1.append('之前');
+            option2.attr('value', '>');
+            option2.append('之后');
+            select.attr('name', 'party_member_choice');
             select.append(option1);
             select.append(option2);
             select.addClass('ml-3');
@@ -482,7 +502,7 @@
         });
 
         // 政治面貌
-				$('#s-policital-status-btn').click(function () {
+        $('#s-policital-status-btn').click(function () {
             var name = 'policital_status';
             var input = $(input_text);
             input.attr(
@@ -498,8 +518,8 @@
             $('#show-search').modal('hide');
         });
 
-				// 籍贯
-				$('#s-native-place-btn').click(function () {
+        // 籍贯
+        $('#s-native-place-btn').click(function () {
             var name = 'native_place';
             var input = $(input_text);
             input.attr(
@@ -515,8 +535,8 @@
             $('#show-search').modal('hide');
         });
 
-				// 出生地
-				$('#s-birth-place-btn').click(function () {
+        // 出生地
+        $('#s-birth-place-btn').click(function () {
             var name = 'birth_place';
             var input = $(input_text);
             input.attr(
@@ -532,8 +552,8 @@
             $('#show-search').modal('hide');
         });
 
-				// 身份
-				$('#s-identity-btn').click(function () {
+        // 身份
+        $('#s-identity-btn').click(function () {
             var name = 'identity';
             var input = $(input_text);
             input.attr(
@@ -549,8 +569,8 @@
             $('#show-search').modal('hide');
         });
 
-				// 工号
-				$('#s-work-no-btn').click(function () {
+        // 工号
+        $('#s-work-no-btn').click(function () {
             var name = 'work_no';
             var input = $(input_text);
             input.attr(
@@ -566,8 +586,8 @@
             $('#show-search').modal('hide');
         });
 
-				// 特殊工作年限
-				$('#s-work-year-btn').click(function () {
+        // 特殊工作年限
+        $('#s-work-year-btn').click(function () {
             var name = 'work_year';
             var input = $(input_text);
             input.attr(
@@ -583,8 +603,8 @@
             $('#show-search').modal('hide');
         });
 
-				// 状态
-				$('#s-state-btn').click(function () {
+        // 状态
+        $('#s-state-btn').click(function () {
             var name = 'state_id', check;
             var div = $(div_text);
             div.addClass('row');
@@ -598,6 +618,63 @@
 
             $('#add-search').append(
                 create_element('状态', name, div)
+            );
+            $('#show-search').modal('hide');
+        });
+
+        // 职称
+        $('#s-title-btn').click(function () {
+            var name = 'use_title_id', check;
+            var div = $(div_text);
+            div.addClass('row');
+
+            for (key in titlies){
+                check = $(check_text);
+                check.find('input').attr({name:name, value:key});
+                check.append(titlies[key]);
+                div.append(check)
+            }
+
+            $('#add-search').append(
+                create_element('职称', name, div)
+            );
+            $('#show-search').modal('hide');
+        });
+
+        // 职称系列
+        $('#s-title-dept-btn').click(function () {
+            var name = 'title_dept_id', check;
+            var div = $(div_text);
+            div.addClass('row');
+
+            for (key in title_depts){
+                check = $(check_text);
+                check.find('input').attr({name:name, value:key});
+                check.append(title_depts[key]);
+                div.append(check)
+            }
+
+            $('#add-search').append(
+                create_element('职称系列', name, div)
+            );
+            $('#show-search').modal('hide');
+        });
+
+        // 职称级别
+        $('#s-title-lv-btn').click(function () {
+            var name = 'title_lv_id', check;
+            var div = $(div_text);
+            div.addClass('row');
+
+            for (key in title_lvs){
+                check = $(check_text);
+                check.find('input').attr({name:name, value:key});
+                check.append(title_lvs[key]);
+                div.append(check)
+            }
+
+            $('#add-search').append(
+                create_element('职称级别', name, div)
             );
             $('#show-search').modal('hide');
         });

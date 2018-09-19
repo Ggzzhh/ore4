@@ -50,8 +50,7 @@ class User(db.Model, UserMixin):
     retry_count = db.Column(db.Integer, default=10)
     disable_time = db.Column(db.DateTime)
     role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
-    fields = ",".join(["在职：管理人员", "在职：专技人员", "在职：一般管理人员",
-                       "协理", "调离", "退休", "去世"])
+    fields = ",".join(["姓名", "性别", "单位简称", "系统", "单位属性", "职务", "职务级别"])
     fields = db.Column(db.String(512), default=fields)
 
     def get_fields(self):
@@ -248,6 +247,16 @@ class Personnel(db.Model):
     punished = db.Column(db.Boolean, default=False)
     # 照片地址
     photo_src = db.Column(db.String(128))
+    # 最高学历id
+    max_edu_id = db.Column(db.Integer)
+    # 全日制最高学历id
+    at_edu_id = db.Column(db.Integer)
+    # 在职最高学历id
+    ot_edu_id = db.Column(db.Integer)
+    # 在聘职称id
+    use_title_id = db.Column(db.Integer)
+    # 在聘职称名id
+    use_title_name_id = db.Column(db.Integer)
     # 家庭情况
     families = db.relationship('Family', backref='personnel', lazy='joined')
     # 奖惩情况
@@ -305,6 +314,11 @@ class Personnel(db.Model):
         per.position_time = str2time(data.get('position_time'))
         per.VGM_time = str2time(data.get('VGM_time'))
         per.agent_time = str2time(data.get('agent_time'))
+        per.max_edu_id = per.max_edu.edu_level.id if per.max_edu else None
+        per.at_edu_id = per.at_edu.edu_level.id if per.at_edu else None
+        per.ot_edu_id = per.ot_edu.edu_level.id if per.ot_edu else None
+        per.use_title_id = per.use_title()
+        per.use_title_name_id = per.use_title_name()
         return per
 
     def to_json(self):
@@ -387,7 +401,9 @@ class Personnel(db.Model):
     @property
     def title(self):
         if self.titlies:
-            return self.titlies[-1].name.name
+            for title in self.titlies:
+                if title.engage:
+                    return title.name.name
         return
 
     @property
@@ -422,6 +438,18 @@ class Personnel(db.Model):
                     max = edu.edu_level.value
                     temp = edu
         return temp
+
+    def use_title(self):
+        for title in self.titlies:
+            if title.engage:
+                return title.id
+        return None
+
+    def use_title_name(self):
+        for title in self.titlies:
+            if title.engage:
+                return title.name_id
+        return None
 
     def __repr__(self):
         return "<员工姓名: {}>".format(self.name)
@@ -563,6 +591,7 @@ class Education(db.Model):
             edu = Education.query.get_or_404(_id)
         else:
             edu = Education(edu_level=edu_level, edu_name=edu_name)
+        edu.edu_level = edu_level
         edu.department = data.get('department')
         edu.degree = data.get('degree')
         edu.remarks = data.get('remarks')
@@ -586,7 +615,7 @@ class EduLevel(db.Model):
 
     @staticmethod
     def to_arr():
-        edu_lvs = EduLevel.query.all()
+        edu_lvs = EduLevel.query.order_by('id').all()
         return [[lv.id, lv.level] for lv in edu_lvs]
 
     def __repr__(self):
@@ -812,6 +841,14 @@ class TitleDept(db.Model):
     name = db.Column(db.String(32))
     titlies = db.relationship('TitleName', backref='dept', lazy='dynamic')
 
+    @staticmethod
+    def to_arr():
+        arr = []
+        depts = TitleDept.query.order_by('id').all()
+        for dept in depts:
+            arr.append([dept.id, dept.name])
+        return arr
+
     def __repr__(self):
         return "<职称系列: {}>".format(self.name)
 
@@ -821,6 +858,14 @@ class TitleLv(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(32))
     titlies = db.relationship('TitleName', backref='lv', lazy='dynamic')
+
+    @staticmethod
+    def to_arr():
+        arr = []
+        lvs = TitleLv.query.order_by('id').all()
+        for lv in lvs:
+            arr.append([lv.id, lv.name])
+        return arr
 
     def __repr__(self):
         return "<职称等级: {}>".format(self.name)
