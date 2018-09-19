@@ -102,27 +102,27 @@ def search():
                            dept_id=dept_id)
 
 
-@index.route('/search-criteria', methods=["GET", "POST"])
-@login_required
-def search_criteria():
-    page = request.args.get('page', 1, type=int)
-    fields = current_user.get_fields()
-    dept_names = Dept.to_arr()
-    duty_lvs = DutyLevel.to_array()
-    all_fields = list(FIELDS.keys())
-    if request.method == "POST":
-        form = request.form
-        pagination = Personnel.query.join(Duty, Duty.id == Personnel.duty_id) \
-            .order_by(Duty.order, Duty.duty_level_id.desc()).paginate(
-            page, per_page=current_app.config['SEARCH_PAGE'],
-            error_out=False
-        )
-    pers = pagination.items
-    pers = filter_field(pers, fields)
-
-    return render_template('search.html', fields=fields, pers=pers,
-                           all_fields=all_fields, pagination=pagination,
-                           dept_names=dept_names, duty_lvs=duty_lvs)
+# @index.route('/search-criteria', methods=["GET", "POST"])
+# @login_required
+# def search_criteria():
+#     page = request.args.get('page', 1, type=int)
+#     fields = current_user.get_fields()
+#     dept_names = Dept.to_arr()
+#     duty_lvs = DutyLevel.to_array()
+#     all_fields = list(FIELDS.keys())
+#     if request.method == "POST":
+#         form = request.form
+#         pagination = Personnel.query.join(Duty, Duty.id == Personnel.duty_id) \
+#             .order_by(Duty.order, Duty.duty_level_id.desc()).paginate(
+#             page, per_page=current_app.config['SEARCH_PAGE'],
+#             error_out=False
+#         )
+#     pers = pagination.items
+#     pers = filter_field(pers, fields)
+#
+#     return render_template('search.html', fields=fields, pers=pers,
+#                            all_fields=all_fields, pagination=pagination,
+#                            dept_names=dept_names, duty_lvs=duty_lvs)
 
 
 @index.route('/system-manage/user')

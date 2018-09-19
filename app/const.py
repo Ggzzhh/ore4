@@ -10,6 +10,7 @@ NAV = {
     '统计查询': {
         'id': 'dropdown_search',
         'data': {
+            '快速查询': 'easy_search',
             '综合查询': 'condition_search',
             'divider': '#',
             '职务统计': '#',

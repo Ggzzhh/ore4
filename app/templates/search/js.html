@@ -164,21 +164,17 @@
         // 性别
         $('#s-sex-btn').click(function () {
             if ($('input[name="sex"]').length > 0) {
-                alert('性别查询只能存在一个！')
+                alert('性别查询只能存在一个！');
                 return false;
             }
             var name = 'sex';
             var div = $(div_text);
-            var radio1 = $(radio_text);
             var radio2 = $(radio_text);
             var radio3 = $(radio_text);
-            radio1.find('input').attr({name: name, value: '全部', checked: true});
             radio2.find('input').attr({name: name, value: '男'});
             radio3.find('input').attr({name: name, value: '女'});
-            radio1.append('全部');
             radio2.append('男');
             radio3.append('女');
-            div.append(radio1);
             div.append(radio2);
             div.append(radio3);
             $('#add-search').append(

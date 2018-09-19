@@ -205,7 +205,7 @@ class Personnel(db.Model):
     # 生日
     birthday = db.Column(db.DateTime)
     # 年龄
-    age = db.Column(db.Integer)
+    age = db.Column(db.Integer, default=0)
     # 干部编号
     cadre_id = db.Column(db.String(64))
     # 身份证

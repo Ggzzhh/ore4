@@ -29,3 +29,6 @@ virtualenv --no-site-packages venv
 ### pip导出库/安装库
     pip freeze > requirements.txt
     pip install -r requirements.txt
+
+### 在sqlalchemy中使用正则
+    per.query.filter(per.name.op('regexp')(r'a|b')).all()
