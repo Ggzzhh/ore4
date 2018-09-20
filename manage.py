@@ -57,7 +57,8 @@ def ex_test():
 
 @manager.command
 def db_test():
-    pass
+    from app.sql_init import add_per
+    add_per()
 
 
 if __name__ == "__main__":

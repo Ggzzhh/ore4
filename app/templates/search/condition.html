@@ -1,63 +1,7 @@
 {% extends 'iframe_base.html' %}
+{% from 'bootstrap/utils.html' import render_static %}
 {% block head %}
-	<style>
-		form {
-			height: 100%;
-			width: 100%;
-			margin: 0;
-			padding: 0;
-		}
-		.info_manage {
-			height: 100%;
-		}
-		.search-table-c {
-			color: white;
-			font-size: 1rem	;
-			height: 100%;
-			background-color: rgba(12, 62, 103, 0.85);
-			border-radius: 15px 15px;
-			min-height: 10vh;
-		}
-		.search-table-c > .form-group{
-			border: 1px solid white;
-			border-radius: 10px 10px;
-		}
-		.search-table-c input, select {
-			max-width: 40%;
-		}
-		.search-tr {
-			width: 100%;
-		}
-		.search-td {
-			height: 90%;
-			border: 1px solid white;
-			border-radius: 10px 10px;
-			margin: 10px 0;
-		}
-		.container-fluid {
-			min-height: 90%;
-		}
-		.s-btn {
-			min-width: 10rem;
-		}
-		.close {
-			color: #6baef3;
-		}
-		.modal-header {
-			flex-flow: row-reverse;
-		}
-		.btn-primary {
-			background-color:rgba(12, 62, 103, 0.85);
-			border-color:rgba(12, 62, 103, 0.85);
-		}
-		#search-form .nav-link {
-			color: white;
-		}
-		#search-form .nav-link.active {
-			color:rgba(12, 62, 103, 0.85) ;
-		}
-	</style>
-
+	{{ render_static('css', 'css/search.css') }}
 {% endblock %}
 {% block content %}
 	<div class="iframe-content">
@@ -118,5 +62,5 @@
 {% endblock %}
 
 {% block script %}
-	{% include 'search/js.html' %}
+	{% include 'search/condition_search_js.html' %}
 {% endblock %}

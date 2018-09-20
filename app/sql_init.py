@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
+from random import sample
+
 from app import db
 
-from app.models import LearnForm, EduLevel, State, Nation
+from app.models import LearnForm, EduLevel, State, Nation, Personnel, Duty
 
 
 def init_learn_form():
@@ -56,3 +58,12 @@ def init_nation():
         db.session.add(na)
 
     print('民族添加完毕')
+
+
+def add_per():
+    duties = Duty.query.all()
+    for i in range(20, 20000):
+        duty = sample(duties, 1)[0]
+        per = Personnel(name="test{}".format(i), id_card=i+30000, duty=duty)
+        db.session.add(per)
+        print("+1 啊哈哈哈")

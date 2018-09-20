@@ -10,12 +10,18 @@ body a:hover {
     cursor: pointer;
 }
 
-ul, ol {
+ul{
     margin: 0;
     padding: 0;
     list-style: none;
 }
 
+ol{
+    padding: 0;
+}
+ol > li {
+    margin-left: 1rem;
+}
 
 ::-webkit-scrollbar {
     width: 6px;

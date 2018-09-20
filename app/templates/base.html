@@ -15,6 +15,9 @@
   <link rel="shortcut icon" href="/static/image/favicon.ico" type="image/x-icon"/>
   {{ bootstrap.load_css() }}
   {% block head %}
+		<style>
+
+		</style>
   {% endblock %}
 
 </head>
@@ -89,7 +92,7 @@
 
         <li class="nav-item">
 					<span class="navbar-text mr-3">
-						<a href="#" class=""> 帮助</a>
+						<a href="#" class="" data-toggle="modal" data-target="#help"> 帮助</a>
 					</span>
         </li>
         <li class="nav-item">
@@ -113,7 +116,7 @@
     <div class="p-2 flex-grow-1">
       {% block page_content %}{% endblock %}
     </div>
-
+		{% include "help.html" %}
   </main>
 
 {% endblock %}
@@ -153,6 +156,22 @@
             });
             $('#easy_search').bind('click', function () {
                 set_iframe_src('/search')
+            });
+            $('#duty_count').bind('click', function () {
+                set_iframe_src('/per-info-count/duty');
+								alert('该页面需要加载几秒钟！ 请耐心等待！');
+            });
+            $('#dept_count').bind('click', function () {
+                set_iframe_src('/per-info-count/dept');
+								alert('该页面需要加载几秒钟！ 请耐心等待！');
+            });
+            $('#title_count').bind('click', function () {
+                set_iframe_src('/per-info-count/title');
+                alert('该页面需要加载几秒钟！ 请耐心等待！');
+            });
+            $('#state_count').bind('click', function () {
+                set_iframe_src('/per-info-count/state');
+                alert('该页面需要加载几秒钟！ 请耐心等待！');
             });
         {% endif %}
     });

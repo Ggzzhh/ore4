@@ -10,7 +10,8 @@ from . import per
 from ..const import FIELDS
 from ..tools import filter_field, str2time
 from ..models import EduLevel, LearnForm, TitleName, DeptPro, TitleDept,\
-    Dept, DutyLevel, State, Personnel, Nation, System, Duty, Education, TitleLv
+    Dept, DutyLevel, State, Personnel, Nation, System, Duty, Education, \
+    TitleLv, Title
 
 
 @per.route('/add')
@@ -90,7 +91,15 @@ def condition_search():
 def search_result():
     if request.method == "POST":
         form = request.form
-        print(form)
+        is_none = True
+        # print(form)
+
+        for e in form:
+            print(form[e])
+            if form[e] != '':
+                is_none = False
+                break
+
         try:
             age1 = int(form.get('age1', 0))
             age2 = int(form.get('age2', 0))
@@ -113,6 +122,8 @@ def search_result():
         session['re_identity'] = r'{}'.format(form.get('identity', ''))
         session['re_work_no'] = r'{}'.format(form.get('work_no', ''))
         session['re_work_year'] = r'{}'.format(form.get('work_year', ''))
+        session['re_major'] = r'{}'.format(form.get('major', ''))
+        session['re_duty'] = r'{}'.format(form.get('duty', ''))
 
         session['dept_ids'] = request.values.getlist('dept_id')
         session['systems'] = request.values.getlist('system_id')
@@ -151,6 +162,7 @@ def search_result():
 
 def filter_query(query):
     """过滤查询"""
+    is_none = True
     min_age = session.get('min_age', 0)
     max_age = session.get('max_age', 0)
     re_name = session.get('re_name', '')
@@ -180,30 +192,40 @@ def filter_query(query):
     use_title_ids = session.get('use_title_ids', '')
     title_dept_ids = session.get('title_dept_ids', '')
     title_lv_ids = session.get('title_lv_ids', '')
+    re_major = session.get('re_major', '')
+    re_duty = session.get('re_duty', '')
 
     # 筛选
     if re_name:
+        is_none = False
         query = query.filter(Personnel.name.op('regexp')(re_name))
 
     if re_phonetic:
+        is_none = False
         query = query.filter(Personnel.phonetic.op('regexp')(re_phonetic))
 
     if re_sex:
+        is_none = False
         query = query.filter(Personnel.sex.op('regexp')(re_sex))
 
     if re_nation:
+        is_none = False
         query = query.filter(Personnel.nation.op('regexp')(re_nation))
 
     if max_age and max_age != 0:
+        is_none = False
         query = query.filter(Personnel.age.between(min_age, max_age))
 
     if re_id_card:
+        is_none = False
         query = query.filter(Personnel.id_card.op('regexp')(re_id_card))
 
     if re_cadre_id:
+        is_none = False
         query = query.filter(Personnel.cadre_id.op('regexp')(re_cadre_id))
 
     if dept_ids or systems or dept_pros:
+        is_none = False
         query = query.join(Dept)
         if dept_ids:
             query = query.filter(Dept.id.in_(dept_ids))
@@ -213,9 +235,11 @@ def filter_query(query):
             query = query.filter(Dept.dept_pro_id.in_(dept_pros))
 
     if duty_lv_ids:
+        is_none = False
         query = query.filter(Duty.duty_level_id.in_(duty_lv_ids))
 
     if max_edu_level_ids or at_edu_level_ids or ot_edu_level_ids:
+        is_none = False
         query = query.join(Education)
         if max_edu_level_ids:
             query = query.filter(Personnel.max_edu_id.in_(max_edu_level_ids))
@@ -225,49 +249,72 @@ def filter_query(query):
             query = query.filter(Personnel.ot_edu_id.in_(ot_edu_level_ids))
 
     if work_time and work_time_choice:
+        is_none = False
         if work_time_choice == ">":
             query = query.filter(Personnel.work_time > work_time)
         elif work_time_choice == "<":
             query = query.filter(Personnel.work_time < work_time)
 
     if party_member and party_member_choice:
+        is_none = False
         if party_member_choice == ">":
             query = query.filter(Personnel.party_member > party_member)
         elif party_member_choice == "<":
             query = query.filter(Personnel.party_member < party_member)
 
     if re_policital_status:
+        is_none = False
         query = query.filter(
             Personnel.policital_status.op('regexp')(re_policital_status)
         )
 
     if re_native_place:
+        is_none = False
         query = query.filter(Personnel.native_place.op('regexp')(re_native_place))
 
     if re_birth_place:
+        is_none = False
         query = query.filter(Personnel.birth_place.op('regexp')(re_birth_place))
 
     if re_identity:
+        is_none = False
         query = query.filter(Personnel.identity.op('regexp')(re_identity))
 
     if re_work_no:
+        is_none = False
         query = query.filter(Personnel.work_no.op('regexp')(re_work_no))
 
     if re_work_year:
+        is_none = False
         query = query.filter(Personnel.s_work_year.op('regexp')(re_work_year))
 
     if state_ids:
+        is_none = False
         query = query.filter(Personnel.state_id.in_(state_ids))
 
     if use_title_ids:
+        is_none = False
         query = query.filter(Personnel.use_title_name_id.in_(use_title_ids))
 
     if title_dept_ids or title_lv_ids:
+        is_none = False
         query = query.join(TitleName,
                            TitleName.id == Personnel.use_title_name_id)
         if title_dept_ids:
             query = query.filter(TitleName.title_dept_id.in_(title_dept_ids))
         if title_lv_ids:
             query = query.filter(TitleName.title_lv_id.in_(title_lv_ids))
+
+    if re_major:
+        is_none = False
+        query = query.join(Title, Title.id == Personnel.use_title_id)
+        query = query.filter(Title.major.op('regexp')(re_major))
+
+    if re_duty:
+        is_none = False
+        query = query.filter(Duty.name.op('regexp')(re_duty))
+
+    if is_none:
+        query = query.filter(Personnel.id < 0)
 
     return query

@@ -3,7 +3,7 @@ import json
 from datetime import datetime, timedelta
 
 from flask import render_template, request, jsonify, \
-    current_app, url_for, redirect, flash
+    current_app, url_for, redirect, session
 from flask_login import login_user, login_required, current_user, logout_user
 import flask_excel as excel
 from sqlalchemy import or_, and_
@@ -102,29 +102,6 @@ def search():
                            dept_id=dept_id, endpoint='index.search')
 
 
-# @index.route('/search-criteria', methods=["GET", "POST"])
-# @login_required
-# def search_criteria():
-#     page = request.args.get('page', 1, type=int)
-#     fields = current_user.get_fields()
-#     dept_names = Dept.to_arr()
-#     duty_lvs = DutyLevel.to_array()
-#     all_fields = list(FIELDS.keys())
-#     if request.method == "POST":
-#         form = request.form
-#         pagination = Personnel.query.join(Duty, Duty.id == Personnel.duty_id) \
-#             .order_by(Duty.order, Duty.duty_level_id.desc()).paginate(
-#             page, per_page=current_app.config['SEARCH_PAGE'],
-#             error_out=False
-#         )
-#     pers = pagination.items
-#     pers = filter_field(pers, fields)
-#
-#     return render_template('search.html', fields=fields, pers=pers,
-#                            all_fields=all_fields, pagination=pagination,
-#                            dept_names=dept_names, duty_lvs=duty_lvs)
-
-
 @index.route('/system-manage/user')
 @login_required
 def system_manage_user():
@@ -179,6 +156,33 @@ def system_manage_dept():
 @login_required
 def system_manage_pwd():
     return render_template('system_manage/pwd.html', title='修改密码')
+
+
+@index.route('/per-info-count/<string:info>')
+@login_required
+def per_info_count(info):
+    title = None
+    content = []
+    if info == "duty":
+        title = "职务统计"
+        cls = {"title": "职务等级", "fields": [], 'count': 0}
+        lvs = DutyLevel.query.all()
+        for lv in lvs:
+            count = 0
+            field = {
+                'name': lv.name,
+                'count': count
+            }
+            cls['fields'].append(field)
+            cls['count'] += field['count']
+        content.append(cls)
+    if info == "dept":
+        title = "单位统计"
+    if info == "title":
+        title = "职称统计"
+    if info == "state":
+        title = "状态统计"
+    return render_template('per_info_count.html', title=title, content=content)
 
 
 @index.route('/upload', methods=['GET', 'POST'])

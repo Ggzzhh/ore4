@@ -1,0 +1,80 @@
+{% extends 'iframe_base.html' %}
+{% from 'bootstrap/utils.html' import render_static %}
+{% block head %}
+	<style>
+		.col-4 {
+
+		}
+		.show-count {
+			text-align: start;
+		}
+		.s-c-title {
+			text-align: center;
+		}
+		.s-c-content {
+			width: 95%;
+		}
+		.s-c-content .tr-count {
+			display: inline-flex;
+		}
+		.s-c-content .th-count, .s-c-content .td-count{
+			padding-left: 1.5rem;
+			margin-top: 1rem;
+			min-width: 13rem;
+		}
+		.s-c-content .th-count {
+			font-weight: 800;
+		}
+		.s-c-content .td-count {
+			padding-top: .5rem;
+		}
+	</style>
+{% endblock %}
+{% block content %}
+	<div class="iframe-content">
+		<div class="search d-flex flex-row">
+			<div class="title">{{ title }}</div>
+		</div>
+		<div class="show-count">
+			{% for cls in content %}
+				<div class="show-cls">
+					<div class="s-c-title mt-3">
+						<h5><b>{{ cls['title'] }} : {{ cls['count'] }} 人</b></h5>
+						<hr />
+					</div>
+					<div class="s-c-content">
+						<div class="row">
+							<div class="col-4 tr-count">
+								<div class="th-count">名 称</div>
+								<div class="th-count" style="min-width: 3rem;">人 数</div>
+							</div>
+							<div class="col-4 tr-count">
+								<div class="th-count">名 称</div>
+								<div class="th-count" style="min-width: 3rem;">人 数</div>
+							</div>
+							<div class="col-4 tr-count">
+								<div class="th-count">名 称</div>
+								<div class="th-count" style="min-width: 3rem;">人 数</div>
+							</div>
+
+							{% for field in cls['fields'] %}
+								<div class="col-4 tr-count">
+									<div class="td-count">{{ field.get('name') }}</div>
+									<div class="td-count" style="min-width: 3rem;">{{ field.get('count') }}</div>
+								</div>
+							{% endfor %}
+						</div>
+
+					</div>
+				</div>
+			{% endfor %}
+		</div>
+	</div>
+{% endblock %}
+{% block scripts %}
+	<script>
+	window.onload = function () {
+			document.write('页面加载中，请等待...')
+  }
+	</script>
+{% endblock %}

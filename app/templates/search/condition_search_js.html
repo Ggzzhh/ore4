@@ -69,10 +69,12 @@
         "s-dept-name-btn": "单位简称",
         "s-system-btn": "单位系统",
         "s-dept-pro-btn": "单位属性",
+        "s-duty-btn": "职务名称",
         "s-duty-lv-btn": "职务级别",
         "s-title-btn": "职称",
         "s-title-dept-btn": "职称系列",
         "s-title-lv-btn": "职称级别",
+        "s-major-btn": "职称专业",
         "s-max-edu-btn": "最高学历",
         "s-at-edu-btn": "全日制学历(最高)",
         "s-ot-edu-btn": "在职学历(最高)",
@@ -110,8 +112,6 @@
         select_text = '<select class="form-control"></select>',
         option_text = '<option></option>',
         input_text = '<input type="text" class="form-control">';
-
-
 
     var del_this = function (e) {
         if (confirm("请确认删除这个查询项"))
@@ -376,6 +376,24 @@
 
             $('#add-search').append(
                 create_element('职务级别', name, div)
+            );
+            $('#show-search').modal('hide');
+        });
+
+        // 职务名称
+        $('#s-duty-btn').click(function () {
+            var name = 'duty';
+            var input = $(input_text);
+
+            input.attr(
+                {
+                    name: name,
+                    placeholder:'查询多个请使用 \'|\' 进行分割，如：矿长|副总。'
+                }
+            );
+
+            $('#add-search').append(
+                create_element('职务名称', name, input)
             );
             $('#show-search').modal('hide');
         });
@@ -675,6 +693,23 @@
 
             $('#add-search').append(
                 create_element('职称级别', name, div)
+            );
+            $('#show-search').modal('hide');
+        });
+
+        // 职称专业
+				$('#s-major-btn').click(function () {
+            var name = 'major';
+            var input = $(input_text);
+            input.attr(
+                {
+                    name: name,
+                    placeholder:'查询多个请使用 \'|\' 进行分割，如：矿山|教育。'
+                }
+            );
+
+            $('#add-search').append(
+                create_element('职称专业', name, input)
             );
             $('#show-search').modal('hide');
         });

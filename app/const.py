@@ -13,10 +13,10 @@ NAV = {
             '快速查询': 'easy_search',
             '综合查询': 'condition_search',
             'divider': '#',
-            '职务统计': '#',
-            '单位统计': '#',
-            '职称统计': '#',
-            '状态统计': '#'
+            '职务统计': 'duty_count',
+            '单位统计': 'dept_count',
+            '职称统计': 'title_count',
+            '状态统计': 'state_count'
         }
     },
     '报表整理': {
