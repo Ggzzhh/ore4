@@ -10,7 +10,7 @@ from sqlalchemy import or_, and_
 
 from . import index
 from ..models import User, Dept, System, Title, Duty, DutyLevel, \
-    DeptPro, Personnel
+    DeptPro, Personnel, State, TitleName, TitleLv, TitleDept
 from ..const import NAV, FIELDS
 from ..tools import filter_field
 
@@ -163,12 +163,18 @@ def system_manage_pwd():
 def per_info_count(info):
     title = None
     content = []
+    pers = Personnel.query.all()
+    session['count'] = {}
+
     if info == "duty":
         title = "职务统计"
         cls = {"title": "职务等级", "fields": [], 'count': 0}
-        lvs = DutyLevel.query.all()
+        lvs = DutyLevel.query.order_by(DutyLevel.id.desc()).all()
         for lv in lvs:
             count = 0
+            for per in pers:
+                if per.duty and per.duty.duty_level_id == lv.id:
+                    count += 1
             field = {
                 'name': lv.name,
                 'count': count
@@ -176,12 +182,152 @@ def per_info_count(info):
             cls['fields'].append(field)
             cls['count'] += field['count']
         content.append(cls)
+        session['count']['职务统计'] = cls
+
     if info == "dept":
         title = "单位统计"
+        cls_name = {"title": "单位简称", "fields": [], 'count': 0}
+        cls_pro = {"title": "单位属性", "fields": [], 'count': 0}
+        cls_system = {"title": "单位系统", "fields": [], 'count': 0}
+        names = Dept.query.order_by(Dept.id).all()
+        pros = DeptPro.query.order_by(DeptPro.id).all()
+        systems = System.query.order_by(System.id).all()
+
+        for name in names:
+            field = {
+                'name': name.dept_name,
+                'count': 0,
+                'id': name.id
+            }
+            cls_name['fields'].append(field)
+
+        for pro in pros:
+            field = {
+                'name': pro.dept_pro_name,
+                'count': 0,
+                'id': pro.id
+            }
+            cls_pro['fields'].append(field)
+
+        for system in systems:
+            field = {
+                'name': system.system_name,
+                'count': 0,
+                'id': system.id
+            }
+            cls_system['fields'].append(field)
+
+        for per in pers:
+            for name in cls_name['fields']:
+                if per.dept_id == name['id']:
+                    name['count'] += 1
+                    cls_name['count'] += 1
+
+            for pro in cls_pro['fields']:
+                if per.dept and per.dept.dept_pro_id == pro['id']:
+                    pro['count'] += 1
+                    cls_pro['count'] += 1
+
+            for system in cls_system['fields']:
+                if per.dept and per.dept.system_id == system['id']:
+                    system['count'] += 1
+                    cls_system['count'] += 1
+
+        content.append(cls_name)
+        content.append(cls_pro)
+        content.append(cls_system)
+
     if info == "title":
         title = "职称统计"
+        cls_name = {"title": "职称名称", "fields": [], 'count': 0}
+        cls_lv = {"title": "职称等级", "fields": [], 'count': 0}
+        cls_dept = {"title": "职称系列", "fields": [], 'count': 0}
+        cls_major = {"title": "职称专业", "fields": [], 'count': 0}
+        names = TitleName.query.order_by(TitleName.id).all()
+        lvs = TitleLv.query.order_by(TitleLv.id).all()
+        depts = TitleDept.query.order_by(TitleDept.id).all()
+
+        for name in names:
+            field = {
+                'name': name.name,
+                'count': 0,
+                'id': name.id
+            }
+            cls_name['fields'].append(field)
+
+        for lv in lvs:
+            field = {
+                'name': lv.name,
+                'count': 0,
+                'id': lv.id
+            }
+            cls_lv['fields'].append(field)
+
+        for dept in depts:
+            field = {
+                'name': dept.name,
+                'count': 0,
+                'id': dept.id
+            }
+            cls_dept['fields'].append(field)
+
+        titlies = Title.query.all()
+        for _title in titlies:
+            exist = False
+            for major in cls_major['fields']:
+                if major['name'] == _title.major:
+                    exist = True
+                    major['count'] += 1
+                    cls_major['count'] += 1
+            if exist is False and _title.major:
+                if _title.major == "":
+                    break
+                temp = {
+                    'name': _title.major,
+                    'count': 1,
+                    'id': 0
+                }
+                cls_major['fields'].append(temp)
+                cls_major['count'] += 1
+
+            for dept in cls_dept['fields']:
+                if _title.name.title_dept_id == dept['id']:
+                    dept['count'] += 1
+                    cls_dept['count'] += 1
+
+            for lv in cls_lv['fields']:
+                if _title.name.title_lv_id == lv['id']:
+                    lv['count'] += 1
+                    cls_lv['count'] += 1
+
+            for name in cls_name['fields']:
+                if _title.name_id == name['id']:
+                    name['count'] += 1
+                    cls_name['count'] += 1
+
+        content.append(cls_name)
+        content.append(cls_dept)
+        content.append(cls_lv)
+        content.append(cls_major)
+
     if info == "state":
         title = "状态统计"
+        cls = {"title": "员工状态", "fields": [], 'count': 0}
+        states = State.query.order_by(State.id).all()
+        for state in states:
+            field = {
+                'name': state.name,
+                'count': 0,
+                'id': state.id
+            }
+            cls['fields'].append(field)
+        for per in pers:
+            for field in cls['fields']:
+                if per.state and field['id'] == per.state.id:
+                    field['count'] += 1
+                    cls['count'] += 1
+        content.append(cls)
+
     return render_template('per_info_count.html', title=title, content=content)
 
 
