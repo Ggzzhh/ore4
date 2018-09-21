@@ -182,7 +182,7 @@ def per_info_count(info):
             cls['fields'].append(field)
             cls['count'] += field['count']
         content.append(cls)
-        session['count']['职务统计'] = cls
+        session['count']['职务等级'] = cls
 
     if info == "dept":
         title = "单位统计"
@@ -234,8 +234,11 @@ def per_info_count(info):
                     cls_system['count'] += 1
 
         content.append(cls_name)
+        session['count']['单位简称'] = cls_name
         content.append(cls_pro)
+        session['count']['单位属性'] = cls_pro
         content.append(cls_system)
+        session['count']['单位系统'] = cls_system
 
     if info == "title":
         title = "职称统计"
@@ -306,9 +309,13 @@ def per_info_count(info):
                     cls_name['count'] += 1
 
         content.append(cls_name)
+        session['count']['职称名称'] = cls_name
         content.append(cls_dept)
+        session['count']['职称系列'] = cls_dept
         content.append(cls_lv)
+        session['count']['职称等级'] = cls_lv
         content.append(cls_major)
+        session['count']['职称专业'] = cls_major
 
     if info == "state":
         title = "状态统计"
@@ -327,6 +334,7 @@ def per_info_count(info):
                     field['count'] += 1
                     cls['count'] += 1
         content.append(cls)
+        session['count']['员工状态'] = cls
 
     return render_template('per_info_count.html', title=title, content=content)
 
