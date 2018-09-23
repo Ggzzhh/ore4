@@ -11,6 +11,23 @@
 <body>
 {% block content %}
 {% endblock %}
+<div class="modal fade" id="loading">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body">
+        文件生成中.....稍后将自动下载！
+      </div>
+
+      <!-- 模态框底部 -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary"
+                data-dismiss="modal">
+          关闭
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
 {{ bootstrap.load_js() }}
 {{ moment.include_moment() }}
 {{ moment.lang("zh-cn") }}
@@ -21,6 +38,35 @@
 {{ render_static('js', 'locales/bootstrap-datepicker.zh-CN.min.js') }}
 
 <script>
+    jQuery.download = function(url, method, filedir, filename){
+        jQuery('<form action="'+url+'" method="'+(method||'post')+'">' +
+            '<input type="text" name="filedir" value="'+filedir+'"/>' +
+            '<input type="text" name="filename" value="'+filename+'"/>' +
+            '</form>')
+            .appendTo('body').submit().remove();
+    };
+
+    function get_export_url(url) {
+        var _success = function (data) {
+            window.setTimeout(function () {
+                $('#loading').modal('hide');
+                $.download(data.url, "GET");
+            }, 1000)
+
+        };
+        $.ajax({
+            url: url,
+            type: "GET",
+            beforeSend: function () {
+                $('#loading').modal('show');
+            },
+            complete: function () {
+                $('#loading').modal('hide');
+            },
+            success: _success
+        })
+    }
+
     $(document).ready(function () {
         $('.mydate').datepicker({
             language: "zh-CN"

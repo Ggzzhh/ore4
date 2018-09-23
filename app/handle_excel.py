@@ -1,9 +1,86 @@
 # -*- coding: utf-8 -*-
+import os
+
+import xlrd, xlwt
 from pyexcel_xlsx import get_data
 
 from app import db
 from app.models import System, Dept, DeptPro, DutyLevel, Duty, TitleName, \
     TitleDept, TitleLv
+from app.const import FIELDS
+
+
+class MakeExcel:
+    def __init__(self, fields=None, file_name=None):
+        self.directory = os.getcwd()
+        self.file_name = u"结果.xls" if file_name is None else file_name
+        self.fields = [] if \
+            fields is None or not isinstance(fields, list) else fields
+        self.f = xlwt.Workbook()
+
+    def make_sample_file(self):
+        sheet1 = self.f.add_sheet(u'sheet1', cell_overwrite_ok=True)
+        rows = list(FIELDS.keys())
+        edu_fields = ['学历', '入学时间', '毕业时间', '院校', '专业', '学习形式']
+        family_fields = ['称谓', '姓名', '年龄', '政治面貌', '工作单位及职务']
+
+        # 添加九个学历列
+        for i in range(1, 10):
+            for field in edu_fields:
+                rows.append(field + str(i))
+
+        # 添加九个家庭成员
+        for i in range(1, 10):
+            for field in family_fields:
+                rows.append(field + str(i))
+
+        # 生成第一行
+        for i in range(len(rows)):
+            sheet1.write(0, i, rows[i], self.make_style(u'微软雅黑', 12, 1))
+            sheet1.col(i).width = 0x0d00
+            sheet1.col(i).height = 500
+
+        self.f.save(self.file_name)
+
+    def make_result_file(self, pers):
+        sheet = self.f.add_sheet(u'sheet1', cell_overwrite_ok=True)
+        rows = self.fields
+
+        for i in range(0, len(rows)):
+            sheet.write(0, i, rows[i], self.make_style(u'微软雅黑', 12, 1))
+            sheet.col(i).width = 0x0d00
+            sheet.col(i).height = 500
+            for j in range(1, len(pers)+1):
+                sheet.write(j, i, pers[j-1]['data'][i])
+
+        self.f.save('files/' + self.file_name)
+        return self.file_name
+
+    @staticmethod
+    def make_style(font_name, color=1, font_color=0, border=1):
+        style = xlwt.XFStyle()
+
+        pattern = xlwt.Pattern()
+        pattern.pattern = xlwt.Pattern.SOLID_PATTERN
+        if isinstance(color, int):
+            pattern.pattern_fore_colour = color
+        style.pattern = pattern
+
+        font = xlwt.Font()
+        font.name = u'{}'.format(font_name)
+        font.colour_index = font_color
+        font.bold = True
+        style.font = font
+
+        if border and isinstance(border, int):
+            borders = xlwt.Borders()
+            borders.right = border
+            borders.left = border
+            borders.top = border
+            borders.bottom = border
+            style.borders = borders
+
+        return style
 
 
 class UNIT:
@@ -53,7 +130,7 @@ class UNIT:
                     res.order = 10
                 db.session.add(res)
             # print(dept[0] + message)
-    print('单位分类更新完毕')
+        print('单位分类更新完毕')
 
 
 class _Duty:

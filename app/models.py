@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import random
 from datetime import datetime, date
 
 from flask import current_app, abort
@@ -289,6 +290,7 @@ class Personnel(db.Model):
         src = data.get('photo_src')
         if src:
             if src != photo_src:
+                src = src.split('?')[0]
                 if src[-4:] != '.jpg':
                     src = src[23:]
                 photo_src = str2img(src, "/static/per_img/", data.get(
@@ -350,7 +352,8 @@ class Personnel(db.Model):
         data['remarks'] = self.remarks
         data['remarks_2'] = self.remarks_2
         data['punished'] = '是' if self.punished else '否'
-        data['photo_src'] = self.photo_src
+        data['photo_src'] = self.photo_src + "?temp" + str(random.random()) \
+            if self.photo_src else '/static/image/timg.jpg'
         data['families'] = self.families
         data['r_and_ps'] = self.r_and_ps
         data['resumes'] = self.resumes

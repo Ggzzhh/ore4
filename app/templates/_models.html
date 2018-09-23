@@ -330,7 +330,6 @@
       {% for p in pagination.iter_pages() %}
         {% if p %}
           {% if p == pagination.page %}
-            {#					如果p的值是当前页面,css效果默认选中#}
             <li class="page-item active">
               <a class="page-link"
                  href="{{ url_for(endpoint, page=p, **kwargs) }}">{{ p }}</a>

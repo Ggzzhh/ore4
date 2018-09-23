@@ -62,7 +62,8 @@ def init_nation():
 
 def add_per():
     duties = Duty.query.all()
-    for i in range(20, 20000):
+
+    for i in range(20, 2000):
         duty = sample(duties, 1)[0]
         per = Personnel(name="test{}".format(i), id_card=i+30000, duty=duty)
         db.session.add(per)

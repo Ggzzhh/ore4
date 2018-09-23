@@ -1,9 +1,10 @@
 import time
+import os
 import json
 from datetime import datetime, timedelta
 
-from flask import render_template, request, jsonify, \
-    current_app, url_for, redirect, session
+from flask import render_template, request, jsonify, abort, \
+    current_app, url_for, redirect, session, send_from_directory, make_response
 from flask_login import login_user, login_required, current_user, logout_user
 import flask_excel as excel
 from sqlalchemy import or_, and_
@@ -13,6 +14,7 @@ from ..models import User, Dept, System, Title, Duty, DutyLevel, \
     DeptPro, Personnel, State, TitleName, TitleLv, TitleDept
 from ..const import NAV, FIELDS
 from ..tools import filter_field
+from ..handle_excel import MakeExcel
 
 
 @index.route('/login2ore4manageSystem', methods=['GET', 'POST'])
@@ -71,14 +73,15 @@ def search():
     fields = current_user.get_fields()
     dept_id = request.args.get('dept_id')
     if request.method == "GET":
-        base_query = Personnel.query.join(Duty)
+        query = Personnel.query.join(Duty)
         if dept_id:
-            base_query = base_query.filter(Personnel.dept_id == dept_id)
-        pagination = base_query.order_by(Duty.order, Duty.duty_level_id.desc())\
+            query = query.filter(Personnel.dept_id == dept_id)
+        pagination = query.order_by(Duty.order, Duty.duty_level_id.desc()) \
             .paginate(
             page, per_page=current_app.config['SEARCH_PAGE'],
             error_out=False
         )
+        url = url_for('v1.make_excel', val='all')
     else:
         form = request.form
         val = form['easy_search']
@@ -94,12 +97,14 @@ def search():
             .paginate(
             page, per_page=current_app.config['SEARCH_PAGE'],
             error_out=False)
+        url = url_for('v1.make_excel', val=val)
     pers = pagination.items
     pers = filter_field(pers, fields)
     return render_template('search.html', fields=fields, pers=pers,
                            all_fields=all_fields, pagination=pagination,
                            dept_names=dept_names, duty_lvs=duty_lvs,
-                           dept_id=dept_id, endpoint='index.search')
+                           dept_id=dept_id, endpoint='index.search',
+                           export_api=url)
 
 
 @index.route('/system-manage/user')
@@ -356,13 +361,14 @@ def upload():
     # ''' % user
 
 
-@index.route("/test", methods=['GET'])
-def test():
-    return jsonify('我擦asdasd123')
-
-
-@index.route("/download", methods=['GET'])
-@login_required
-def download_file_named_in_unicode():
-    return excel.make_response_from_array([['呵呵呵', '哈哈哈'], ['哟啊', 4]], "xlsx",
-                                          file_name=u"中文文件名")
+@index.route("/download/<string:filename>", methods=['GET'])
+def download(filename):
+    f = MakeExcel()
+    directory = os.getcwd()
+    response = make_response(
+        send_from_directory(directory + '/files/', filename,
+                            as_attachment=True))
+    response.headers[
+        "Content-Disposition"] = "attachment; filename={}".format(
+        filename.encode().decode('latin-1'))
+    return response

@@ -2,13 +2,15 @@
 import json
 
 from flask import flash, redirect, url_for, jsonify, \
-    current_app, request, abort
+    current_app, request, abort, session
 from flask_login import logout_user, current_user, login_required
 
 from . import api_v1
 from ..models import db, User, Role, Duty, DutyLevel, Dept, \
     Personnel, State, Resume, Title, Education, RAndP, Family
-from ..tools import replace2none, str2time
+from ..tools import replace2none, str2time, filter_field
+from ..personnel.views import filter_query
+from ..handle_excel import MakeExcel
 
 
 @api_v1.route('/field', methods=["POST"])
@@ -377,3 +379,31 @@ def del_per():
         return jsonify({'error': False, 'message': '删除成功!'})
     else:
         return jsonify({'error': False, 'message': '没有选择目标!'})
+
+
+@api_v1.route('/make_excel/<val>')
+@login_required
+def make_excel(val):
+    query = Personnel.query.join(Duty)
+    if val == 'all':
+        query = filter_query(query, is_none=False, is_all=True)
+    elif val == 'is_none':
+        query = filter_query(query, is_none=False)
+    else:
+        session['val'] = val
+        query = filter_query(query)
+    pers = query.order_by(Duty.order, Duty.duty_level_id.desc()).all()
+    fields = current_user.get_fields()
+    me = MakeExcel(fields=fields, file_name='查询结果.xls')
+    pers = filter_field(pers, fields)
+    try:
+        filename = me.make_result_file(pers)
+        url = url_for('index.download', filename=filename)
+    except PermissionError:
+        return jsonify({'error': True,
+                        'error_message': '生成文件失败, '
+                                         '请先关闭当前名为“查询结果.xls”的文件或者重命名!!'})
+    else:
+        return jsonify({'error': False,
+                        'message': '导出成功！即将开始下载！',
+                        'url': url})

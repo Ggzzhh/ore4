@@ -141,6 +141,7 @@ def search_result():
         session['work_time_choice'] = form.get('work_time_choice', '')
         session['party_member'] = str2time(form.get('party_member', ''))
         session['party_member_choice'] = form.get('party_member_choice', '')
+        session['val'] = None
 
     page = request.args.get('page', 1, type=int)
     dept_names = Dept.to_arr()
@@ -157,12 +158,12 @@ def search_result():
     return render_template('search.html', fields=fields, pers=pers,
                            all_fields=all_fields, pagination=pagination,
                            dept_names=dept_names, duty_lvs=duty_lvs,
-                           endpoint='per.search_result')
+                           endpoint='per.search_result',
+                           export_api=url_for('v1.make_excel', val='is_none'))
 
 
-def filter_query(query):
+def filter_query(query, is_none=True, is_all=False):
     """过滤查询"""
-    is_none = True
     min_age = session.get('min_age', 0)
     max_age = session.get('max_age', 0)
     re_name = session.get('re_name', '')
@@ -194,8 +195,21 @@ def filter_query(query):
     title_lv_ids = session.get('title_lv_ids', '')
     re_major = session.get('re_major', '')
     re_duty = session.get('re_duty', '')
+    val = session.get('val', '')
 
     # 筛选
+    if val:
+        query = query.filter(
+            or_(
+                Personnel.name.like('%' + val + '%'),
+                Personnel.phonetic.like('%' + val + '%')
+            )
+        )
+        return query
+
+    if is_all:
+        return query
+
     if re_name:
         is_none = False
         query = query.filter(Personnel.name.op('regexp')(re_name))
@@ -313,6 +327,8 @@ def filter_query(query):
     if re_duty:
         is_none = False
         query = query.filter(Duty.name.op('regexp')(re_duty))
+
+
 
     if is_none:
         query = query.filter(Personnel.id < 0)

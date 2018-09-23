@@ -43,7 +43,7 @@ class Config:
     # 分页设置 每页显示数量
     PER_PAGE = 8
     # 搜索分页设置
-    SEARCH_PAGE = 12
+    SEARCH_PAGE = 11
 
     # 系统名称
     SYSTEMNAME = '四矿干部管理系统'

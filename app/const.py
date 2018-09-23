@@ -3,7 +3,7 @@ NAV = {
         'id': 'dropdown_info',
         'data': {
             '新增人员': 'new-per',
-            'excel录入': '#',
+            'excel导入': '#',
             '照片导入': '#'
         }
     },
@@ -22,7 +22,7 @@ NAV = {
     '报表整理': {
         'id': 'dropdown_table',
         'data': {
-            '干部花名册': '#',
+            '干部花名册': 'test_down',
             '人数统计表': '#'
         }
     },
