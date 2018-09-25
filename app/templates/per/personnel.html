@@ -199,14 +199,22 @@
 
           // 监听form表单
           $('#add-per').bind('submit', function () {
-              if ($('#name').val() == ""){
+              if ($('#name').val() === ""){
                   alert('姓名不能为空！');
                   return false;
               }
-              if ($('#duty').val() == ""){
+
+              if ($('#duty').val() === ""){
                   alert('职务不能为空！');
                   return false;
               }
+
+              if ($('#id_card').val() === "" || $('#id_card').val().length !==
+									18){
+									alert('身份证号不能为空或位数不够！');
+									return false;
+							}
+
               var data = JSON.stringify({
                   families: get_families(),
                   r_and_p: get_r_and_p(),

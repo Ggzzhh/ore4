@@ -22,8 +22,8 @@ NAV = {
     '报表整理': {
         'id': 'dropdown_table',
         'data': {
-            '干部花名册': 'test_down',
-            '人数统计表': '#'
+            '干部花名册': 'roster',
+            '人数统计表': 'census'
         }
     },
     '系统管理': {

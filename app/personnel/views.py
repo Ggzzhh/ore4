@@ -14,6 +14,13 @@ from ..models import EduLevel, LearnForm, TitleName, DeptPro, TitleDept,\
     TitleLv, Title
 
 
+@per.route('/roster')
+@login_required
+def roster():
+    systems = System.query.order_by(System.id).all()
+    return render_template('search/roster.html', systems=systems)
+
+
 @per.route('/add')
 @login_required
 def add_per():

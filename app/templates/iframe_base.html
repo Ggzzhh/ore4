@@ -2,31 +2,31 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="utf-8">
-  {{ bootstrap.load_css() }}
-  {{ render_static('css', 'css/iframe.css') }}
-  {{ render_static('css', 'css/bootstrap-datepicker3.css') }}
-  {% block head %}{% endblock %}
+	<meta charset="utf-8">
+	{{ bootstrap.load_css() }}
+	{{ render_static('css', 'css/iframe.css') }}
+	{{ render_static('css', 'css/bootstrap-datepicker3.css') }}
+	{% block head %}{% endblock %}
 </head>
 <body>
 {% block content %}
 {% endblock %}
 <div class="modal fade" id="loading">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-body">
-        文件生成中.....稍后将自动下载！
-      </div>
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-body">
+				文件生成中.....稍后将自动下载！
+			</div>
 
-      <!-- 模态框底部 -->
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary"
-                data-dismiss="modal">
-          关闭
-        </button>
-      </div>
-    </div>
-  </div>
+			<!-- 模态框底部 -->
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary"
+								data-dismiss="modal">
+					关闭
+				</button>
+			</div>
+		</div>
+	</div>
 </div>
 {{ bootstrap.load_js() }}
 {{ moment.include_moment() }}
@@ -46,7 +46,10 @@
             .appendTo('body').submit().remove();
     };
 
-    function get_export_url(url) {
+    function get_export_url(url, type,_data) {
+        if (type == null){
+            type = "GET"
+				}
         var _success = function (data) {
             window.setTimeout(function () {
                 $('#loading').modal('hide');
@@ -56,7 +59,10 @@
         };
         $.ajax({
             url: url,
-            type: "GET",
+            type: type,
+            data: _data,
+            dataType: 'json',
+            contentType: 'application/json',
             beforeSend: function () {
                 $('#loading').modal('show');
             },

@@ -1,0 +1,78 @@
+{% extends 'iframe_base.html' %}
+{% block head %}
+	<style>
+		.info_manage a{
+			text-decoration: none;
+		}
+		.roster-title {
+			margin-top: .5rem;
+			font-size: 1.5rem;
+			padding-bottom: .5rem;
+			padding-left: 1rem;
+			border-bottom: 1px solid silver;
+		}
+	</style>
+{% endblock %}
+{% block content %}
+	<div class="iframe-content">
+		<div class="search d-flex flex-row">
+			<div class="title">导出干部花名册</div>
+		</div>
+		<div class="info_manage">
+			<div class="container-fluid" id="accordion">
+				{% for system in systems %}
+					{% set system = system.to_json() %}
+					<div class="roster-title">
+						{{ system['name'] }}
+					</div>
+					<div class="row mt-3">
+						{% for dept in system['depts'] %}
+							<label class="c-input c-checkbox col-3">
+								<input type="checkbox" name="dept_id" value="{{ dept['id'] }}">
+								<span class="c-indicator ml-1"></span> {{ dept['name'] }}
+							</label>
+						{% endfor %}
+					</div>
+				{% endfor %}
+			</div>
+			<div class="roster-btn mt-3 d-flex">
+				<div>
+					<button class="btn btn-link" onclick="choice_a()">全选</button>
+					&nbsp;
+					<button class="btn btn-link" onclick="choice_r()">反选</button>
+				</div>
+				<div class="ml-auto">
+					<button class="btn btn-secondary" id="export-roster">导出花名册</button>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+
+{% block script %}
+	<script>
+      var inputs = document.getElementsByTagName('input');
+      function choice_a() {
+          for (var i=0; i < inputs.length; i++){
+              inputs[i].checked = true;
+          }
+      }
+
+      function choice_r() {
+          for (var i=0; i < inputs.length; i++){
+              inputs[i].checked = !inputs[i].checked;
+          }
+      }
+
+      $(document).ready(function () {
+          $('#export-roster').click(function () {
+              var ids= [];
+              $('input[name="dept_id"]:checked').map(function (i, e) {
+                  ids.push($(e).val())
+              });
+							get_export_url("/v1/make_roster", "POST",JSON.stringify({'ids':
+							ids}));
+          });
+      });
+	</script>
+{% endblock %}
