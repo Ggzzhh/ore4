@@ -1,0 +1,43 @@
+{% extends 'iframe_base.html' %}
+{% from 'bootstrap/utils.html' import render_static %}
+{% block head %}
+	{{ render_static('css', 'css/fileinput.min.css') }}
+	{{ render_static('css', 'css/b3.css') }}
+{% endblock %}
+
+{% block content %}
+	<div class="iframe-content">
+		<div class="search d-flex flex-row">
+			<div class="title">批量导入照片</div>
+		</div>
+		<div class="container mt-5" style="height: 500px">
+			<input id="photo-upload" type="file" multiple="multiple">
+		</div>
+	</div>
+{% endblock %}
+
+{% block script %}
+	{{ render_static('js', 'js/fileinput.min.js') }}
+	{{ render_static('js', 'js/zh.js') }}
+	<script>
+      function initFileInput(ctrlName, uploadUrl) {
+          var control = $('#' + ctrlName);
+          control.fileinput({
+              language: 'zh', //设置语言
+              uploadUrl: uploadUrl, //上传的地址
+              allowedFileExtensions : ['jpg', 'png','gif'],//接收的文件后缀
+              showCaption: false,
+              showUpload: true,
+              showRemove: true,
+              showClose: true,
+              initialPreviewShowDelete: true,
+              browseClass: 'btn btn-primary',
+              maxFileCount: 0
+          });
+      }
+
+      $(document).ready(function () {
+          initFileInput('photo-upload', '/upload')
+      })
+	</script>
+{% endblock %}

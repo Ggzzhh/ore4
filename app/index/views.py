@@ -10,7 +10,7 @@ import flask_excel as excel
 from sqlalchemy import or_, and_
 
 from . import index
-from ..models import User, Dept, System, Title, Duty, DutyLevel, \
+from ..models import db, User, Dept, System, Title, Duty, DutyLevel, \
     DeptPro, Personnel, State, TitleName, TitleLv, TitleDept
 from ..const import NAV, FIELDS
 from ..tools import filter_field
@@ -169,7 +169,7 @@ def per_info_count(info):
     title = None
     content = []
     pers = Personnel.query.all()
-    session['count'] = {}
+    session['count'] = session.get('count') or {}
 
     if info == "duty":
         title = "职务统计"
@@ -344,26 +344,48 @@ def per_info_count(info):
     return render_template('per_info_count.html', title=title, content=content)
 
 
+@index.route('/photo-upload')
+@login_required
+def photo_upload():
+    return render_template('photo_upload.html')
+
+
 @index.route('/upload', methods=['GET', 'POST'])
 @login_required
 def upload():
     if request.method == 'POST':
-        return jsonify({'result': request.get_array(field_name='file')})
-    user = current_user.username
-    return render_template('test.html')
-    # return '''
-    # <!doctype html>
-    # <title>Upload an excel file %s </title>
-    # <h1>Excel file upload (csv, tsv, csvz, tsvz only)</h1>
-    # <form action="" method=post enctype=multipart/form-data><p>
-    # <input type=file name=file><input type=submit value=Upload>
-    # </form>
-    # ''' % user
+        files = request.files.getlist('file_data')
+        file = files[0]
+        filename = file.filename
+        try:
+            id_card = filename.split('.')[0]
+        except:
+            per = None
+        else:
+            per = Personnel.query.filter_by(id_card=id_card).first()
+
+        if per is None:
+            return jsonify({'error': '身份证号不存在！'})
+        upload_path = os.path.join(os.getcwd(), "app", "static", "per_img")
+
+        if os.path.exists(upload_path):
+            pass
+        else:
+            os.mkdir(upload_path)
+
+        try:
+            src = os.path.join(upload_path, filename)
+            file.save(src)
+            per.photo_src = os.path.join("\static", "per_img", filename)
+            db.session.add(per)
+        except Exception as e:
+            print(e)
+            jsonify({'error': '发生错误'})
+    return jsonify({'success': '上传成功'})
 
 
 @index.route("/download/<string:filename>", methods=['GET'])
 def download(filename):
-    f = MakeExcel()
     directory = os.getcwd()
     response = make_response(
         send_from_directory(directory + '/files/', filename,

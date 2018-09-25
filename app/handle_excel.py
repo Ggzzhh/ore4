@@ -3,6 +3,7 @@ import os
 
 import xlrd, xlwt
 from pyexcel_xlsx import get_data
+from flask import session
 
 from app import db
 from app.models import System, Dept, DeptPro, DutyLevel, Duty, TitleName, \
@@ -123,6 +124,30 @@ class MakeExcel:
                     x += 1
             else:
                 pass
+
+        self.f.save('files/' + self.file_name)
+        return self.file_name
+
+    def make_count_excel(self):
+        sheet = self.f.add_sheet(u'sheet1', cell_overwrite_ok=True)
+        rows = list(session['count'].keys())
+        i = 0
+
+        # 表头
+        for row in rows:
+            j = 2
+            sheet.write_merge(0, 0, i, i+1, row,
+                              self.make_style(u'微软雅黑', 12, 1))
+            sheet.write(1, i, "名称", self.make_style(u'微软雅黑', 12, 1))
+            sheet.write(1, i+1, "人数", self.make_style(u'微软雅黑', 12, 1))
+            for field in session['count'][row]['fields']:
+                sheet.write(j, i, field['name'], self.make_style(u'微软雅黑'))
+                sheet.write(j, i+1, field['count'], self.make_style(u'微软雅黑'))
+                j += 1
+            sheet.write(j, i, "合计", self.make_style(u'微软雅黑', 14, 1))
+            sheet.write(j, i+1, session['count'][row]['count'],
+                        self.make_style(u'微软雅黑', 14, 1))
+            i += 2
 
         self.f.save('files/' + self.file_name)
         return self.file_name

@@ -120,13 +120,27 @@
   </main>
 
 {% endblock %}
-<footer class="">
-  {% block footer %}
-  {% endblock %}
-</footer>
+<div class="modal fade" id="loading">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-body">
+				文件生成中.....稍后将自动下载！
+			</div>
+
+			<!-- 模态框底部 -->
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary"
+								data-dismiss="modal">
+					关闭
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
 {{ bootstrap.load_js() }}
 {{ render_static('js', 'js/search.js') }}
 {{ render_static('js', 'js/main.js') }}
+{{ render_static('js', 'js/_ajax.js') }}
 <script>
     $(document).ready(function () {
         {% if current_user.username != config.ADMIN_USERNAME %}
@@ -171,6 +185,12 @@
             });
             $('#roster').bind('click', function () {
                 set_iframe_src('/per/roster')
+            });
+            $('#photo-upload').bind('click', function () {
+                set_iframe_src('/photo-upload')
+            });
+            $('#census').bind('click', function () {
+                get_export_url("/v1/make-census")
             });
         {% endif %}
     });

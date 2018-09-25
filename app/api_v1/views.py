@@ -10,6 +10,7 @@ from ..models import db, User, Role, Duty, DutyLevel, Dept, \
     Personnel, State, Resume, Title, Education, RAndP, Family
 from ..personnel.views import filter_query
 from ..tools import replace2none, str2time, filter_field
+from ..index.views import per_info_count
 
 
 @api_v1.route('/field', methods=["POST"])
@@ -428,3 +429,23 @@ def make_roster():
                             'url': url})
     return jsonify({'error': True,
                     'error_message': '请选择至少一个单位！'})
+
+
+@api_v1.route('/make-census')
+def make_census():
+    try:
+        me = MakeExcel(file_name="人数统计.xls")
+        per_info_count("duty")
+        per_info_count("dept")
+        per_info_count("title")
+        per_info_count("state")
+        filename = me.make_count_excel()
+        url = url_for('index.download', filename=filename)
+    except PermissionError:
+        return jsonify({'error': True,
+                        'error_message': '生成文件失败, '
+                                         '请先关闭当前名为“干部花名册.xls”的文件或者重命名!!'})
+    else:
+        return jsonify({'error': False,
+                        'message': '导出成功！即将开始下载！',
+                        'url': url})
