@@ -45,7 +45,7 @@ def manage_per():
                                'duty_level_id': info.get('duty_lv')})
         if name is None:
             abort(403)
-        if id_card is not None:
+        if id_card is not None and _id is None:
             id_card = Personnel.query.filter_by(id_card=id_card).first()
             if id_card is not None:
                 return jsonify({'error': True, 'error_message': '身份证号已存在! '

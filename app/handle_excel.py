@@ -22,9 +22,10 @@ class MakeExcel:
         self.edu_fields = ['学历', '入学时间', '毕业时间', '院校', '专业', '学习形式']
         self.family_fields = ['称谓', '姓名', '年龄', '政治面貌', '工作单位及职务']
 
-    def make_sample_file(self):
+    def make_sample_file(self, pers):
         sheet1 = self.f.add_sheet(u'sheet1', cell_overwrite_ok=True)
         rows = self._fields
+        col = 0
         rows.append('简历')
         rows.append('奖惩情况')
 
@@ -44,7 +45,32 @@ class MakeExcel:
             sheet1.col(i).width = 0x0d00
             sheet1.col(i).height = 500
 
+        for per in pers[:1]:
+            col += 1
+            i = 0
+            data = per.to_json()
+            for key in list(FIELDS.keys()):
+                print(FIELDS[key])
+                sheet1.write(col, i, data.get(FIELDS[key]), self.make_style(
+                    u'微软雅黑'))
+                i += 1
+
+            resumes = data.get('resumes')
+            if resumes:
+                resume = ""
+                for r in resumes:
+                    r = r.to_json()
+                    temp = [r.get('work_time') or '',
+                            r.get('dept') or '',
+                            r.get('duty') or '',
+                            r.get('identifier') or '']
+                    resume += " ".join(temp)
+                    resume += "\n"
+                sheet1.write(col, i, resume, self.make_style(u'微软雅黑'))
+                i += 1
+
         self.f.save('files/' + self.file_name)
+        return self.file_name
 
     def make_result_file(self, pers):
         sheet = self.f.add_sheet(u'sheet1', cell_overwrite_ok=True)
@@ -247,6 +273,7 @@ class MakeExcel:
 
             result.append(temp_dict)
         return result
+
 
     @staticmethod
     def make_style(font_name, color=1, font_color=0, border=1):
