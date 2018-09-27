@@ -45,14 +45,12 @@ class MakeExcel:
             sheet1.col(i).width = 0x0d00
             sheet1.col(i).height = 500
 
-        for per in pers[:1]:
+        for per in pers:
             col += 1
             i = 0
             data = per.to_json()
             for key in list(FIELDS.keys()):
-                print(FIELDS[key])
-                sheet1.write(col, i, data.get(FIELDS[key]), self.make_style(
-                    u'微软雅黑'))
+                sheet1.write(col, i, data.get(FIELDS[key]))
                 i += 1
 
             resumes = data.get('resumes')
@@ -60,14 +58,76 @@ class MakeExcel:
                 resume = ""
                 for r in resumes:
                     r = r.to_json()
-                    temp = [r.get('work_time') or '',
-                            r.get('dept') or '',
-                            r.get('duty') or '',
-                            r.get('identifier') or '']
+                    temp = [r.get('work_time') or '空',
+                            r.get('dept') or '空',
+                            r.get('duty') or '空',
+                            r.get('identifier') or '空']
                     resume += " ".join(temp)
                     resume += "\n"
-                sheet1.write(col, i, resume, self.make_style(u'微软雅黑'))
+                sheet1.write(col, i, resume)
                 i += 1
+            else:
+                i += 1
+
+            r_and_ps = data.get('r_and_ps')
+            r_and_p = ""
+            for rp in r_and_ps:
+                rp = rp.to_json()
+                temp = [
+                    rp.get('time') or '空',
+                    rp.get('dept') or '空',
+                    rp.get('reason') or '空',
+                    rp.get('result') or '空',
+                    rp.get('remarks') or '空',
+                    ]
+                r_and_p += " ".join(temp)
+                r_and_p += "\n"
+            sheet1.write(col, i, r_and_p)
+            i += 1
+
+            edus = list(data.get('edus'))
+            while len(edus) < 9:
+                edus.append('')
+            for edu in edus:
+                if edu and edu.to_json():
+                    edu = edu.to_json()
+                    sheet1.write(col, i, edu.get('lv') or "")
+                    i += 1
+                    sheet1.write(col, i, edu.get('enrolment_time') or "")
+                    i += 1
+                    sheet1.write(col, i, edu.get('graduation_time') or "")
+                    i += 1
+                    sheet1.write(col, i, edu.get('edu_name') or "")
+                    i += 1
+                    sheet1.write(col, i, edu.get('department') or "")
+                    i += 1
+                    sheet1.write(col, i, edu.get('learn_form') or "")
+                    i += 1
+                else:
+                    for j in range(6):
+                        sheet1.write(col, i, "")
+                        i += 1
+
+            families = list(data.get('families'))
+            while len(families) < 9:
+                families.append('')
+            for family in families:
+                if family:
+                    family = family.to_json()
+                    sheet1.write(col, i, family.get('relationship') or "")
+                    i += 1
+                    sheet1.write(col, i, family.get('name') or "")
+                    i += 1
+                    sheet1.write(col, i, family.get('age') or "")
+                    i += 1
+                    sheet1.write(col, i, family.get('p_c') or "")
+                    i += 1
+                    sheet1.write(col, i, family.get('workplace') or "")
+                    i += 1
+                else:
+                    for j in range(5):
+                        sheet1.write(col, i, "")
+                        i += 1
 
         self.f.save('files/' + self.file_name)
         return self.file_name
@@ -320,7 +380,7 @@ class UNIT:
                 db.session.add(s)
         print('系统分类更新完毕')
 
-    def initemp_dictept_pro(self):
+    def init_dept_pro(self):
         data = get_data(self.excel_unit)['单位属性']
         for pro in data:
             res = DeptPro.query.filter_by(dept_pro_name=pro[0]).first()
@@ -329,7 +389,7 @@ class UNIT:
                 db.session.add(s)
         print('单位属性分类更新完毕')
 
-    def initemp_dictept(self):
+    def init_dept(self):
         data = get_data(self.excel_unit)['单位']
         for dept in data:
             res = Dept.query.filter_by(dept_name=dept[0]).first()
@@ -364,7 +424,7 @@ class _Duty:
         self.duties= data['Sheet1']
         self.lvs = data['Sheet2']
 
-    def initemp_dictuty_lv(self):
+    def init_duty_lv(self):
         for lv in self.lvs:
             res = DutyLevel.query.filter_by(name=lv[0]).first()
             if res is None:
@@ -376,7 +436,7 @@ class _Duty:
                 db.session.add(res)
         print('职务级别数据已更新')
 
-    def initemp_dictuty(self):
+    def init_duty(self):
 
         for _duty in self.duties:
             res = Duty.query.filter_by(name=_duty[0]).first()
@@ -405,7 +465,7 @@ class _Title:
         self.lvs = data['Sheet2']
         self.depts = data['Sheet3']
 
-    def init_temp_dictept(self):
+    def init_t_dept(self):
         for _dept in self.depts:
             res = TitleDept.query.filter_by(name=_dept[0]).first()
             if res is None:

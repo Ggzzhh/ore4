@@ -21,8 +21,8 @@
 			<div class="explain">
 				<a href="/download/上传示例.xls" class="btn btn-primary"
 					 id="upload_example">下载示例excel表</a>
-				<a href = "/export_all" class="btn btn-success"
-					 id="exprot_all">导出所有成员资料</a>
+				<button class="btn btn-success"
+					 id="exprot_all">导出所有成员资料</button>
 			</div>
 
 			<div class="explain">使用excel文件导入</div>
@@ -57,6 +57,12 @@
       }
 
 			initFileInput('import_excel', '/import-excel');
+
+      $(document).ready(function () {
+					$('#exprot_all').bind('click', function () {
+							get_export_url("/v1/export_all")
+          });
+      })
 
 	</script>
 {% endblock %}

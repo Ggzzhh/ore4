@@ -279,6 +279,7 @@ class Personnel(db.Model):
     def from_json(data, id=None):
         if id is not None:
             per = Personnel.query.get_or_404(id)
+            per.name = data.get('name')
         else:
             per = Personnel(name=data.get('name'))
         per.phonetic = str2pinyin(per.name)
@@ -900,7 +901,7 @@ class State(db.Model):
         return "<状态: {}>".format(self.name)
 
 
-def run_only():
+def init_admin():
 
     def register_role():
         admin = Role(name='管理员', id=1)
@@ -919,4 +920,4 @@ def run_only():
 
     register_role()
     register_admin()
-    print('ok')
+    print('\n管理员与角色初始化完毕!')

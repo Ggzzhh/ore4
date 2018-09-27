@@ -45,14 +45,14 @@ def manage_per():
                                'duty_level_id': info.get('duty_lv')})
         if name is None:
             abort(403)
-        if id_card is not None and _id is None:
+        if id_card is not None:
             id_card = Personnel.query.filter_by(id_card=id_card).first()
             if id_card is not None:
-                return jsonify({'error': True, 'error_message': '身份证号已存在! '
-                                                                '不可重复！'})
+                if _id is None or (_id and str(id_card.id) != _id):
+                    return jsonify({'error': True,
+                                    'error_message': '身份证号已存在! 不可重复！'})
         if _id:
-            per = Personnel.query.get_or_404(_id)
-            per.from_json(info, _id)
+            per = Personnel.from_json(info, _id)
         else:
             per = Personnel.from_json(info)
 
@@ -272,7 +272,6 @@ def del_family(id):
 @login_required
 def save_img():
     data = request.get_data()
-    print(data)
     return jsonify({"data": "/static/image/timg.jpg"})
 
 
@@ -307,7 +306,6 @@ def choice_state():
             per = Personnel.query.get(_id)
             if per is not None:
                 state = State.query.get(int(_state))
-                print(_state)
                 if state:
                     per.state = state
                 else:
@@ -444,6 +442,26 @@ def make_census():
         return jsonify({'error': True,
                         'error_message': '生成文件失败, '
                                          '请先关闭当前名为“干部花名册.xls”的文件或者重命名!!'})
+    else:
+        return jsonify({'error': False,
+                        'message': '导出成功！即将开始下载！',
+                        'url': url})
+
+
+@api_v1.route("/export_all")
+@login_required
+def export_all():
+    try:
+        pers = Personnel.query.join(Duty).order_by(Duty.order,
+                                                   Duty.duty_level_id.desc(
+                                                   )).all()
+        me = MakeExcel(file_name='导出.xls')
+        filename = me.make_sample_file(pers=pers)
+        url = url_for('index.download', filename=filename)
+    except PermissionError:
+        return jsonify({'error': True,
+                        'error_message': '生成文件失败, '
+                                         '请先关闭当前名为“导出.xls”的文件或者重命名!!'})
     else:
         return jsonify({'error': False,
                         'message': '导出成功！即将开始下载！',

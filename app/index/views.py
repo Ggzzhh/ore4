@@ -34,8 +34,12 @@ def login():
                         datetime.now().day:
                     user.disable_time = None
                     user.retry_count = 10
+                    db.session.add(user)
                 if user.verify_password(password):
                     login_user(user)
+                    user.disable_time = None
+                    user.retry_count = 10
+                    db.session.add(user)
                     return redirect(request.args.get('next') or url_for(
                         'index.main'))
                 else:
@@ -461,17 +465,6 @@ def upload():
             print(e)
             jsonify({'error': '发生错误'})
     return jsonify({'success': '成员照片已更新! 请自行查看！'})
-
-
-@index.route("/export_all")
-@login_required
-def export_all():
-    pers = Personnel.query.join(Duty).order_by(Duty.order,
-                                               Duty.duty_level_id.desc(
-                                               )).all()
-    me = MakeExcel(file_name='导出.xls')
-    filename = me.make_sample_file(pers=pers)
-    return redirect(url_for('index.download', filename=filename))
 
 
 @index.route("/download/<string:filename>", methods=['GET'])

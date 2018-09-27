@@ -2,24 +2,25 @@
 # -*- coding: utf-8 -*-
 import os
 
-
 from flask_script import Manager, Shell
-from flask_migrate import Migrate, MigrateCommand
+from flask_migrate import Migrate, MigrateCommand, upgrade
 
 from app import create_app, db
 from app.models import User, Role, Dept, Personnel, DeptPro, Duty, DutyLevel,\
     Title, TitleLv, TitleDept, EduLevel, State, System, Education,\
     Resume, RAndP
 
-app = create_app('development')
+# app = create_app('development')
+app = create_app('production')
 manager = Manager(app)
 migrate = Migrate(app, db)
 
 
 @manager.shell
 def make_shell_context():
-    return dict(app=app, db=db, user=User, role=Role, dept=Dept,
-                per=Personnel, duty=Duty, title=Title, edu=Education, rp=RAndP)
+    return dict(app=app, db=db, user=User, role=Role,
+                per=Personnel, duty=Duty, title=Title,
+                edu=Education, rp=RAndP, dept=Dept)
 
 
 manager.add_command("shell", Shell(make_context=make_shell_context))
@@ -27,23 +28,24 @@ manager.add_command('db', MigrateCommand)
 
 
 @manager.command
+def init_admin():
+    from app.models import init_admin
+    init_admin()
+
+
+@manager.command
 def init():
-    from app.models import run_only
+    from app.handle_excel import UNIT, _Duty, _Title
     from app.sql_init import init_edu_lv, init_learn_form, \
         init_state, init_nation
-    run_only()
+    upgrade()
+    unit = UNIT()
+    duty = _Duty()
+    title = _Title()
     init_edu_lv()
     init_learn_form()
     init_state()
     init_nation()
-
-
-@manager.command
-def ex_test():
-    from app.handle_excel import UNIT, _Duty, _Title
-    unit = UNIT()
-    duty = _Duty()
-    title = _Title()
     unit.init_system()
     unit.init_dept_pro()
     unit.init_dept()
@@ -53,15 +55,6 @@ def ex_test():
     title.init_t_lvs()
     title.init_t()
     db.session.commit()
-
-
-@manager.command
-def db_test():
-    # from app.sql_init import add_per
-    # add_per()
-    from app.handle_excel import MakeExcel
-    f = MakeExcel(file_name="上传示例.xls")
-    f.make_sample_file()
 
 
 if __name__ == "__main__":
