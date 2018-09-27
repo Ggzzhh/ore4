@@ -587,7 +587,14 @@ class Education(db.Model):
     def from_json(data):
         _id = data.get('id')
         edu_name = data.get('edu_name')
-        edu_level = EduLevel.query.get(data.get('edu_level_id'))
+
+        if data.get('edu_level_id'):
+            edu_level = EduLevel.query.get(data.get('edu_level_id'))
+        elif data.get('edu_level'):
+            edu_level = EduLevel.query.filter_by(level=data.get('edu_level')).first()
+        else:
+            edu_level = None
+
         if edu_level is None or edu_name is None:
             return None
         if _id:
@@ -600,7 +607,11 @@ class Education(db.Model):
         edu.remarks = data.get('remarks')
         edu.enrolment_time = str2time(data.get('enrolment_time'))
         edu.graduation_time = str2time(data.get('graduation_time'))
-        edu.learn_form = LearnForm.query.get(data.get('learn_id'))
+        if data.get('learn_id'):
+            edu.learn_form = LearnForm.query.get(data.get('learn_id'))
+        elif data.get('learn'):
+            edu.learn_form = LearnForm.query.filter_by(name=data.get(
+                'learn')).first()
         return edu
 
     def __repr__(self):

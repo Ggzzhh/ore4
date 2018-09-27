@@ -57,8 +57,11 @@ def ex_test():
 
 @manager.command
 def db_test():
-    from app.sql_init import add_per
-    add_per()
+    # from app.sql_init import add_per
+    # add_per()
+    from app.handle_excel import MakeExcel
+    f = MakeExcel(file_name="上传示例.xls")
+    f.make_sample_file()
 
 
 if __name__ == "__main__":

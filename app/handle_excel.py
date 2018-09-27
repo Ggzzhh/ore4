@@ -18,21 +18,24 @@ class MakeExcel:
         self.fields = [] if \
             fields is None or not isinstance(fields, list) else fields
         self.f = xlwt.Workbook()
+        self._fields = list(FIELDS.keys())
+        self.edu_fields = ['学历', '入学时间', '毕业时间', '院校', '专业', '学习形式']
+        self.family_fields = ['称谓', '姓名', '年龄', '政治面貌', '工作单位及职务']
 
     def make_sample_file(self):
         sheet1 = self.f.add_sheet(u'sheet1', cell_overwrite_ok=True)
-        rows = list(FIELDS.keys())
-        edu_fields = ['学历', '入学时间', '毕业时间', '院校', '专业', '学习形式']
-        family_fields = ['称谓', '姓名', '年龄', '政治面貌', '工作单位及职务']
+        rows = self._fields
+        rows.append('简历')
+        rows.append('奖惩情况')
 
         # 添加九个学历列
         for i in range(1, 10):
-            for field in edu_fields:
+            for field in self.edu_fields:
                 rows.append(field + str(i))
 
         # 添加九个家庭成员
         for i in range(1, 10):
-            for field in family_fields:
+            for field in self.family_fields:
                 rows.append(field + str(i))
 
         # 生成第一行
@@ -41,7 +44,7 @@ class MakeExcel:
             sheet1.col(i).width = 0x0d00
             sheet1.col(i).height = 500
 
-        self.f.save(self.file_name)
+        self.f.save('files/' + self.file_name)
 
     def make_result_file(self, pers):
         sheet = self.f.add_sheet(u'sheet1', cell_overwrite_ok=True)
@@ -152,6 +155,99 @@ class MakeExcel:
         self.f.save('files/' + self.file_name)
         return self.file_name
 
+    def file2json(self, src):
+        file = xlrd.open_workbook(src)
+        sheet = file.sheet_by_index(0)
+        nrow = sheet.nrows
+        ncol = sheet.ncols
+        fields = self._fields
+        result = []
+
+        def check_excel(names, fields):
+            for field in fields:
+                if field not in names:
+                    return True
+            return False
+
+        if ncol != 145 or check_excel(sheet.row_values(0), fields):
+            raise TypeError('表格错误！请下载示例表格，在其中加入内容并上传！')
+
+        for i in range(ncol):
+            if sheet.cell(1, i).ctype == 3:
+                raise TypeError('Excel中存在时间格式！请设置单元格格式为文本！')
+        rows = self._fields
+
+        for i in range(1, nrow):
+            temp = sheet.row_values(i)
+            temp_dict = {}
+            for key in rows:
+                temp_dict[FIELDS[key]] = temp.pop(0)
+
+            temp_dict['resumes'] = []
+            temp_dict['r_and_ps'] = []
+
+            resumes = temp.pop(0).split('\n')
+            r_and_ps = temp.pop(0).split('\n')
+
+            for resume in resumes:
+                t = {}
+                resume = resume.split(' ')
+                if len(resume) < 2 or resume[0] == '':
+                    break
+                while len(resume) < 4:
+                    resume.append('空')
+                t['work_time'] = resume[0]
+                t['dept'] = resume[1]
+                t['duty'] = resume[2]
+                t['identifier'] = resume[3]
+                temp_dict['resumes'].append(t)
+
+            for rp in r_and_ps:
+                t = {}
+                rp = rp.split(' ')
+                if len(resume) < 2 or resume[0] == '':
+                    break
+                while len(rp) < 5:
+                    rp.append('空')
+                t['time'] = rp[0]
+                t['dept'] = rp[1]
+                t['reason'] = rp[2]
+                t['result'] = rp[3]
+                t['remarks'] = rp[4]
+                temp_dict['r_and_ps'].append(t)
+
+            edus = []
+            for i in range(9):
+                edu = {}
+                edu['edu_level'] = temp.pop(0)
+                edu['enrolment_time'] = temp.pop(0)
+                edu['graduation_time'] = temp.pop(0)
+                edu['edu_name'] = temp.pop(0)
+                edu['department'] = temp.pop(0)
+                edu['learn'] = temp.pop(0)
+                for key in edu.keys():
+                    if edu[key] != '' and edu[key] and len(edu[key]) > 1:
+                        edus.append(edu)
+                        break
+            temp_dict['edus'] = edus
+
+            families = []
+            for i in range(9):
+                family = {}
+                family['relationship'] = temp.pop(0)
+                family['name'] = temp.pop(0)
+                family['age'] = temp.pop(0)
+                family['p_c'] = temp.pop(0)
+                family['workplace'] = temp.pop(0)
+                for key in family.keys():
+                    if family[key] != '' and len(family[key]) > 1:
+                        families.append(family)
+                        break
+            temp_dict['families'] = families
+
+            result.append(temp_dict)
+        return result
+
     @staticmethod
     def make_style(font_name, color=1, font_color=0, border=1):
         style = xlwt.XFStyle()
@@ -197,7 +293,7 @@ class UNIT:
                 db.session.add(s)
         print('系统分类更新完毕')
 
-    def init_dept_pro(self):
+    def initemp_dictept_pro(self):
         data = get_data(self.excel_unit)['单位属性']
         for pro in data:
             res = DeptPro.query.filter_by(dept_pro_name=pro[0]).first()
@@ -206,7 +302,7 @@ class UNIT:
                 db.session.add(s)
         print('单位属性分类更新完毕')
 
-    def init_dept(self):
+    def initemp_dictept(self):
         data = get_data(self.excel_unit)['单位']
         for dept in data:
             res = Dept.query.filter_by(dept_name=dept[0]).first()
@@ -241,7 +337,7 @@ class _Duty:
         self.duties= data['Sheet1']
         self.lvs = data['Sheet2']
 
-    def init_duty_lv(self):
+    def initemp_dictuty_lv(self):
         for lv in self.lvs:
             res = DutyLevel.query.filter_by(name=lv[0]).first()
             if res is None:
@@ -253,7 +349,7 @@ class _Duty:
                 db.session.add(res)
         print('职务级别数据已更新')
 
-    def init_duty(self):
+    def initemp_dictuty(self):
 
         for _duty in self.duties:
             res = Duty.query.filter_by(name=_duty[0]).first()
@@ -282,7 +378,7 @@ class _Title:
         self.lvs = data['Sheet2']
         self.depts = data['Sheet3']
 
-    def init_t_dept(self):
+    def init_temp_dictept(self):
         for _dept in self.depts:
             res = TitleDept.query.filter_by(name=_dept[0]).first()
             if res is None:
@@ -334,3 +430,4 @@ class _Title:
             return temp
         except:
             return None
+

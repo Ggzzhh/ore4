@@ -3,16 +3,29 @@
 {% block head %}
 	{{ render_static('css', 'css/fileinput.min.css') }}
 	{{ render_static('css', 'css/b3.css') }}
+	<style>
+	.explain {
+		margin-bottom: 1rem;
+		font-size: 1.5rem;
+		font-weight: 600;
+	}
+	</style>
 {% endblock %}
 
 {% block content %}
 	<div class="iframe-content">
 		<div class="search d-flex flex-row">
-			<div class="title">批量导入照片</div>
+			<div class="title">导入成员</div>
 		</div>
 		<div class="container mt-5" style="height: 500px">
-			<input id="photo-upload" type="file" multiple="multiple"
-						 accept="image/jpeg, image/png, image/gif">
+			<div class="explain">
+				<a href="/download/上传示例.xls" class="btn btn-primary"
+					 id="upload_example">下载示例excel表</a>
+				<button class="btn btn-success" id="exprot_all">导出所有成员资料</button>
+			</div>
+
+			<div class="explain">使用excel文件导入</div>
+			<input id="import_excel" type="file" accept="application/vnd.ms-excel">
 		</div>
 	</div>
 {% endblock %}
@@ -26,19 +39,23 @@
           control.fileinput({
               language: 'zh', //设置语言
               uploadUrl: uploadUrl, //上传的地址
-              allowedFileExtensions : ['jpg', 'png','gif'],//接收的文件后缀
-              showCaption: false,
+              allowedFileExtensions : ['xls'],//接收的文件后缀
+              showCaption: true,
+							dropZoneEnabled: false,
               showUpload: true,
               showRemove: true,
               showClose: true,
               initialPreviewShowDelete: true,
               browseClass: 'btn btn-primary',
-              maxFileCount: 0
+              maxFileCount: 1
           });
+          $('#import_excel').on('fileuploaded', function (event, data, previewId, index) {
+							alert(data.response.success);
+							// window.parent.location.reload();
+          })
       }
 
-      $(document).ready(function () {
-          initFileInput('photo-upload', '/upload')
-      })
+			initFileInput('import_excel', '/import-excel');
+
 	</script>
 {% endblock %}

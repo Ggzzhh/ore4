@@ -189,6 +189,9 @@
             $('#photo-upload').bind('click', function () {
                 set_iframe_src('/photo-upload')
             });
+            $('#import-excel').bind('click', function () {
+                set_iframe_src('/import-excel')
+            });
             $('#census').bind('click', function () {
                 get_export_url("/v1/make-census")
             });

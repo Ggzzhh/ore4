@@ -47,7 +47,7 @@ def manage_per():
             abort(403)
         if id_card is not None:
             id_card = Personnel.query.filter_by(id_card=id_card).first()
-            if id_card is not None and _id is None:
+            if id_card is not None:
                 return jsonify({'error': True, 'error_message': '身份证号已存在! '
                                                                 '不可重复！'})
         if _id:
@@ -324,7 +324,6 @@ def choice_state():
 @login_required
 def work_move():
     data = request.get_json()
-    print(data)
     _id = data.get('id')
     dept_id = data.get('dept_id')
     duty_name = data.get('duty_name')

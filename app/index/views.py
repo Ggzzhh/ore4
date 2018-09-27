@@ -11,7 +11,8 @@ from sqlalchemy import or_, and_
 
 from . import index
 from ..models import db, User, Dept, System, Title, Duty, DutyLevel, \
-    DeptPro, Personnel, State, TitleName, TitleLv, TitleDept
+    DeptPro, Personnel, State, TitleName, TitleLv, TitleDept, Resume, RAndP, \
+    Education, Family
 from ..const import NAV, FIELDS
 from ..tools import filter_field
 from ..handle_excel import MakeExcel
@@ -350,6 +351,86 @@ def photo_upload():
     return render_template('photo_upload.html')
 
 
+@index.route('/import-excel', methods=["GET", "POST"])
+@login_required
+def import_excel():
+    if request.method == "GET":
+        return render_template('import_excel.html')
+    else:
+        file = request.files.get('file_data')
+        filename = file.filename
+        upload_path = os.path.join(os.getcwd(), "files")
+
+        if not os.path.exists(upload_path):
+            os.mkdir(upload_path)
+
+        try:
+            src = os.path.join(upload_path, "上传.xls")
+            file.save(src)
+            me = MakeExcel(file_name="上传.xls")
+            per_jsons = me.file2json(src)
+            msg = '导入记录：\n'
+            for _json in per_jsons:
+                t = Personnel.query.filter_by(id_card=_json.get('id_card')).first()
+                if t:
+                    msg += '员工<{}>已存在！修改内容请自行前往该员工详情页！\n'.format(t.name)
+                    continue
+                per = Personnel.from_json(_json)
+
+                state = State.query.filter_by(name=_json.get('state')).first()
+                if state:
+                    per.state = state
+
+                dept = Dept.query.filter_by(dept_name=_json.get(
+                    'dept_name')).first()
+                if dept:
+                    per.dept = dept
+
+                duty = Duty.query.filter_by(name=_json.get('duty_name')).first()
+                if duty is None:
+                    duty_lv = DutyLevel.query.filter_by(name=_json.get(
+                        'duty_lv')).first()
+                    if duty_lv:
+                        duty = Duty(name=_json.get('duty_name'), duty_level=duty_lv)
+                if duty:
+                    per.duty = duty
+
+                title = TitleName.query.filter_by(name=_json.get(
+                    'title_name')).first()
+                if title:
+                    title = Title(name=title, engage=True)
+                if title:
+                    per.titlies.append(title)
+
+                for resume in _json.get('resumes'):
+                    r = Resume.from_json(resume)
+                    if r:
+                        per.resumes.append(r)
+
+                for r_and_p in _json.get('r_and_ps'):
+                    r = RAndP.from_json(r_and_p)
+                    if r:
+                        per.r_and_ps.append(r)
+
+                for edu in _json.get('edus'):
+                    r = Education.from_json(edu)
+                    if r:
+                        per.edus.append(r)
+
+                for family in _json.get('families'):
+                    r = Family.from_json(family)
+                    if r:
+                        per.families.append(r)
+
+                db.session.add(per)
+                msg += "员工<{}>导入完毕!\n".format(per.name)
+
+        except Exception as e:
+            return jsonify({'error': str(e)})
+        msg += "end!\n"
+        return jsonify({'success': msg})
+
+
 @index.route('/upload', methods=['GET', 'POST'])
 @login_required
 def upload():
@@ -368,9 +449,7 @@ def upload():
             return jsonify({'error': '身份证号不存在！'})
         upload_path = os.path.join(os.getcwd(), "app", "static", "per_img")
 
-        if os.path.exists(upload_path):
-            pass
-        else:
+        if not os.path.exists(upload_path):
             os.mkdir(upload_path)
 
         try:
@@ -381,7 +460,7 @@ def upload():
         except Exception as e:
             print(e)
             jsonify({'error': '发生错误'})
-    return jsonify({'success': '上传成功'})
+    return jsonify({'success': '成员照片已更新! 请自行查看！'})
 
 
 @index.route("/download/<string:filename>", methods=['GET'])

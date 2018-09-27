@@ -33,7 +33,14 @@ def str2pinyin(_str):
 def str2time(_str):
     if _str is None or _str == "" or _str == "None":
         return
-    return datetime.datetime.strptime(_str, "%Y年%m月%d日")
+    _str = str(_str)
+    if '年' in _str:
+        result = datetime.datetime.strptime(_str, "%Y年%m月%d日")
+    elif '-' in _str:
+        result = datetime.datetime.strptime(_str, "%Y-%m-%d")
+    else:
+        result = None
+    return result
 
 
 def time2str(time):

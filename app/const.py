@@ -3,7 +3,7 @@ NAV = {
         'id': 'dropdown_info',
         'data': {
             '新增人员': 'new-per',
-            'excel导入': '#',
+            'excel导入/导出': 'import-excel',
             '照片导入': 'photo-upload'
         }
     },
