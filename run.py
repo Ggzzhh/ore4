@@ -9,4 +9,7 @@ from config import PORT
 http_server = HTTPServer(WSGIContainer(app))
 print('服务启动成功! 端口：{}'.format(PORT))
 http_server.listen(PORT)
-IOLoop.instance().start()
+try:
+    IOLoop.instance().start()
+except KeyboardInterrupt:
+    IOLoop.instance().stop()
