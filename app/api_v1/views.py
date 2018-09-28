@@ -169,6 +169,9 @@ def manage_duty():
         db.session.add(duty)
     elif request.method == "DELETE":
         duty = Duty.query.get_or_404(res['id'])
+        if duty and duty.personnels.all() != []:
+            return jsonify({'error': True, 'error_message':
+                '该职务下还有员工存在，无法删除！请先删除或转移该职务下所有员工！'})
         db.session.delete(duty)
         message = '删除成功'
     return jsonify({'error': False, 'message': message})
@@ -194,6 +197,9 @@ def manage_dept():
         db.session.add(temp)
     elif request.method == "DELETE":
         dept = Dept.query.get_or_404(res['id'])
+        if dept and dept.personnels.all() != []:
+            return jsonify({'error': True, 'error_message':
+                '该单位中还有员工存在，无法删除！请先删除或转移该单位中所有员工！'})
         db.session.delete(dept)
         message = '删除成功'
     return jsonify({'error': False, 'message': message})

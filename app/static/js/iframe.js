@@ -139,15 +139,11 @@ $('#choice_state').bind('click', function () {
 
 $('#choice-s-btn').bind('click', function () {
     var per_id = $('input[name="per-id"]:checked');
-    if (per_id.length > 1) {
-        alert('选择人数不要超过1个！谢谢合作！');
+    if (per_id.length === 0) {
+        alert('请选择至少一个人进行调动！');
         return false;
     }
-    else if (per_id.length === 0) {
-        alert('请选择一个人进行调动！');
-        return false;
-    }
-    this.modal('show');
+    $('#choice-state').modal('show');
 });
 
 $('#w-m-btn').bind('click', function () {

@@ -102,7 +102,6 @@ def search_result():
         # print(form)
 
         for e in form:
-            print(form[e])
             if form[e] != '':
                 is_none = False
                 break

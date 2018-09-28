@@ -58,7 +58,7 @@ def login():
                            system_name=current_app.config['SYSTEMNAME'])
 
 
-@index.route('/main')
+@index.route('/')
 @login_required
 def main():
     nav_data = NAV

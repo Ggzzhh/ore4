@@ -259,15 +259,24 @@ class Personnel(db.Model):
     # 在聘职称名id
     use_title_name_id = db.Column(db.Integer)
     # 家庭情况
-    families = db.relationship('Family', backref='personnel', lazy='joined')
+    families = db.relationship('Family', backref='personnel', lazy='joined',
+                               cascade='all, delete-orphan',
+                               passive_deletes=True)
     # 奖惩情况
-    r_and_ps = db.relationship('RAndP', backref='personnel', lazy='joined')
+    r_and_ps = db.relationship('RAndP', backref='personnel', lazy='joined',
+                               cascade='all, delete-orphan',
+                               passive_deletes=True)
     # 学历
-    edus = db.relationship('Education', backref='personnel', lazy='joined')
+    edus = db.relationship('Education', backref='personnel', lazy='joined',
+                           cascade='all, delete-orphan', passive_deletes=True)
     # 简历
-    resumes = db.relationship('Resume', backref='personnel', lazy='joined')
+    resumes = db.relationship('Resume', backref='personnel', lazy='joined',
+                              cascade='all, delete-orphan',
+                              passive_deletes=True)
     # 职称
-    titlies = db.relationship('Title', backref='personnel', lazy='joined')
+    titlies = db.relationship('Title', backref='personnel', lazy='joined',
+                              cascade='all, delete-orphan',
+                              passive_deletes=True)
     # 职务
     duty_id = db.Column(db.Integer, db.ForeignKey('duties.id'))
     # 单位
@@ -800,7 +809,7 @@ class Title(db.Model):
         name = TitleName.query.get(data.get('name_id'))
         major = data.get('major')
         _id = data.get('id')
-        if name is None or major is None:
+        if name is None:
             return None
         if _id is None:
             temp = Title(name=name)
@@ -813,6 +822,7 @@ class Title(db.Model):
             temp.engage = True
         temp.engage_time = str2time(data.get('engage_time'))
         temp.get_time = str2time(data.get('get_time'))
+        temp.engage = True if data.get('engage') == 'true' else False
         return temp
 
     def __repr__(self):

@@ -7,3 +7,4 @@
        `python manage.py db upgrade`
        `python manage.py init_admin`
        `python manage.py init`
+    4. `python run.py`

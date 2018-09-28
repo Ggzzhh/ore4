@@ -2,91 +2,91 @@
 {% import 'per/_models.html' as model %}
 {% from 'bootstrap/utils.html' import render_static %}
 {% block head %}
-  <style>
-    .per-content {
-      height: 100%;
-      width: 100%;
-    }
-    .per-table {
-      padding: 1.2rem 1rem;
-      width: 100%;
-      height: 100%;
-    }
-    .tab-content {
-      width: 100%;
-      min-height: 90%;
-    }
-    .fade {
-      width: 100%;
-      height: 90%;
-    }
-    #info-tbody td {
-      font-size: 0.85rem;
-      max-height: 1rem;
-    }
+	<style>
+		.per-content {
+			height: 100%;
+			width: 100%;
+		}
+		.per-table {
+			padding: 1.2rem 1rem;
+			width: 100%;
+			height: 100%;
+		}
+		.tab-content {
+			width: 100%;
+			min-height: 90%;
+		}
+		.fade {
+			width: 100%;
+			height: 90%;
+		}
+		#info-tbody td {
+			font-size: 0.85rem;
+			max-height: 1rem;
+		}
 
-    #info-tbody td>span{
-      display: block;
-      padding-top: 0.4rem;
-    }
+		#info-tbody td>span{
+			display: block;
+			padding-top: 0.4rem;
+		}
 
-    #info-tbody tr > td > div{
-      vertical-align: center;
-      display: inline-block;
-      padding-top: 0.4rem;
-      min-width: 6rem;
-    }
+		#info-tbody tr > td > div{
+			vertical-align: center;
+			display: inline-block;
+			padding-top: 0.4rem;
+			min-width: 6rem;
+		}
 
-    form#add-per {
-      width: 100%;
-      height: 100%;
-    }
-    td.index, th.index{
-      width: 3em;
-      padding-top: 1em;
-    }
-    table tbody{
-      font-size: 0.875rem;
-    }
-    td.index {
-      padding-top: 1.1rem;
-    }
-    td select {
-      min-width: 5rem;
-    }
+		form#add-per {
+			width: 100%;
+			height: 100%;
+		}
+		td.index, th.index{
+			width: 3em;
+			padding-top: 1em;
+		}
+		table tbody{
+			font-size: 0.875rem;
+		}
+		td.index {
+			padding-top: 1.1rem;
+		}
+		td select {
+			min-width: 5rem;
+		}
 
-    @media (min-width: 1400px){
-      #info-tbody td>span {
-        min-width: 6rem;
-      }
-    }
+		@media (min-width: 1400px){
+			#info-tbody td>span {
+				min-width: 6rem;
+			}
+		}
 
-  </style>
+	</style>
 {% endblock %}
 {% block content %}
-  <div class="iframe-content">
-    <div class="search d-flex mb-2">
-      <div class="title">{{ title }}</div>
-    </div>
-    <div class="per-content">
-      <form id="{{ form_id }}">
-        {% include 'per/infotable.html' %}
-        {% if current_user.role.id == 1 %}
-          <div class="input-group justify-content-end">
-          <button type="submit" class="btn btn-outline-dark
+	<div class="iframe-content">
+		<div class="search d-flex mb-2">
+			<div class="title">{{ title }}</div>
+		</div>
+		<div class="per-content">
+			<form id="{{ form_id }}">
+				{% include 'per/infotable.html' %}
+				{% if current_user.role.id == 1 %}
+					<div class="input-group justify-content-end">
+					<button type="submit" class="btn btn-outline-dark
 				mr-3">提交</button>
-          <button type="reset" class="btn btn-outline-dark
+					<button type="reset" class="btn btn-outline-dark
 				mr-3">重置</button>
-        {% endif %}
-        </div>
-      </form>
-    </div>
-  </div>
+				{% endif %}
+				</div>
+			</form>
+		</div>
+	</div>
 {% endblock %}
 {% block script %}
-  {{ render_static('js', 'js/per.js') }}
-  {{ render_static('js', 'js/main.js') }}
-  <script>
+	{{ render_static('js', 'js/per.js') }}
+	{{ render_static('js', 'js/main.js') }}
+	<script>
       var temp;
 
       var img_src = "/static/image/timg.jpg";
@@ -210,10 +210,10 @@
               }
 
               if ($('#id_card').val() === "" || $('#id_card').val().length !==
-									18){
-									alert('身份证号不能为空或位数不够！');
-									return false;
-							}
+                  18){
+                  alert('身份证号不能为空或不是18位！');
+                  return false;
+              }
 
               var data = JSON.stringify({
                   families: get_families(),
@@ -249,6 +249,11 @@
                   alert('职务不能为空！');
                   return false;
               }
+              if ($('#id_card').val() === "" || $('#id_card').val().length !==
+                  18){
+                  alert('身份证号不能为空或不是18位！');
+                  return false;
+              }
               var url = window.location.href;
               var pros = url.split('/');
               var id = pros[pros.length - 1];
@@ -264,7 +269,7 @@
 
               var _success = function (data) {
                   alert(data.message);
-                  location.href = '/search';
+                  location.reload();
               };
 
               a_json(
@@ -277,6 +282,6 @@
               return false;
           })
       });
-  </script>
+	</script>
 
 {% endblock %}
