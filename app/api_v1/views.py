@@ -472,3 +472,30 @@ def export_all():
         return jsonify({'error': False,
                         'message': '导出成功！即将开始下载！',
                         'url': url})
+
+
+@api_v1.route("/make-ids", methods=["POST"])
+@login_required
+def make_ids():
+    ids = request.get_json().get('ids')
+    if ids and isinstance(ids, list):
+        try:
+            pers = Personnel.query.join(Duty).filter(Personnel.id.in_(
+                ids)).order_by(Duty.order,Duty.duty_level_id.desc()).all()
+            fields = current_user.get_fields()
+            me = MakeExcel(fields=fields, file_name='部分人员导出.xls')
+            pers = filter_field(pers, fields)
+
+            filename = me.make_result_file(pers=pers)
+            url = url_for('index.download', filename=filename)
+        except PermissionError:
+            return jsonify({'error': True,
+                            'error_message': '生成文件失败, '
+                                             '请先关闭当前名为“部分人员导出.xls”的文件或者重命名!!'})
+        else:
+            return jsonify({'error': False,
+                            'message': '导出成功！即将开始下载！',
+                            'url': url})
+    else:
+        return jsonify({'error': True,
+                        'error_message': '没有人员传入!'})

@@ -6,6 +6,24 @@ jQuery.download = function(url, method, filedir, filename){
         .appendTo('body').submit().remove();
 };
 
+function get_export_ids() {
+    var ids= [];
+    $('input[name="per-id"]:checked').map(function (i, e) {
+        ids.push($(e).val())
+    });
+    if (ids.length === 0) {
+        alert('请选择至少一个人进行导出！');
+        return false;
+    }
+    get_export_url(
+        '/v1/make-ids',
+        'POST',
+        JSON.stringify({
+            ids: ids
+        })
+    )
+}
+
 function get_export_url(url, type, _data) {
     if (type == null){
         type = "GET"

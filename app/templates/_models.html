@@ -22,6 +22,9 @@
                             {% if field in check %}
                            checked
                             {% endif %}
+                            {% if field == "姓名" %}
+                              checked disabled
+                            {% endif %}
                     />
 										<label for="{{ field }}" class="form-check-label">{{ field }}</label>
 									</span>

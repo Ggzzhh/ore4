@@ -89,7 +89,16 @@
 			</ul>
 
 			<ul class="navbar-nav align-items-center">
-
+        <li class="nav-item">
+					<span class="navbar-text mr-3">
+						<a onclick="forward()"> 前进</a>
+					</span>
+				</li>
+        <li class="nav-item">
+					<span class="navbar-text mr-3">
+						<a onclick="back()"> 后退</a>
+					</span>
+				</li>
 				<li class="nav-item">
 					<span class="navbar-text mr-3">
 						<a href="#" class="" data-toggle="modal" data-target="#help"> 帮助</a>
@@ -208,6 +217,12 @@
     }
     function set_iframe_src(url) {
         $('iframe').attr('src', url)
+    }
+    function back() {
+        window.history.go(-1);
+    }
+    function forward() {
+        window.history.go(1);
     }
 </script>
 </body>

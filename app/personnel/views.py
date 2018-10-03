@@ -334,8 +334,6 @@ def filter_query(query, is_none=True, is_all=False):
         is_none = False
         query = query.filter(Duty.name.op('regexp')(re_duty))
 
-
-
     if is_none:
         query = query.filter(Personnel.id < 0)
 

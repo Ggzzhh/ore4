@@ -430,7 +430,8 @@ def import_excel():
                 msg += "员工<{}>导入完毕!\n".format(per.name)
 
         except Exception as e:
-            return jsonify({'error': str(e)})
+            print(e)
+            return jsonify({'error': "出现未知错误! 请重试或联系程序员！"})
         msg += "end!\n"
         return jsonify({'success': msg})
 
