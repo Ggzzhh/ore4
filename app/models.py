@@ -308,7 +308,12 @@ class Personnel(db.Model):
         per.photo_src = photo_src
         per.id_card = data.get('id_card')
         per.birthday = str2time(data.get('birthday'))
-        per.age = data.get('age')
+        age = data.get('age')
+        try:
+            age = int(age)
+        except:
+            age = None
+        per.age = age
         per.policital_status = data.get('policital_status')
         per.identity = data.get('identity')
         per.party_member = str2time(data.get('party_member'))
