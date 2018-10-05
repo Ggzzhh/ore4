@@ -158,12 +158,20 @@
               <div class="modal-body">
                 <div class="input-group mb-3">
                   <div class="input-group-prepend">
+                    <span class="input-group-text">单位系统</span>
+                  </div>
+                  <select name="d-system" id="d-system" class="form-control">
+                    {% for system in systems %}
+                      <option value="{{ system[1] }}">{{ system[1] }}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend">
                     <span class="input-group-text">单位名称</span>
                   </div>
                   <select name="dept-id" id="dept-id" class="form-control">
-                    {% for dept in dept_names %}
-                      <option value="{{ dept[0] }}">{{ dept[1] }}</option>
-                    {% endfor %}
+
                   </select>
                 </div>
                 <div class="input-group mb-3">
@@ -220,4 +228,37 @@
       </div>
     </div>
   </div>
+{% endblock %}
+{% block script %}
+  <script>
+      var system = {};
+      {% for dept in dept_names %}
+          if (system['{{ dept[2] }}'] == null)
+              system['{{ dept[2] }}'] = [];
+          system['{{ dept[2] }}'].push({
+              id: '{{ dept[0] }}',
+              name: '{{ dept[1] }}'
+          })
+      {% endfor %}
+
+      function append_dept(key) {
+          var s = system[key];
+          $('#dept-id').empty();
+          for (var i=0; i < s.length; i++){
+              $('#dept-id').append(
+                  "<option value='"+s[i].id+"'>"+s[i].name+"</option>"
+              )
+          }
+      }
+
+      $(document).ready(function () {
+          var key = $('#d-system').val();
+          append_dept(key);
+
+          $('#d-system').change(function () {
+              var key = $('#d-system').val();
+              append_dept(key);
+          });
+      });
+  </script>
 {% endblock %}

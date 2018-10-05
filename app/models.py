@@ -167,7 +167,7 @@ class Dept(db.Model):
     @staticmethod
     def to_arr():
         names = []
-        for dept in Dept.query.all():
+        for dept in Dept.query.order_by(Dept.order.desc()).all():
             names.append([dept.id, dept.dept_name, dept.system.system_name,
                           dept.dept_pro.dept_pro_name])
         return names

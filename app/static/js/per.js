@@ -185,7 +185,7 @@ $(document).ready(function () {
     $('#dept_name').bind('change', dept_name_change);
     $('#birthday').bind('change', function () {
         var birthday = $('#birthday').val();
-        var age = moment(birthday, "YYYY年MM月DD日").fromNow(true);
+        var age = moment(birthday, "YYYY-MM-DD").fromNow(true);
         var re = /(\d{1,2}) [年]/;
         if (re.test(age))
             $('#age').val(re.exec(age)[1]);

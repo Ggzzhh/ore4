@@ -77,6 +77,7 @@ def search():
     all_fields = list(FIELDS.keys())
     fields = current_user.get_fields()
     dept_id = request.args.get('dept_id')
+    systems = System.to_array()
     if request.method == "GET":
         query = Personnel.query.join(Duty)
         if dept_id:
@@ -109,7 +110,7 @@ def search():
                            all_fields=all_fields, pagination=pagination,
                            dept_names=dept_names, duty_lvs=duty_lvs,
                            dept_id=dept_id, endpoint='index.search',
-                           export_api=url)
+                           export_api=url, systems=systems)
 
 
 @index.route('/system-manage/user')

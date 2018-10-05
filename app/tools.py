@@ -46,8 +46,8 @@ def str2time(_str):
 def time2str(time):
     if time is None:
         return
-    return time.strftime("%Y") + "年" + time.strftime("%m") + "月" + \
-           time.strftime("%d") + "日"
+    return time.strftime("%Y") + "-" + time.strftime("%m") + "-" + \
+           time.strftime("%d")
 
 
 def str2img(_str, base_url="", _id=""):
