@@ -244,6 +244,7 @@
       function append_dept(key) {
           var s = system[key];
           $('#dept-id').empty();
+          if (s == null) return;
           for (var i=0; i < s.length; i++){
               $('#dept-id').append(
                   "<option value='"+s[i].id+"'>"+s[i].name+"</option>"
